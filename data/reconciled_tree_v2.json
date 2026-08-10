@@ -1,0 +1,741 @@
+{
+  "meta": {
+    "title": "The Reconciled Tree — canonical foundation",
+    "version": "3.31",
+    "frozen": "2026-08-05",
+    "recanonized": "2026-08-07",
+    "tier": "practitioner/T3",
+    "authority_order": [
+      "rectified tree diagram (skeleton, path names, path markers)",
+      "Ali's explicit rulings, Aug 5-7 2026 sessions"
+    ],
+    "de_hebraized": true,
+    "notes": "Letters/gematria excluded from system; kept only as derivation audit trail. No layers/facet overlays until canon ratified. This system rejects the Golden Dawn framework (10 spheres vs 11); GD attributions are not evidence here.",
+    "status": "OVERLAY PHASE through Pass 50 (Aug 7 2026). Decan ring MOUNTED (37 cells, Chronos-canonical names); BEHDETY seated at Gevurah; Shu PROMOTED to decan-commander; Sekhmet re-tiered T2-L field-regent."
+  },
+  "zero_point_rationale": {
+    "origin": "Amen/Consciousness at the zero-point, manifest and unmanifest",
+    "yang_fruit": "+1..+10 (manifest, Alpha->Omega)",
+    "yin_seed": "-1..-10 (unmanifest, mirror through origin)",
+    "count": "0 plus ten each side = eleven positions per side (Tao)",
+    "consequences": [
+      "zero is occupied — plenum, not void",
+      "no Abyss, no shevirat ha-kelim",
+      "shadow-tree = same body lit from one side"
+    ]
+  },
+  "nodes": [
+    {
+      "id": "kether",
+      "num": 0,
+      "sephirah": "Kether",
+      "planet": "Source",
+      "kemetic": "AMEN",
+      "akan": "Nyamewaa-Nyame",
+      "weekday": null,
+      "soul_part": null,
+      "rulers": {
+        "feminine": null,
+        "masculine": "Amen",
+        "mode": "sole"
+      }
+    },
+    {
+      "id": "chokmah",
+      "num": 1,
+      "sephirah": "Chokmah",
+      "planet": "Constellations",
+      "kemetic": "NSOROMA / ATUM",
+      "akan": "Maa-Ma'at (Law)",
+      "weekday": null,
+      "soul_part": null,
+      "rulers": {
+        "feminine": "Ma'at (ruling principle) + Seshat",
+        "masculine": "Tehuti",
+        "mode": "triad under Ma'at"
+      },
+      "kem": "ATUM"
+    },
+    {
+      "id": "binah",
+      "num": 2,
+      "sephirah": "Binah",
+      "planet": "Saturn",
+      "kemetic": "MIN / AMEN-MIN",
+      "akan": "Amen-Min",
+      "weekday": "Saturday",
+      "soul_part": "Ba",
+      "rulers": {
+        "feminine": "Amenet-Menit",
+        "masculine": "Amen-Men",
+        "mode": "pair",
+        "note": "Men/Min: same deity, variant transliteration; artwork label AMEN-MIN stands. Margin note [AS1]: 'Min is the sphere of Panspermia, and ruler of time; also the deep-mind ruler, and crown chakra.'"
+      },
+      "force": "Time (Magnetism reseated to Malkuth, pass 30)",
+      "kem": "AMEN-MIN"
+    },
+    {
+      "id": "chesed",
+      "num": 4,
+      "sephirah": "Chesed",
+      "planet": "Jupiter",
+      "kemetic": "AMEN-RA",
+      "akan": "Yaw",
+      "weekday": "Thursday",
+      "soul_part": "Akh",
+      "rulers": {
+        "feminine": "Amenet-Rait",
+        "masculine": "Amen-Ra",
+        "mode": "pair"
+      }
+    },
+    {
+      "id": "gevurah",
+      "num": 5,
+      "sephirah": "Gevurah",
+      "planet": "Mars",
+      "kemetic": "BEHDETY",
+      "akan": "Bena / Ogu",
+      "weekday": "Tuesday",
+      "soul_part": "Sekhem",
+      "note": "Sphere-name BEHDETY — from Heru-Behudet, the masculine co-ruler (the Edfu winged-disk striker). Ruled Pass 50 (Aug 7 2026), retiring the Akan 'Bena' from the name-slate; §12.2 flag closed. The Akradinbosom day-pair Bena & Abenaa (Tuesday) is a separate layer and is unaffected.",
+      "rulers": {
+        "feminine": "Sekhmet",
+        "masculine": "Heru-Behudet",
+        "mode": "pair"
+      },
+      "kem": "BEHDETY"
+    },
+    {
+      "id": "tiphereth",
+      "num": 6,
+      "sephirah": "Tiphereth",
+      "planet": "Sun",
+      "kemetic": "HERU",
+      "akan": "Owia / Heru-pa-khart",
+      "weekday": null,
+      "soul_part": "Ka",
+      "note": "Diagram's center texts PTAH/VIRGO belong to the Applied Skill path, not this sphere (Ali rulings 2 & 4).",
+      "sign_layer": "Leo (Fixed Fire)",
+      "rulers": {
+        "feminine": null,
+        "masculine": "Heru (son of Ausar)",
+        "mode": "sole"
+      }
+    },
+    {
+      "id": "netzach",
+      "num": 7,
+      "sephirah": "Netzach",
+      "planet": "Venus",
+      "kemetic": "AFI",
+      "akan": "Afi / Afua",
+      "weekday": "Friday",
+      "soul_part": "Ib",
+      "rulers": {
+        "feminine": "Het-Heru (Gr. Hathor)",
+        "masculine": "Nefertem",
+        "mode": "pair"
+      },
+      "kem": "HET-HERU"
+    },
+    {
+      "id": "hod",
+      "num": "3 & 8",
+      "sephirah": "Hod",
+      "planet": "Mercury",
+      "kemetic": "AWUKU",
+      "akan": "Aku (ruler: Set)",
+      "weekday": "Wednesday",
+      "soul_part": "Sheut",
+      "rulers": "Sutekh & Nebt-Het — descending ground (8) / ascending neutral (3); counterflow reconciled",
+      "kem": "SUTEKH"
+    },
+    {
+      "id": "yesod",
+      "num": 9,
+      "sephirah": "Yesod",
+      "planet": "Moon",
+      "kemetic": "AUSET",
+      "akan": "Adwoa",
+      "weekday": "Monday",
+      "soul_part": "Ren",
+      "rulers": {
+        "feminine": "Auset",
+        "masculine": "Khonsu",
+        "mode": "pair"
+      }
+    },
+    {
+      "id": "malkuth",
+      "num": 10,
+      "sephirah": "Malkuth",
+      "planet": "Earth",
+      "kemetic": "ASAASE-AFUA",
+      "akan": "Asaase Yaa",
+      "weekday": null,
+      "soul_part": "Khet",
+      "sign_layer": "Taurus (Fixed Earth)",
+      "rulers": "Geb & Renenutet — dua any day",
+      "force": "Magnetism (pass 30)",
+      "kem": "GEB"
+    },
+    {
+      "id": "ausar",
+      "num": 11,
+      "sephirah": "Ausar (11th)",
+      "planet": "Neptune",
+      "kemetic": "AUSAR",
+      "akan": "Awusi / As-Ra",
+      "weekday": "Sunday",
+      "soul_part": "Sah (= Orion)",
+      "note": "Zero-terminal crossing-node at the Da'ath locus: three paths pass through, none terminate.",
+      "sign_layer": "Pisces (constellation layer; Neptune is the planetary layer)",
+      "rulers": {
+        "feminine": null,
+        "masculine": "Ausar",
+        "mode": "sole"
+      }
+    }
+  ],
+  "paths": [
+    {
+      "id": "covenant",
+      "name": "Written Covenant",
+      "from": "kether",
+      "to": "binah",
+      "through": null,
+      "marker": "Libra",
+      "marker_type": "sign",
+      "ruler": "Ma'at"
+    },
+    {
+      "id": "images",
+      "name": "Sequenced Images",
+      "from": "kether",
+      "to": "chokmah",
+      "through": null,
+      "marker": "Virgo",
+      "marker_type": "sign",
+      "ruler": "Sia",
+      "note": "Divine perception — the principle Consciousness bearing its Kemetic name (pass 9)."
+    },
+    {
+      "id": "flame",
+      "name": "Flame of Consumption",
+      "from": "binah",
+      "to": "chokmah",
+      "through": null,
+      "marker": "Elemental Fire",
+      "marker_type": "element",
+      "stellar": "Khepesh / Big Dipper (MSXTYW) - Orion",
+      "ruler": "Sekhmet",
+      "note": "Top horizontal; ex-Shin principle extracted (Ali ruling 3)."
+    },
+    {
+      "id": "skillcommand",
+      "name": "Divine Skill & Command",
+      "from": "kether",
+      "to": "tiphereth",
+      "through": "ausar",
+      "marker": "Orion",
+      "marker_type": "stellar",
+      "ruler": "Ptah",
+      "note": "The central channel. Named by Ptah's two creative powers — the craftsman's skill and creation by utterance — and governed by him."
+    },
+    {
+      "id": "fortress",
+      "name": "Mobile Fortress",
+      "from": "binah",
+      "to": "chesed",
+      "through": "ausar",
+      "marker": "Cancer (Taweret)",
+      "marker_type": "sign",
+      "ruler": "Taweret"
+    },
+    {
+      "id": "conjoin",
+      "name": "Conjoining & Separation",
+      "from": "chokmah",
+      "to": "gevurah",
+      "through": "ausar",
+      "marker": "Gemini",
+      "marker_type": "sign",
+      "ruler": "Anubis (as psychopomp — confirmed)",
+      "note": "Zayin meaning: sword or phallus — the twins of joining and dividing (Ali, second pass)."
+    },
+    {
+      "id": "dwelling",
+      "name": "Fertile Dwelling",
+      "from": "binah",
+      "to": "gevurah",
+      "through": null,
+      "marker": "Virgo",
+      "marker_type": "sign",
+      "ruler": "Het-Heru"
+    },
+    {
+      "id": "revelation",
+      "name": "Flowing Revelation",
+      "from": "chokmah",
+      "to": "chesed",
+      "through": null,
+      "marker": "Aquarius",
+      "marker_type": "sign",
+      "ruler": "Heka",
+      "note": "Spirit-riding: the step-down of higher entities and energies into the space a human occupies; makes invocation (vs. evocation) possible. Ruled by the carrying itself — heka is the faculty gods and humans share (Merikare: heka issued to humankind against the blow of events; CT 261: Heka made before two things had come into being). T1 basis, T3 synthesis, owned (pass 8)."
+    },
+    {
+      "id": "dualcurrent",
+      "name": "The Dual Current",
+      "from": "gevurah",
+      "to": "chesed",
+      "through": null,
+      "marker": "Electricity <-> Magnetism",
+      "marker_type": "principle",
+      "ruler": "Shu",
+      "note": "Middle horizontal; ex-Aleph. Twin winds to-and-fro; abundance vs harsh conditions; randomness feeding novelty. Hieroglyphic inscription band on diagram (Ali ruling 3). Shu's militarized decan-agents strike through this wind-medium (Naos); Pass 50 promotes Shu to commander of the decans (T2, von Bomhard), reinforcing this seat."
+    },
+    {
+      "id": "appliedskill",
+      "name": "Applied Skill",
+      "from": "gevurah",
+      "to": "netzach",
+      "through": "tiphereth",
+      "marker": "Virgo",
+      "marker_type": "sign",
+      "ruler": "Ptah (confirmed)",
+      "note": "Diagram's PTAH and VIRGO at center belong to this path (Ali rulings 2 & 4)."
+    },
+    {
+      "id": "coiledpower",
+      "name": "Coiled Power",
+      "from": "chesed",
+      "to": "hod",
+      "through": "tiphereth",
+      "marker": "Draco",
+      "marker_type": "stellar",
+      "ruler": "Set (higher form)",
+      "note": "Represented by the chakras (coiled serpent). Path of teaching/training: master/student, willing mind-and-body meets sensei; habit formation, lizard brain; ethics, morals, instruction, higher learning (Ali, second pass). v1's invented 'The Teacher | Draco?' on this route was content-correct, name-wrong."
+    },
+    {
+      "id": "utterance",
+      "name": "Forceful Utterance",
+      "from": "gevurah",
+      "to": "hod",
+      "through": null,
+      "marker": "Aries",
+      "marker_type": "sign",
+      "ruler": "Hu",
+      "note": "Authoritative utterance — restored to his seat from Ali's earlier drafts (pass 9); Heru-Behudet unseated from the path, remains Gevurah sphere co-ruler."
+    },
+    {
+      "id": "fate",
+      "name": "Grasping Fate",
+      "from": "chesed",
+      "to": "netzach",
+      "through": null,
+      "marker": "Sagittarius",
+      "marker_type": "sign",
+      "ruler": "Iusaaset — the Hand of Atum",
+      "note": "Pass 47: Iusaaset, the Hand of Atum (Vandier T2 + the path's arm-and-grasping-hand glyphs + the Hathor-terminus). Supersedes the earlier Nebt-Het placeholder."
+    },
+    {
+      "id": "regeneration",
+      "name": "Regeneration",
+      "from": "binah",
+      "to": "yesod",
+      "through": "gevurah",
+      "marker": "Scorpio",
+      "marker_type": "sign",
+      "ruler": "Ausar",
+      "note": "Generation diagonal. The re-membered god governs the death-rebirth path. D52 glyph retired from display (pass 8); generative meaning retained."
+    },
+    {
+      "id": "impulse",
+      "name": "Divine Impulse",
+      "from": "chokmah",
+      "to": "yesod",
+      "through": "chesed",
+      "marker": "Libra",
+      "marker_type": "sign",
+      "ruler": "Auset & Atum (co-rulers)",
+      "note": "The only co-ruled path — governed by its own endpoints: Atum (Chokmah) and Auset (Yesod). D52 glyph retired from display (pass 8); generative meaning retained."
+    },
+    {
+      "id": "immersion",
+      "name": "Immersion",
+      "from": "hod",
+      "to": "netzach",
+      "through": null,
+      "marker": "Elemental Water",
+      "marker_type": "element",
+      "ruler": "Tefnut",
+      "note": "Bottom horizontal; ex-Mem principle extracted; primal moisture. With Shu on the Dual Current, the first-born pair holds two of the three horizontals. Ratified pass 3; ruler pass 8 (Sobek unseated — offices, not a census)."
+    },
+    {
+      "id": "solarrising",
+      "name": "Solar Rising",
+      "from": "tiphereth",
+      "to": "yesod",
+      "through": null,
+      "marker": "Sirius",
+      "marker_type": "stellar",
+      "ruler": "Heru"
+    },
+    {
+      "id": "eyeofmatter",
+      "name": "Eye of Matter",
+      "from": "hod",
+      "to": "yesod",
+      "through": null,
+      "marker": "Capricorn",
+      "marker_type": "sign",
+      "ruler": "Set (lower form)"
+    },
+    {
+      "id": "pillarharmony",
+      "name": "Pillar of Harmony",
+      "from": "netzach",
+      "to": "yesod",
+      "through": null,
+      "marker": "Venus",
+      "marker_type": "planet",
+      "ruler": "Het-Heru",
+      "note": "A musical chord — shared frequency among groups; affinity binding clubs, families, clans, culture (Ali, second pass). Planet-on-path is in tension with 'planets seat exclusively on spheres'; resolved in the two-slot model (marker vs ruler)."
+    },
+    {
+      "id": "hiddeninfluence",
+      "name": "Hidden Influence",
+      "from": "hod",
+      "to": "malkuth",
+      "through": null,
+      "marker": "Cancer",
+      "marker_type": "sign",
+      "ruler": "Khonsu",
+      "note": "Reverted to the artwork's Cancer in pass four — the pass-three Pisces ruling was mis-spoken; GD convergence note struck."
+    },
+    {
+      "id": "huntcatch",
+      "name": "Hunt & Catch",
+      "from": "netzach",
+      "to": "malkuth",
+      "through": null,
+      "marker": "Sagittarius",
+      "marker_type": "sign",
+      "ruler": "Wepwawet"
+    },
+    {
+      "id": "timelocation",
+      "name": "Time and Location",
+      "from": "yesod",
+      "to": "malkuth",
+      "through": null,
+      "marker": "Seal of 3D reality",
+      "marker_type": "principle",
+      "ruler": "Geb",
+      "note": "Named by Ali (ruling 1): where a thing becomes real in 3D and, if physical, casts a shadow. Ex-Tav."
+    }
+  ],
+  "structure": {
+    "central_pillar": [
+      "kether",
+      "ausar",
+      "tiphereth",
+      "yesod",
+      "malkuth"
+    ],
+    "crossings_through_ausar": [
+      "fortress",
+      "conjoin"
+    ],
+    "crossings_through_tiphereth": [
+      "appliedskill",
+      "coiledpower"
+    ],
+    "generation_diagonals": [
+      "regeneration",
+      "impulse"
+    ],
+    "yesod_in": [
+      "solarrising",
+      "regeneration",
+      "impulse",
+      "eyeofmatter",
+      "pillarharmony"
+    ],
+    "yesod_out": [
+      "timelocation"
+    ],
+    "malkuth_in": [
+      "timelocation",
+      "hiddeninfluence",
+      "huntcatch"
+    ],
+    "horizontals_as_elements": {
+      "flame": "Fire",
+      "dualcurrent": "Electricity<->Magnetism",
+      "immersion": "Water"
+    }
+  },
+  "sign_census": {
+    "on_paths": {
+      "Virgo": 3,
+      "Libra": 2,
+      "Cancer": 2,
+      "Sagittarius": 2,
+      "Gemini": 1,
+      "Aquarius": 1,
+      "Aries": 1,
+      "Scorpio": 1,
+      "Capricorn": 1
+    },
+    "on_spheres": {
+      "Leo": "Tiphereth (6)",
+      "Taurus": "Malkuth (10)",
+      "Pisces": "Ausar (11)"
+    },
+    "status": "All 12 signs seated: 9 signs on 14 path-seats + 3 signs on central-pillar spheres. Nothing absent.",
+    "remaining_sphere_sign_layers": "not stated for the other eight spheres — do not fill by conjecture"
+  },
+  "open_cells": [
+    "Facet 7 in progress",
+    "Facet 14: final freeze (four readings held)",
+    "8th chakra tree-seat (deferred)",
+    "Facet 1: SHU/He readings",
+    "Builder-of-Stars (maintenance)",
+    "Budde epithets (A14, maintenance)",
+    "Words of Power protocols (pedj-shes cord-as-conductor; ddmdw-hr rubric-grounding) — drafted, awaiting ratification"
+  ],
+  "derivation_audit_trail_not_system": {
+    "Vav": "Written Covenant",
+    "Heh": "Sequenced Images",
+    "Shin": "Flame of Consumption",
+    "Beth": "Divine Skill & Command",
+    "Chet": "Mobile Fortress",
+    "Zayin": "Conjoining & Separation",
+    "Daleth": "Fertile Dwelling",
+    "Gimel": "Flowing Revelation",
+    "Aleph": "The Dual Current",
+    "Yod": "Applied Skill",
+    "Teth": "Coiled Power",
+    "Peh": "Forceful Utterance",
+    "Kaph": "Grasping Fate",
+    "Nun": "Regeneration",
+    "Lamed": "Divine Impulse",
+    "Mem": "Immersion",
+    "Resh": "Solar Rising",
+    "Ayin": "Eye of Matter",
+    "Samech": "Pillar of Harmony",
+    "Qoph": "Hidden Influence",
+    "Tzaddi": "Hunt & Catch",
+    "Tav": "Time and Location"
+  },
+  "deferred": "All 16 facet overlays, psychodynamic/somatic node columns, and any diagram layer system — until canon ratified (Ali ruling 5).",
+  "marker_taxonomy": {
+    "sign": 14,
+    "stellar": [
+      "Orion (Divine Skill & Command)",
+      "Khepesh+Orion (Flame of Consumption)",
+      "Sirius (Solar Rising)",
+      "Draco (Coiled Power)"
+    ],
+    "element_or_principle": [
+      "Fire",
+      "Electricity<->Magnetism",
+      "Water",
+      "Seal of 3D reality"
+    ],
+    "deity": [
+      "Ptah (Applied Skill)",
+      "Anubis (Conjoining & Separation)"
+    ],
+    "planet": [
+      "Venus (Pillar of Harmony)"
+    ]
+  },
+  "design_notes_sphere_rulers": [
+    "Amen refraction: sole at the zero-point, unfolding into polarity only in descent (Amen-Men/Amenet-Menit at Binah; Amen-Ra/Amenet-Rait at Chesed).",
+    "Ausarian line: the three central-pillar sole rulers descend as family — Ausar (11) -> Heru (6); Auset seats at Yesod (9), where polarity begins.",
+    "Set is the only off-pillar sole ruler — the consortless isolate; capacitor of the tree."
+  ],
+  "two_slot_model": "Each path carries a MARKER (sign/star/element/principle/planet — its signature) and a RULER (deity, or the principle Consciousness — its governor), independent slots. Venus marks Pillar of Harmony while Het-Heru rules it; Draco marks Coiled Power while Set (higher form) rules it.",
+  "ruler_structure_notes": [
+    "Set: sole at Hod sphere + higher form on Coiled Power (ends at Hod) + lower form on Eye of Matter (starts at Hod) — every seat Hod-incident; the capacitor charges through his own terminal.",
+    "Divine Impulse co-rulers = its own endpoints: Atum (Chokmah/NSOROMA-ATUM) and Auset (Yesod). Only co-ruled path.",
+    "Ptah rules both skill-paths: Divine Skill & Command (central channel) and Applied Skill.",
+    "Canid psychopomps split the ways: Anubis (Conjoining & Separation), Wepwawet (Hunt & Catch).",
+    "Two Cancer paths carry two lunar powers: Taweret (Mobile Fortress), Khonsu (Hidden Influence).",
+    "Het-Heru rules twice: Fertile Dwelling, Pillar of Harmony. Nebt-Het's seat: Grasping Fate superseded by Iusaaset (pass 47); Nebt-Het pairs with Set at Hod (pass 47 Messengers' Directions). Ausar governs Regeneration.",
+    "Shu-Tefnut, the primal pair, hold The Dual Current and Flowing Revelation (both Chesed-incident); Shu matches the 3-year-old Divinities facet. Heru rules Solar Rising from his own sphere — marker (Sirius), ruler (Heru), and name (Solar Rising) all denote the heliacal rising.",
+    "Barque triad on paths (pass 9): Sia — Sequenced Images; Hu — Forceful Utterance; Heka — Flowing Revelation."
+  ],
+  "objections_appendix": "See master §9 — twelve anticipated objections with the author's answers. Held items: Virgo-creation source passage (open research); tree of Dua (undisclosed).",
+  "framing": "Reconstruction of stellar-cult doctrines; GD/Hermetica and kindred systems are solar-cult in origin and are not source-authorities.",
+  "scholarly_scaffold": "See master §8a: barque triad attested (CT; report Pt II); Divine Skill & Command = Memphite doctrine (Shabaka Stone); Hermetica-as-Egyptian-substrate license (Fowden/Bull/Iversen); ten-count is medieval (Hayman). Pass 14: Naos of the Decades = T1 charter of the Strike Window genre (von Bomhard 2008); Shu's decan-agents militarize the Dual Current; pedj-shes/Naos = build-by-stars vs strike-by-stars, the polarity of Shu's own path.",
+  "naos_command": {
+    "status": "CANON Pass 50 (Aug 7 2026). von Bomhard's 'war machine / texts of execration' reading confirmed (T2, via associate T2-L).",
+    "hierarchy": "Ra (supreme, T1/T2) -> Shu (theater/atmospheric commander — 'the great god'; PROMOTED, T2) -> Thoth (Lord of the Books, T2) -> Sekhmet/Sirius (field-regent of the retinue; re-tiered T2->T2-L) -> 36 decans -> khatyw (slaughterers) + shmayw (executioners)",
+    "register": "decan effect-texts = Negative/martial register (striking-by-stars); competitive-operations overlay (Chronos warfare module) is PRIVATE, print-excluded."
+  },
+  "covenant": {
+    "registers": [
+      "T1",
+      "T2",
+      "T2-L",
+      "T3",
+      "Negative",
+      "G"
+    ],
+    "rules": [
+      "Gnosis may not dress as text. Text may not overrule gnosis.",
+      "A higher-tier fact does not automatically promote — or demote — the interpretation built upon it.",
+      "G is a column, not a rung."
+    ],
+    "self_grading": "Sphere/path attributions = G (with T2-L lineage where noted); artwork = canonical drawing of the G record; scholarly apparatus = §8a (T1/T2); Negative/framing controls = §9."
+  },
+  "calibration_designation": {
+    "role": "§3b feeds the One Tree calibration table as G-column and pair-statement",
+    "adjudicated": {
+      "Sun": "Heru at Sun, Ausar at 11; relationship = Ba-Demedj sixth-hour conjunction"
+    },
+    "diverges_print": {
+      "Jupiter": "lineage Heru-sa-Aset vs canon Amen-Ra & Amenet-Rait"
+    },
+    "converges": [
+      "Moon (Auset & Khonsu, practice-confirmed)",
+      "Mars (anchor row)",
+      "Venus (paired, not displaced)",
+      "Saturn (pair completes tenant)",
+      "Mercury (Sutekh & Nebt-Het — pass 47 homecoming)"
+    ]
+  },
+  "overlay_register": {
+    "process": "read facet at zoom -> data table -> Ali ratifies -> freeze -> then mount as diagram layer; each facet pure",
+    "order": [
+      "4 Egyptian Divinities (verified/absorbed by §3b)",
+      "2 Zodiac (verification)",
+      "1 Chakras & Seed Sounds",
+      "14 Akradinbosom & Week",
+      "3 Symbols",
+      "7 Elements/Wombs",
+      "16 Forces",
+      "13 Dimensions",
+      "10-12 Strengths/Weaknesses/Distortions",
+      "6 Decision Process",
+      "5 Brain Anatomy",
+      "9 Rulerships",
+      "15 God Rankings",
+      "8 Hebrew Archangels — HELD for de-Hebraization ruling"
+    ],
+    "decan_fork": "RESOLVED — the decans mount as a RING around the tree (not on spheres/paths); 37 cells named Pass 50",
+    "facet4_open_items": [],
+    "facet4_status": "RATIFIED — absorbed by §3b; Apep excluded (no seat, no depiction); Re-Horakhty gloss dropped",
+    "facet2_status": "RATIFIED — planetary layer exact match, absorbed by §3/§3a",
+    "facet1_pending": {
+      "chakras": {
+        "binah": [
+          "Crown",
+          "I"
+        ],
+        "ausar": [
+          "9th",
+          "AH"
+        ],
+        "chesed": [
+          "Third Eye",
+          "HU"
+        ],
+        "gevurah": [
+          "Root",
+          "OH"
+        ],
+        "tiphereth": [
+          "Solar",
+          "YA"
+        ],
+        "netzach": [
+          "Heart",
+          "WA"
+        ],
+        "hod": [
+          "Throat",
+          "He"
+        ],
+        "yesod": [
+          "Sacral",
+          "SHU (confirm)"
+        ],
+        "kether": null,
+        "chokmah": null,
+        "malkuth": null
+      },
+      "open": [
+        "absent 8th chakra — deliberate, elsewhere, or gap?",
+        "confirm SHU and He readings; note Hu/Shu homophone flag"
+      ],
+      "eighth_chakra": {
+        "exists": true,
+        "location": "beneath the feet, beneath the root",
+        "seed_sound": null,
+        "doctrine": "no sound penetrates earth",
+        "opening": "prescribed meditation",
+        "tree_seat": "UNASSIGNED — held open by Ali; do not default"
+      }
+    },
+    "facet1_status": "FROZEN — 8 seats Binah->Yesod; 8th chakra: beneath the feet, soundless (no sound penetrates earth), meditation-opened, seat unassigned by design; SHU/He readings flagged unconfirmed",
+    "facet14_status": "Corrections applied; Kajamanu omitted; non-Egyptian tenants marked archive-only. Four readings held as-written; freezes on Ali's word.",
+    "facet3_status": "FROZEN pass 25 — teaching layer complete; Hod = compass/ruler/pencil/automobile (measure, calculate, move)",
+    "facet7_status": "RATIFIED — five horizontal element-strata (Fire/Spirit/Air/Water/Earth bands); arrows excluded, spiral-descent doctrine parked; ten-wombs cell held open",
+    "facet16_status": "RATIFIED AS AMENDED pass 30 — Magnetism Binah->Malkuth per Circuit Doctrine",
+    "facets_10_11_12_status": "COMPLETE — psychological register closed pass 34",
+    "facet13_status": "SKIMMED — archive stub only, undeveloped by ruling",
+    "facets_skipped": [
+      "5 Brain Anatomy",
+      "8 Hebrew Archangels (resolves de-Hebraization hold)",
+      "15 God Rankings"
+    ],
+    "facet9_status": "TABLED clean — dominion pair-grammar; plenty-registers flag open",
+    "facet6_status": "TABLED clean — interrogative layer; Kether reading to confirm",
+    "strengths_reseating_pass33": {
+      "tiphereth": "+Courage (Fearlessness collapsed), +Integrity",
+      "hod": "+Mobility (confirmed), +Creativity",
+      "chesed": "+Ethics",
+      "binah": "Choice alone (flag)",
+      "netzach": "Sociability, Responsibility",
+      "yesod": "Gestation — the reflection doctrine (pass 34)",
+      "kether": "inscrutable — no question, no wording anywhere"
+    },
+    "decans_status": "RING MOUNTED & CANONIZED (Pass 50, Aug 7 2026). 37 cells named per the Chronos warfare module — adopted CANONICAL ('we spent a lot of time compiling that information'); the 'full decan military and business applications' chat names are printed as T2-L variants, not harmonized. Anchor = heliacal Sirius. Command hierarchy in naos_command. Decan names + effect-summaries T2-L (verified secondhand via von Bomhard's associate); planetary natures T3 owned; 236-case flags practitioner-private; competitive-ops overlay PRIVATE/print-excluded. Full register: claude/Decan_Ring_Consolidated_Register_v2.md. One internal Chronos fix applied: it reused 'Tepy-a Sopdet' at both 31 and 35 — 35 keeps it (Procyon), 31 = Aryt."
+  },
+  "compilation_notes_ruling": "Multi-cultural facet tenants (Mesopotamian, Sumerian, Yoruba/Vodun etc.) are archive-only compilation notes; print-excluded. Final work is purely Egyptian + canonized Akan/Afurakan spine. Canonized illustrative doctrine sentences stand.",
+  "circuit_doctrine": {
+    "status": "CANON (pass 30; G/T3 on T1 anchors)",
+    "rail": "Heru — constant positive (sole ruler as conductor-exclusivity)",
+    "neutral_ground": "Two conductors, two persons: Set = ground (8), descending messenger (storms, discharge, messages to earth); Nebt-Het = neutral (3), ascending messenger (temple, offerings, messages from earth to the gods); 3+8=11 bonded return; contention = counterflow; offerings ride the neutral, storms ride the ground",
+    "fault": "Apep = fault current, discharged nightly by Set at the prow (Amduat/BD108); no seat because discharged",
+    "supply": "Chesed — charged sky; lightning = discharge event (charge at Chesed, path in Set, bolt their meeting)",
+    "winding": "Coiled Power = transformer coil Chesed->Tiphereth->Hod (supply->rail->neutral); teaching/habit = induction; absorbs the spiral-descent",
+    "bus": "Ausar zero-terminal node = bus-bar",
+    "waveform": "Yesod — Emotions & Glamour = Yesod-Lens morphology stage",
+    "magnet": "Magnetism reseated at Malkuth (Earth the permanent magnet; compass = the Tau instrument); Time retained at Binah; supernals = Time & Space",
+    "strike_window": "the operator closes switches, not petitions"
+  },
+  "abundance_ruling": "Abundance seats at Netzach, scarcity at Gevurah (pass 32); Chesed rules the Wealth-Poverty axis (Rulerships); reconciliation offered: Chesed dispenses, Netzach/Gevurah experience, the charge precedes the coin",
+  "plenty_registers": "RATIFIED pass 35 — the charge precedes the coin",
+  "render": "reconciled_tree_v3_lenses.html — 14 lenses on the classic geometry; decan ring filled (37 cells) Pass 50",
+  "horizon_works": {
+    "reconciled_tree_deck": "70-card architecture (22 path-trumps + 11 stations + 36 decan minors + epagomenal Geb); psych register as meanings; Circuit spread; Sirius-ring pairing. Minor-arcana source COMPLETE Pass 50 (37-cell ring named). Next project (Ali)."
+  },
+  "glyph_register": "Opened pass 42 — sphere proto-godforms + color-keyed path glyphs catalogued; confident IDs: Min C8, wedjat+plumes, Het-Heru hwt-falcon, Auset, N35a water, A2 speaker, khepesh foreleg; Dual Current inscription band clean-read pass 49: extended animal offering-litany, speech-launched (A2) — the voice-offering on the air; opening word-group awaiting Ali; Conjoining adze identified (probable)",
+  "doctrines_pass43": {
+    "tree_of_dua": "godform rendition = original title's crux; sphere glyphs are its embryo",
+    "sphere_names": "RULED pass 44 — Akan off the name-slate (Atum, Het-Heru, Sutekh, Amen-Min applied). Bena -> BEHDETY (from Heru-Behudet), RULED pass 50. Malkuth: Asaase-Afua retired -> GEB (pass 45), pair Geb & Renenutet.",
+    "words_of_power": "per-sphere opening utterances from PT/CT/BD with T1 locators -> rites; next major research program. Two protocols drafted (pedj-shes cord-as-conductor; ddmdw-hr rubric-grounding), awaiting ratification.",
+    "circuit_library": "§4d is one of many circuits; deck as circuit remedies; mansion-timed circuit resonance",
+    "earth_dua": "Earthly-realm dua -> Geb & Renenutet, ANY day (outside the weekday rotation); canonized pass 45 as a G-register discovery"
+  },
+  "path_ruler_update": {
+    "grasping_fate": "Iusaaset — the Hand of Atum (pass 47; Vandier T2 + artwork arm-glyphs + Hathor-terminus)"
+  }
+}

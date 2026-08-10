@@ -1,3 +1,14 @@
+# CHANGES — v3.33 (Deity lore captions)
+
+**v3.33** — Paths-mode ruler captions rebuilt as finished, public-facing entries:
+
+- **Deity lore** compiled from `data/Female_Divinities_Reference.pdf` + `data/Male_Divinities_Reference.pdf` into `DEITY_LORE`: name meaning, features, symbols, roles, epithets (with transliterations), and invocations. Fields absent from the references are skipped.
+- **Hieroglyphic name-blocks** extracted from the reference PDFs to `images/glyphs/` (29 deities) and shown in each ruler caption with a conventional phonetic pronunciation and the MDC/Gardiner/Budge transliterations. *Stub: Shu's name-block is missing from the reference PDF (his page repeats Hu's block) — glyph omitted for Shu.*
+- **Removed** the Hebrew-letter “audit” metadata (`PATH_LETTERS`) from path and ruler captions, the “Ruler→path mapping…” provenance box, and the path-study provenance box.
+- Set (higher) and Set (lower) share the single Sutekh reference entry. The serpent slain nightly from Ra's barque is left unnamed in the render per the Kau constraint.
+
+---
+
 # CHANGES — v3.32 (Paths Mode + Kau Mode)
 
 **Base:** Built on `base/reconciled_tree_v3_lenses.html` at **v3.31** (newer than the v3.18 referenced in CURSOR_PROMPT.md). Bumped to **v3.32**.

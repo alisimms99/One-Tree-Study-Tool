@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reconciled Tree — v3.32 · Paths + Kau</title>
+<title>The Reconciled Tree — v3.33 · Paths + Kau</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -48,6 +48,19 @@
     font-family:'IBM Plex Mono',monospace; font-size:9px; line-height:1.6; letter-spacing:.03em; color:#4A3A18;}
   .note{font-size:12px; font-style:italic; color:#4A3E22; line-height:1.5}
 
+  /* deity caption — finished-product layout */
+  .glyph-block{margin:2px 0 14px; text-align:center}
+  .glyph-block img{width:100%; max-width:300px; display:block; margin:0 auto; border:1px solid #C9B37E; border-radius:4px}
+  .glyph-block .cap{font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:#8A6D1F; margin-top:5px}
+  ul.epithets,ul.ruled{list-style:none; margin:2px 0 0; padding:0}
+  ul.epithets li,ul.ruled li{font-size:12.5px; line-height:1.5; padding-left:13px; position:relative; margin-bottom:3px; color:var(--ink)}
+  ul.epithets li::before,ul.ruled li::before{content:'◆'; position:absolute; left:0; top:1px; font-size:7px; color:#B08D2E}
+  ul.epithets li .tr{font-family:'IBM Plex Mono',monospace; font-size:11px; color:#5A4A22}
+  blockquote.invoke{margin:4px 0 2px; padding:10px 12px; background:var(--papyrus2); border-left:3px solid var(--gold);
+    font-size:12.5px; font-style:italic; line-height:1.55; color:#3A2E12}
+  blockquote.invoke .src{display:block; margin-top:7px; font-family:'IBM Plex Mono',monospace; font-style:normal;
+    font-size:8.5px; letter-spacing:.14em; text-transform:uppercase; color:#8A6D1F}
+
   .path-line{stroke:var(--line); stroke-width:1.6; fill:none; transition:stroke .18s, stroke-width .18s, opacity .18s}
   .path-hit{stroke:transparent; stroke-width:16; fill:none; cursor:pointer; outline:none}
   .pgroup:focus-within .path-line, .pgroup:hover .path-line{stroke:var(--gold); stroke-width:2.2}
@@ -91,21 +104,24 @@
   @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 
   /* —— Paths mode —— */
-  #treewrap{flex-direction:column; align-items:center}
-  #rulerGallery{display:none; width:100%; padding:5px 8px 7px;
-    border-bottom:1px solid #2A3050; background:#12182A; gap:3px;
-    grid-template-columns:repeat(11,minmax(0,1fr)); overflow:visible}
-  #treewrap.paths-mode #rulerGallery{display:grid}
+  #treewrap{flex-direction:row; align-items:stretch; justify-content:center}
+  .ruler-side{display:none; flex:0 0 176px; flex-direction:column; background:#12182A; padding:6px 6px 10px; overflow-y:auto}
+  #galleryF{border-right:1px solid #2A3050}
+  #galleryM{border-left:1px solid #2A3050}
+  #treewrap.paths-mode .ruler-side{display:flex}
+  .ruler-side .gal-head{font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.24em;
+    color:#8A6D1F; text-transform:uppercase; text-align:center; padding:4px 0 6px}
+  .ruler-side .gal-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:5px; align-content:start}
   .ruler-btn{background:#171C30; border:2px solid #3A4060; border-radius:5px; cursor:pointer;
     padding:3px 2px 2px; text-align:center; transition:border-color .15s, opacity .15s;
     width:100%; min-width:0; display:flex; flex-direction:column; align-items:stretch}
-  .ruler-btn .img-frame{width:100%; height:58px; display:flex; align-items:flex-end; justify-content:center;
-    background:#0E1220; border-radius:3px; overflow:hidden; flex:0 0 58px}
+  .ruler-btn .img-frame{width:100%; height:72px; display:flex; align-items:flex-end; justify-content:center;
+    background:#0E1220; border-radius:3px; overflow:hidden; flex:0 0 72px}
   .ruler-btn img{max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain;
     object-position:center bottom; display:block}
-  .ruler-btn .rlab{font-family:'IBM Plex Mono',monospace; font-size:6.5px; letter-spacing:.02em;
-    color:#B0B8D0; margin-top:2px; line-height:1.15; white-space:normal; overflow:hidden;
-    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; min-height:2.3em}
+  .ruler-btn .rlab{font-family:'IBM Plex Mono',monospace; font-size:7.5px; letter-spacing:.02em;
+    color:#B0B8D0; margin-top:3px; line-height:1.2; white-space:normal; overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; min-height:2.4em}
   .ruler-btn:hover{border-color:#565B72}
   .ruler-btn.on{border-color:var(--gold); background:#171C30}
   .ruler-btn.dim{opacity:.45}
@@ -142,13 +158,20 @@
 <body>
 <header>
   <h1>THE RECONCILED TREE</h1>
-  <div class="sub"><b>v3.32</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
+  <div class="sub"><b>v3.33</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
 </header>
 <main>
   <nav id="rail" aria-label="Lenses"></nav>
   <div id="treewrap">
-    <div id="rulerGallery" aria-label="Path rulers"></div>
+    <div id="galleryF" class="ruler-side" aria-label="Path rulers — feminine">
+      <div class="gal-head">♀ Rulers</div>
+      <div class="gal-grid"></div>
+    </div>
     <svg id="tree" viewBox="0 0 800 1150" role="img" aria-label="The Reconciled Tree with switchable lenses"></svg>
+    <div id="galleryM" class="ruler-side" aria-label="Path rulers — masculine">
+      <div class="gal-head">♂ Rulers</div>
+      <div class="gal-grid"></div>
+    </div>
   </div>
   <aside id="panel"></aside>
 </main>
@@ -159,7 +182,7 @@ const IMG_BASE=(()=>{const p=location.pathname||location.href||'';return (/\/bas
 function img(p){return (p||'').replace(/^images\//,IMG_BASE);}
 function portraitHtml(src,alt){return '<div class="portrait-wrap"><img class="portrait-preview" src="'+img(src)+'" alt="'+alt+'"></div>';}
 
-/* ================= CANON v3.32 ================= */
+/* ================= CANON v3.33 ================= */
 const NODES = {
  kether:{x:400,y:95,r:48,c:"#F2EBD7",num:"0",seph:"Kether",kem:"AMEN",planet:"SOURCE"},
  chokmah:{x:595,y:300,r:46,c:"#C9CFDD",num:"1",seph:"Chokmah",kem:"ATUM",planet:"CONSTELLATIONS"},
@@ -295,7 +318,6 @@ const MODES=[
  {id:"paths",name:"Paths",desc:"Path study — click a path ruler to highlight every path that deity governs. Lore and tree-function in the inspector."},
  {id:"kau",name:"Kau",desc:"The Fourteen Kau of Re — Lanzone ring (Layer 1), barque overlay (Layer 2), benefaction annotations (Layer 3). Per Kau_Comparative_Register_v2_RATIFIED §O4."}
 ];
-const PATH_LETTERS={covenant:"Vav · audit",images:"Heh · audit",flame:"Shin · audit",skillcommand:"Beth · audit",fortress:"Chet · audit",conjoin:"Zayin · audit",dwelling:"Daleth · audit",revelation:"Gimel · audit",dualcurrent:"Aleph · audit",appliedskill:"Yod · audit",coiledpower:"Teth · audit",utterance:"Peh · audit",fate:"Kaph · audit",regeneration:"Nun · audit",impulse:"Lamed · audit",immersion:"Mem · audit",solarrising:"Resh · audit",eyeofmatter:"Ayin · audit",pillarharmony:"Samech · audit",hiddeninfluence:"Qoph · audit",huntcatch:"Tzaddi · audit",timelocation:"Tav · audit"};
 const PATH_META={
  covenant:{subtitle:"The Code",lore:"Ma'at is the covenant that writes order into being — her name and office identical. The scales of judgment, the Declaration of Innocence before the forty-two assessors, Ptahhotep's maxim that her order is great and unchallenged since Osiris: she is the code without which the circuit fails to cohere.",function:"The scale balances and the agreement binds — order written into being; the installation meets its code. Establishes the absolute terms under which current is permitted to flow."},
  images:{subtitle:"The Sensor",lore:"Sia is divine perception — one of the fourteen creative powers, riding at the stern of the solar barque while Hu commands at the bow. The consciousness principle that sequences images into coherent reality; without this sensor the machine is blind.",function:"Divine perception in working order — the pattern seen, signs read accurately, insight arriving in sequence; the barque's lookout sees the channel ahead."},
@@ -321,28 +343,166 @@ const PATH_META={
  timelocation:{subtitle:"The Terminal",lore:"Geb — the earth that holds form. Both coordinates of the manifestation-cross land here; the circuit terminates on ground that receives the imprint of the heavens.",function:"The thing becomes real — manifestation lands in time and place and casts its shadow; circuit terminates on the earth."}
 };
 const RULERS=[
- {id:"maat",name:"Ma'at",img:"images/01_maat.png",paths:["covenant"]},
- {id:"sia",name:"Sia",img:"images/Sia_revised_raw.png",paths:["images"]},
- {id:"sekhmet",name:"Sekhmet",img:"images/04_sekhmet.png",paths:["flame"]},
- {id:"ptah",name:"Ptah",img:"images/04_ptah.png",paths:["skillcommand","appliedskill"]},
- {id:"taweret",name:"Taweret",img:"images/09_taweret.png",paths:["fortress"]},
- {id:"anubis",name:"Anubis",img:"images/05_anubis.png",paths:["conjoin"]},
- {id:"het_heru",name:"Het-Heru",img:"images/05_het_heru.png",paths:["dwelling","pillarharmony"]},
- {id:"heka",name:"Heka",img:"images/03_heka.png",paths:["revelation"]},
- {id:"shu",name:"Shu",img:"images/06_shu.png",paths:["dualcurrent"]},
- {id:"set_higher",name:"Set (higher)",img:"images/08_sutekh.png",paths:["coiledpower"]},
- {id:"hu",name:"Hu",img:"images/Hu_revised_raw.png",paths:["utterance"]},
- {id:"iusaaset",name:"Iusaaset",img:"images/11_iusaaset.png",paths:["fate"]},
- {id:"ausar",name:"Ausar",img:"images/11_ausar.png",paths:["regeneration"]},
- {id:"auset",name:"Auset",img:"images/07_auset.png",paths:["impulse"]},
- {id:"atum",name:"Atum",img:"images/Atum_34_final.png",paths:["impulse"]},
- {id:"tefnut",name:"Tefnut",img:"images/10_tefnut.png",paths:["immersion"]},
- {id:"heru",name:"Heru",img:"images/heru_pschent_generated.png",paths:["solarrising"]},
- {id:"set_lower",name:"Set (lower)",img:"images/12_set_animal.png",paths:["eyeofmatter"]},
- {id:"khonsu",name:"Khonsu",img:"images/09_khonsu.png",paths:["hiddeninfluence"]},
- {id:"wepwawet",name:"Wepwawet",img:"images/08_wepwawet.png",paths:["huntcatch"]},
- {id:"geb",name:"Geb",img:"images/10_geb.png",paths:["timelocation"]}
+ {id:"maat",name:"Ma'at",sex:"f",img:"images/01_maat.png",paths:["covenant"]},
+ {id:"sekhmet",name:"Sekhmet",sex:"f",img:"images/04_sekhmet.png",paths:["flame"]},
+ {id:"taweret",name:"Taweret",sex:"f",img:"images/09_taweret.png",paths:["fortress"]},
+ {id:"het_heru",name:"Het-Heru",sex:"f",img:"images/05_het_heru.png",paths:["dwelling","pillarharmony"]},
+ {id:"iusaaset",name:"Iusaaset",sex:"f",img:"images/11_iusaaset.png",paths:["fate"]},
+ {id:"auset",name:"Auset",sex:"f",img:"images/07_auset.png",paths:["impulse"]},
+ {id:"tefnut",name:"Tefnut",sex:"f",img:"images/10_tefnut.png",paths:["immersion"]},
+ {id:"sia",name:"Sia",sex:"m",img:"images/Sia_revised_raw.png",paths:["images"]},
+ {id:"ptah",name:"Ptah",sex:"m",img:"images/04_ptah.png",paths:["skillcommand","appliedskill"]},
+ {id:"anubis",name:"Anubis",sex:"m",img:"images/05_anubis.png",paths:["conjoin"]},
+ {id:"heka",name:"Heka",sex:"m",img:"images/03_heka.png",paths:["revelation"]},
+ {id:"shu",name:"Shu",sex:"m",img:"images/06_shu.png",paths:["dualcurrent"]},
+ {id:"set_higher",name:"Set (higher)",sex:"m",img:"images/08_sutekh.png",paths:["coiledpower"]},
+ {id:"hu",name:"Hu",sex:"m",img:"images/Hu_revised_raw.png",paths:["utterance"]},
+ {id:"ausar",name:"Ausar",sex:"m",img:"images/11_ausar.png",paths:["regeneration"]},
+ {id:"atum",name:"Atum",sex:"m",img:"images/Atum_34_final.png",paths:["impulse"]},
+ {id:"heru",name:"Heru",sex:"m",img:"images/heru_pschent_generated.png",paths:["solarrising"]},
+ {id:"set_lower",name:"Set (lower)",sex:"m",img:"images/12_set_animal.png",paths:["eyeofmatter"]},
+ {id:"khonsu",name:"Khonsu",sex:"m",img:"images/09_khonsu.png",paths:["hiddeninfluence"]},
+ {id:"wepwawet",name:"Wepwawet",sex:"m",img:"images/08_wepwawet.png",paths:["huntcatch"]},
+ {id:"geb",name:"Geb",sex:"m",img:"images/10_geb.png",paths:["timelocation"]}
 ];
+/* Deity lore compiled from data/Female_Divinities_Reference.pdf + data/Male_Divinities_Reference.pdf.
+   Name-block hieroglyph images extracted from the same references (images/glyphs/).
+   Fields absent from the reference are omitted and the caption skips them.
+   Shu's name-block is missing from the reference PDF (page duplicates Hu's block) — glyph omitted. */
+const DEITY_LORE={
+ maat:{glyph:"images/glyphs/maat.png",translit:"mAat · Gardiner mꜢꜤt · Budge Maāt",pron:"mah-AHT",
+  meaning:"“She who is righteous” — mAat “righteous” + .t “she”.",
+  features:"A woman with an ostrich feather atop her head, holding the was scepter (power) and the ankh (life).",
+  symbols:"Ostrich feather · vulture · the plinth",
+  roles:"Goddess of justice, truth and harmony. Weighs the heart on the scales against her feather of righteousness.",
+  epithets:[{t:"dr-isft",e:"removes wrong-doers"},{t:"dr-sbiw",e:"removes rebels"},{t:"Hnt imntt / nbt dwAt",e:"Mistress of the Underworld"},{t:"nbt pt",e:"Lady of heaven"},{t:"sAt rA",e:"daughter of Ra"},{t:"sDmt-sprw",e:"she who hears petitions"},{t:"sDmt-snmHw",e:"she who hears prayers"}],
+  invocation:{text:"Ma'at is good and its worth is lasting. It has not been disturbed since the day of its creator, whereas he who transgresses its ordinances is punished.",src:"Instruction of Ptahhotep"}},
+ sekhmet:{glyph:"images/glyphs/sekhmet.png",translit:"sxmt · Gardiner Sḫmt",pron:"SEKH-met",
+  meaning:"“She who is powerful” — sxm “power, mighty one” + .t “she”.",
+  symbols:"Fire · the sun · the colors red, yellow, orange, maroon and burgundy",
+  roles:"Goddess of flame, war, fertility and healing.",
+  epithets:[{t:"nbt nrw",e:"Lady of Terror"},{t:"nbt xAyt",e:"Lady of massacre"},{t:"wnmyt",e:"the Devouring Flame"},{t:"aA nsrt",e:"Great of flame"},{t:"nbt nsrt",e:"Lady of Flame"},{t:"irt-ra",e:"Eye of Ra"},{t:"nbt mAat",e:"Lady of Ma'at"},{t:"wrt HkAw",e:"Great of Magic"},{t:"nbt tAwy",e:"Lady of the two lands"},{t:"xnty pr-nsr",e:"Foremost of the house of flame"}],
+  invocation:{text:"When you encounter enemies in their barque, you will prevail over the enemies of Ra in the First Time, in this your name of Sekhmet.",src:"Edfu Temple inscription"}},
+ taweret:{glyph:"images/glyphs/taweret.png",translit:"tAwrt · Gardiner TꜢ-wrt",pron:"tah-WEH-ret",
+  meaning:"“She who is great.”",
+  features:"A bipedal hippopotamus with human breasts, feline hands and feet and a crocodile tail, often carrying the sa symbol of protection.",
+  symbols:"The sa symbol · hippopotamus · the right Wadjet Eye of Ra · the northern sky",
+  roles:"Goddess of fertility, women, childbirth, child-rearing and the home; a fearsome protector whose amulets were worn by pregnant women.",
+  epithets:[{t:"nbt m pt",e:"Lady of heaven"},{t:"sAt-ra",e:"daughter of Ra"},{t:"rrt",e:"the sow"},{e:"Mistress of the horizon"},{e:"She who removes waters"},{e:"Mistress of pure water"},{e:"Lady of the birthing house"}]},
+ het_heru:{glyph:"images/glyphs/het_heru.png",translit:"Hwt-Hr · Gardiner ḥwt-ḥr",pron:"het-HEH-roo · Greek Hathor",
+  meaning:"“Lady / House of Horus” — Hwt “house” + Hr “Horus”; the variant Ḥut-Ḥuret means “Lady of the House above”.",
+  features:"A woman wearing the sun disk between cow horns; a cow; or a human-cow hybrid; red-haired as the Seven Hathors.",
+  symbols:"Cow · falcon · lioness · milk · malachite · menit necklace · sistrum · turquoise · the Sothis star · Wadjet Eye · sycamore · papyrus · the number 7",
+  roles:"Goddess of the sky, love, fertility, beauty, joy, music, dance, motherhood, healing, childbirth, foreign lands and mining.",
+  epithets:[{t:"nbt-Dr",e:"Lady of the Universe"},{t:"nbt iwnt",e:"Lady of Dendera"},{t:"nbt mfkAt",e:"Mistress of Turquoise"},{t:"nbt pt",e:"Lady of heaven"},{t:"sAt ra",e:"Daughter of Ra"},{t:"sxmt",e:"She who is powerful"},{t:"nbt xbi",e:"Lady of the dance"}],
+  invocation:{text:"The beauty of Your face glitters when You rise — O come in peace.",src:"Hymn, Thebes"}},
+ iusaaset:{glyph:"images/glyphs/iusaaset.png",translit:"iw.s aA.s",pron:"yoo-sah-AH-set",
+  meaning:"“She who grows as she comes” — iw “come” + .s “she” + aA “great” + .s “she”.",
+  features:"A woman with a scarab upon her head.",
+  symbols:"The acacia tree",
+  roles:"Primal goddess, “grandmother of all the gods”; personifies the hand of god with which Atum created the world from himself.",
+  epithets:[{e:"Iusaaset at Heliopolis"}]},
+ auset:{glyph:"images/glyphs/auset.png",translit:"Ast · Gardiner Ꜣst · Budge Ȧust",pron:"ah-OO-set · Greek Isis",
+  meaning:"“Lady / She of the throne” — As or st “throne” + .t “female”.",
+  features:"A woman with a throne upon her head, or the solar disk between cow horns; sometimes winged.",
+  symbols:"Throne · the Tyet knot of Isis · cow horns · kite bird · scorpion · swallow · Shen ring · cobra · sistrum · sycamore and acacia",
+  roles:"Goddess of health, marriage, domestic life, womanhood, fertility, purification, weaving, nature, magic, family and wisdom; friend to slaves, sinners, artisans and the downtrodden; mother of the King through Horus.",
+  epithets:[{t:"Ast wrt HkAw",e:"Isis great in words of power"},{t:"Ast wrt nTrt mwt",e:"Isis great divine mother"},{t:"Hnwt-nTrw-nbw",e:"mistress of all gods"},{t:"mwt Hrw",e:"mother of Horus"},{t:"mwt-nTr",e:"god's mother"},{t:"nbt pt",e:"Lady of heaven"}],
+  invocation:{text:"Awake, Awake, Awake, Awake in peace, Lady of goodness.",src:"Prayer to Isis"}},
+ tefnut:{glyph:"images/glyphs/tefnut.png",translit:"tfnt, tfnwt",pron:"TEF-noot",
+  meaning:"Possibly “She of water” — tf + nw “water” + .t; also read as “to spit” (tfi) or “orphan” (tfn).",
+  features:"A lion-headed woman with pointed ears and uraeus headdress, sometimes crowned with the solar disk.",
+  symbols:"Lion · the colors green and blue · water · serpents",
+  roles:"Goddess of rain, air, moisture, weather, dew, lions, fertility and water.",
+  epithets:[{t:"Dt",e:"Forever — fixed, unchanging, eternal sameness"},{t:"mHyt nfrt",e:"Beautiful north wind"},{t:"tfn",e:"orphan"},{e:"10th God of the Nine from Heliopolis"}],
+  invocation:{text:"Atum said: Tefnut is my living daughter, she is together with her brother Shu. “Life” is his name, “truth” is her name — “life” sleeps with my daughter “truth”.",src:"Pyramid Texts"}},
+ sia:{glyph:"images/glyphs/sia.png",translit:"siA · Gardiner siꜢ",pron:"SEE-ah",
+  meaning:"“To perceive, to know.”",
+  features:"Anthropomorphic — ram-headed in the Old Kingdom — holding a papyrus scroll, standing on the solar barque.",
+  symbols:"Writing",
+  roles:"Deification of perception in the Heliopolitan Ennead; embodies reason, insight and wisdom; one of the fourteen creative powers of Amun-Ra. With Hu he guides the sun through its nocturnal journey — Hu at the bow of the barque, Sia at the stern — until it is reborn at dawn."},
+ ptah:{glyph:"images/glyphs/ptah.png",translit:"ptH · Gardiner ptḥ · Budge Ptaḥ",pron:"p-TAH",
+  meaning:"“One who creates” — ptH “to make, to form, to create”.",
+  features:"A green-skinned mummiform man with ceremonial beard and skull cap, standing on a plinth and holding a scepter that combines the ankh, the Djed pillar and the Was scepter.",
+  symbols:"Was scepter · ankh · Djed pillar · the Apis bull · the ear glyph · the Moringa tree",
+  roles:"God of creation, fertility, the arts, craftsmen, metalworking and architecture; the demiurge who existed before all things and created the universe by speaking — shaping thought (the heart) into speech (the tongue); formed men from clay on a potter's wheel.",
+  epithets:[{t:"it nTrw",e:"father of the gods"},{t:"nb mAat",e:"Lord of truth and righteousness"},{t:"nb HkA",e:"Lord of Magic"},{t:"msDr sDm",e:"the Ear that hears"},{t:"wr xrp Hmwt",e:"Greatest of the master craftsmen"}],
+  invocation:{text:"There is nobody who could live without Thee, because breath comes out of Thy nose permanently, and water out of Thy mouth… Thou makest green the land so that gods, humans and cattle have abundance.",src:"Hymn, Berlin Papyrus 3048"}},
+ anubis:{glyph:"images/glyphs/anubis.png",translit:"inpw · Gardiner ỉnpw · Budge Ȧnpu",pron:"AHN-poo · Greek Anubis",
+  meaning:"Possibly inpw “royal child”, or inp “to decay”; also read as “to swathe, to wrap around”.",
+  features:"A jackal- or dog-headed man, or a full canine.",
+  symbols:"The seated jackal · the Imiut fetish · Wadjet eye · Sekhem scepter",
+  roles:"Master embalmer and inventor of embalming, chief physician of the gods, guardian and guide of souls of the dead, master of the scales in the Hall of Judgment, messenger of the gods; personification of the Summer Solstice.",
+  epithets:[{t:"nb tA Dsr",e:"Lord of the Sacred Land"},{t:"xnty imntyw",e:"who is at the head of the Westerners"},{t:"wp-wAtw Smā",e:"opener of the ways, guide to the south"},{t:"iry maxAt",e:"Guardian of the scales"},{t:"wDa mAat",e:"weigher of righteousness"},{t:"tpy Dw.f",e:"He on his mountain"}],
+  invocation:{text:"Hail! Anpu, Ruler of the underworld, come forth — likewise I pray, let darkness depart… Protect my ba in the underworld."}},
+ heka:{glyph:"images/glyphs/heka.png",translit:"HkAw · Gardiner ḤkꜢw · Budge Ḥekau",pron:"HEH-kah",
+  meaning:"The activation of the Ka — “magic”.",
+  features:"Shown as a child or an adult god wearing the Hemhem crown or the Heka symbol, with ankh, flail and scepter; created by Atum at the beginning of time, “before duality had yet come into being”; strangles two wounded snakes — a possible root of the caduceus.",
+  symbols:"Snakes · caduceus · flail · scepter · ankh · the Ka sign · the Heka sign",
+  roles:"God of magic and medicine; fought and defeated two serpents on Ra's solar barque; one of the fourteen creative powers of Amun-Ra; his priesthood dealt with medicine and healing rituals.",
+  invocation:{text:"To me belonged the universe before you gods had come into being. You have come afterwards, because I am Heka.",src:"Coffin Texts, Spell 261"}},
+ shu:{translit:"Sw · Budge Šw",pron:"shoo",
+  meaning:"“He who ascends” — Sw “ascend”; possibly “the void” — Sw “empty”; swt “feather”, his headdress.",
+  features:"A man with one or more ostrich feathers upon his head; sometimes lion-form.",
+  symbols:"Ostrich feather · sky blue",
+  roles:"God of air, wind, fog and clouds; represents calm and thus Ma'at; separated Nut, the sky, from Geb, the earth.",
+  epithets:[{t:"nHH",e:"forever — cyclical, eternally renewed"},{t:"TAw nDm",e:"Sweet wind"},{t:"TAw",e:"the wind, the breath"}]},
+ set_higher:{glyph:"images/glyphs/sutekh.png",translit:"stX · Gardiner Śtẖ · Budge Sutekh",pron:"SOO-tekh · SET",
+  meaning:"Disputed — readings include “overmaster, overpowering”, “turning back”, txtx “to confuse”, tStS “to crush”, swtx “force of the wind”; the true meaning is considered lost.",
+  features:"The unidentified Set-animal (Nehes / Sha) with its forked tail; sometimes linked to a donkey.",
+  symbols:"Storms · Was-scepter · the Set-animal · donkey · crocodile · hippopotamus · scorpion · snakes",
+  roles:"God of storms, the red desert, war and foreigners; stands guard on Ra's barque each night, spearing the serpent of chaos so the sun may rise.",
+  epithets:[{t:"aA pHty",e:"He with great strength"},{t:"dSr",e:"the Red"},{t:"nb DSrt",e:"Lord of the Desert"},{t:"nb qri",e:"Lord of the storm"},{t:"nb TAw",e:"Lord of the wind"},{t:"wr HkAw",e:"Great of magic"}],
+  invocation:{text:"Provide yourself with the Great of Magic, Seth who dwells in Ombos, Lord of Upper Egypt… you are more ba and more powerful than the gods of Upper Egypt.",src:"Pyramid Texts"}},
+ hu:{glyph:"images/glyphs/hu.png",translit:"Hw",pron:"hoo",
+  meaning:"The name relates to “authoritative utterance” — speech so effective that it creates.",
+  features:"Human, falcon- or ram-headed.",
+  roles:"Personification of the first word Atum uttered at creation — the power of the spoken word; closely associated with Ptah; one of the fourteen creative powers of Amun-Ra.",
+  epithets:[{e:"authoritative utterance — that speech which is so effective that it creates"}]},
+ ausar:{glyph:"images/glyphs/ausar.png",translit:"wsir, Asr · Gardiner Wśỉr · Budge Ȧusȧr",pron:"ow-SAR · Greek Osiris",
+  meaning:"Debated — most likely “He of the throne”, As or ws “throne” + irt “accomplish, create”; alternate readings include “seat of the eye of the Sun”.",
+  features:"Wears the headdress of the West; mummiform; god of fertility and rebirth.",
+  symbols:"Green and black · the Djed pillar · crook and flail · Atef crown · ostrich feathers · the sacred barque · the Bennu phoenix · wheat · willow · sycamore · acacia · turquoise",
+  roles:"God of the afterlife, death, life, resurrection and eternal rule.",
+  epithets:[{t:"nb Ddw",e:"Lord of Busiris"},{t:"nb imntt",e:"Lord of the West"},{t:"nb nHH · HqA-Dt",e:"Lord of eternity"},{t:"wnn-nfr",e:"Wenennefer — he who is continually young and perfect"},{t:"xnty-imntyw",e:"Foremost of the Westerners"},{t:"wrt-HkAw",e:"Great of magic"}],
+  invocation:{text:"Hail to you, Lord of the Sacred Land, with the two horns, exalted in the atef-crown.",src:"Hymn, Tomb of Kheruef"}},
+ atum:{glyph:"images/glyphs/atum.png",translit:"itm, tm, tmw · Gardiner Ỉtm · Budge Ȧtem, Temu",pron:"ah-TOOM",
+  meaning:"“The complete one” — tm “be complete, entire, everything, the universe”; “the finisher”.",
+  features:"Born from a blue lotus bud on the waters of Nu; wears the double crown, sometimes with the solar disk or a ram's head.",
+  symbols:"The evening sun · snake · scarab · lizards · the ished-tree · rams · the Mnevis bull · lions · eels",
+  roles:"Solar deity, “closer of the day”; the first god, self-created on the primeval mound rising from Nun; spat forth Shu (air) and Tefnut (moisture); journeys through the underworld each night before rising again at dawn.",
+  epithets:[{t:"it nTrw",e:"Father of gods"},{t:"it nisw",e:"Father of the Pharaoh"},{t:"nb tAwy iwnw",e:"Lord of the two lands and Heliopolis"},{t:"itmw nb innw nTr aA-Ht",e:"Atum, lord of Heliopolis, great god of the great house"}],
+  invocation:{text:"I am Atum, the creator of the Eldest Gods; I am he who gave birth to Shu; I am that Great He-She… I took my space in the place of my will.",src:"Coffin Texts I, 161"}},
+ heru:{glyph:"images/glyphs/heru.png",translit:"Hr, Hrw · Gardiner Ḥr(.w) · Budge Ḥeru",pron:"HEH-roo · Greek Horus",
+  meaning:"“Falcon”, “the distant one”, “one who is above”, “he who is the day”.",
+  features:"Falcon-headed.",
+  symbols:"Falcon · sparrow hawk · the Wadjet Eye · acacia · Shen ring",
+  roles:"God of the sun, sky, justice, victory and kingship; protector and avenger of his father Osiris.",
+  epithets:[{t:"bik nTr",e:"divine falcon"},{t:"Hrw ka-nakht",e:"Horu the mighty bull"},{t:"Hrw nD it.f",e:"Horus, protector of his Father"},{t:"nb pt · nb Axt · nb tAwy",e:"Lord of the sky, the horizon, the two lands"},{t:"wr-pHty",e:"who has great strength"},{t:"nfr-Hr",e:"Beautiful of face, who shines in the morning and brightens sky and earth at his rising"}],
+  invocation:{text:"Horus is the avenger of his father. Now the raising of the Djed pillar in Djeddjedu is the shoulder of Horus, president of the city."}},
+ khonsu:{glyph:"images/glyphs/khonsu.png",translit:"xnsw · Budge Khensu",pron:"KHON-soo",
+  meaning:"“He who travels” — xns “to travel” + sw “he”.",
+  features:"A youth in mummy wrappings with green skin, a king's beard and a menat necklace; or falcon-headed; wears the side-lock and the crescent-beneath-full-moon headdress.",
+  symbols:"The number 9 · moon · snakes · baboon · falcon · lotus",
+  roles:"God of the new moon; exorcist and healer of the New Kingdom; protector against wild animals; watches over night travelers; with Thoth he marks the passage of time; instrumental in creating new life.",
+  epithets:[{t:"aA-pHty",e:"great of strength"},{t:"wHm-rnp",e:"he who repeats rejuvenation"},{t:"xnsw pA iry sxrw m wAst",e:"Khonsu of Thebes, maker of men's destinies"},{t:"xnsw pA iri sxr.w",e:"Khonsu the Counsellor"}],
+  invocation:{text:"It is sweet, your grace, Khonsu, to the orphan.",src:"Stela Turin 50052"}},
+ wepwawet:{glyph:"images/glyphs/wepwawet.png",translit:"wp-wAwt · Gardiner wp-wꜢw.t · Budge Ȧp-uat",pron:"wep-WAH-wet",
+  meaning:"“Opener of the path, of the roadways” — wp(i) “open, judge, discern” + wAwt “ways, roads”.",
+  features:"An anthropomorphic gray or white wolf-jackal figure carrying bow, arrows and shield.",
+  symbols:"Bow and arrows · shield · mace · adze · roadways · the gray wolf · Was scepter",
+  roles:"God of warfare and hunting; protector of the king in battle; opener of the ways for the deceased in the Duat; personifies the Winter Solstice and the opening of the roads of the South, complementing Anpu who opens the roads of the North.",
+  epithets:[{t:"sxm tAwy",e:"power of the two lands"},{t:"wpwAwt nb tA Dsr Hry-ib AbDw",e:"Wepwawet, lord of the holy land, dwelling in Abydos"}],
+  invocation:{text:"Hail to You, Upuaut, Bull of offerings and Lord of provisions, Great of the Ureret-Crown… Eldest God, who came forth from His mother's womb already wise.",src:"Offering chapel of Sesostri, 13th Dynasty"}},
+ geb:{glyph:"images/glyphs/geb.png",translit:"gb, gbb · Budge Seb, Qeb, Geb",pron:"geb",
+  meaning:"“Earth, ground” — gbb.",
+  features:"A man with a goose upon his head, or a man with brown skin stretched out to represent the earth.",
+  symbols:"Earth · goose · the colors brown and green · crop growth · snakes · bulls · barley · reeds · ram · crocodile · hare",
+  roles:"God of the earth.",
+  epithets:[{t:"iwa mnx n Sw",e:"excellent heir of Shu"},{t:"sA-tA",e:"Son of earth"},{t:"nHbw-kAw",e:"father of snakes"},{t:"ngg wr",e:"the Great Honker"}],
+  invocation:{text:"It is Geb who has opened your mouth, that your heart may be for you."}}
+};
+DEITY_LORE.set_lower=DEITY_LORE.set_higher;
 const KAU_SEATS=[
  {n:1,seat:"Seekh",gloss:"spirit; intelligence",deity:"Heru",tier:"G/T3",contested:true,alt:null,stable:false,img:"images/heru_pschent_generated.png"},
  {n:2,seat:"Nekht",gloss:"strength; victory",deity:"Heru-Behudet",tier:"G/T3",contested:false,alt:null,stable:true,img:"images/05_heru_behudet.png"},
@@ -469,16 +629,17 @@ svg.appendChild(deityLayer); // labels render above the spheres — halos keep t
 
 /* ================= modes: paths gallery ================= */
 const treewrap=document.getElementById('treewrap');
-const rulerGallery=document.getElementById('rulerGallery');
+const galleryF=document.querySelector('#galleryF .gal-grid');
+const galleryM=document.querySelector('#galleryM .gal-grid');
 let activeMode=null, activeRuler=null;
 function buildRulerGallery(){
-  rulerGallery.innerHTML='';
+  galleryF.innerHTML=''; galleryM.innerHTML='';
   RULERS.forEach(r=>{
     const b=document.createElement('button');
     b.className='ruler-btn'; b.dataset.id=r.id; b.title=r.name+' · '+r.paths.length+' path(s)';
     b.innerHTML='<div class="img-frame"><img src="'+img(r.img)+'" alt="'+r.name+'"></div><div class="rlab">'+r.name+'</div>';
     b.addEventListener('click',()=>selectRuler(r.id));
-    rulerGallery.appendChild(b);
+    (r.sex==='f'?galleryF:galleryM).appendChild(b);
   });
 }
 function highlightRulerPaths(rulerId){
@@ -489,13 +650,13 @@ function highlightRulerPaths(rulerId){
     const g=pathGroups[p.id], tg=pathLabels[p.id];
     g.classList.remove('ruler-hilite','ruler-dim');
     tg.classList.remove('ruler-hilite','ruler-dim');
-    if(activeMode==='paths'){
+    if(activeMode==='paths' && rulerId){
       const on=ruled.has(p.id);
       g.classList.add(on?'ruler-hilite':'ruler-dim');
       tg.classList.add(on?'ruler-hilite':'ruler-dim');
     }
   });
-  rulerGallery.querySelectorAll('.ruler-btn').forEach(b=>{
+  document.querySelectorAll('.ruler-btn').forEach(b=>{
     b.classList.toggle('on',b.dataset.id===rulerId);
     b.classList.toggle('dim',!!rulerId && b.dataset.id!==rulerId);
   });
@@ -505,32 +666,40 @@ function selectRuler(id){
   highlightRulerPaths(id);
   const r=RULERS.find(x=>x.id===id);
   if(!r) return;
-  const pathList=r.paths.map(pid=>{
+  const L=DEITY_LORE[r.id]||{};
+  const pathList='<ul class="ruled">'+r.paths.map(pid=>{
     const p=PATHS.find(x=>x.id===pid), m=PATH_META[pid];
-    return '<li><b>'+p.name+'</b> · '+PATH_LETTERS[pid]+' · <i>'+(m?m.subtitle:'')+'</i></li>';
-  }).join('');
+    return '<li><b>'+p.name+'</b>'+(m?' · <i>'+m.subtitle+'</i>':'')+'</li>';
+  }).join('')+'</ul>';
+  const epithets=L.epithets?'<ul class="epithets">'+L.epithets.map(e=>'<li>'+(e.t?'<span class="tr">'+e.t+'</span> — ':'')+e.e+'</li>').join('')+'</ul>':'';
+  const sub=[L.pron?'“'+L.pron+'”':'',L.translit||''].filter(Boolean).join(' · ');
   panel.innerHTML=`
     <div class="eyebrow">Path ruler</div>
     ${portraitHtml(r.img,r.name)}
     <h2>${r.name}</h2>
-    <h3 class="route">v3.32 · Paths mode · ${r.paths.length} path${r.paths.length>1?'s':''}</h3>
-    ${field('Paths ruled',pathList)}
-    <div class="prov">Ruler→path mapping from reconciled_tree_v2.json + Path_Trump_Book_Entries_v3_FINAL. Click a highlighted path for full lore.</div>`;
+    ${sub?`<h3 class="route">${sub}</h3>`:''}
+    ${L.glyph?`<div class="glyph-block"><img src="${img(L.glyph)}" alt="${r.name} written in hieroglyphs"><div class="cap">The name in hieroglyphs · period variants</div></div>`:''}
+    ${field('Name meaning',L.meaning)}
+    ${field('Features',L.features)}
+    ${field('Symbols',L.symbols)}
+    ${field('Roles',L.roles)}
+    ${field('Epithets',epithets)}
+    ${L.invocation?`<div class="field"><div class="k">Invocation</div><blockquote class="invoke">${L.invocation.text}${L.invocation.src?'<span class="src">— '+L.invocation.src+'</span>':''}</blockquote></div>`:''}
+    ${field('Paths ruled',pathList)}`;
 }
 function showPathStudy(pid){
   const p=PATHS.find(x=>x.id===pid), m=PATH_META[pid];
   if(!p||!m) return;
   const route=p.pts.map((q,i)=> (i>0&&i<p.pts.length-1)?'→ '+NODES[q].kem+' →':NODES[q].kem).join(' ');
   panel.innerHTML=`
-    <div class="eyebrow">Path · ${PATH_LETTERS[pid]||''}</div>
+    <div class="eyebrow">Path</div>
     <h2>${p.name}</h2>
     <h3 class="route"><i>${m.subtitle}</i> · ${route}</h3>
     ${field('Marker · '+p.mtype,p.marker)}
     ${field('Ruler',p.ruler)}
     ${field('Lore',m.lore)}
     ${field('Function in the tree',m.function)}
-    ${p.circuit?field('Circuit role',p.circuit):''}
-    <div class="prov">Lore condensed from Path_Trump_Book_Entries_v3_FINAL · function from Path_Trump_Semantics_v2 + Dua_Station_Operating_Doctrine (pending).</div>`;
+    ${p.circuit?field('Circuit role',p.circuit):''}`;
 }
 
 /* ================= modes: kau ring ================= */
@@ -733,7 +902,7 @@ function field(k,v){return v?`<div class="field"><div class="k">${k}</div><div c
 function clearSel(){document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));}
 function home(lens){
   lens=lens|| (activeMode? MODES.find(m=>m.id===activeMode) : LENSES.find(l=>l.id===activeLens));
-  const ver='v3.32 · closed canon + Paths + Kau modes';
+  const ver='v3.33 · closed canon + Paths + Kau modes';
   panel.innerHTML=`
    <div class="eyebrow">${activeMode?'Mode':'Lens'}</div>
    <h2>${lens.name}</h2>

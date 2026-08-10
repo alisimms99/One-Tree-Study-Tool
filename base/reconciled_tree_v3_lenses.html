@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reconciled Tree — v3.34 · Paths + Kau</title>
+<title>The Reconciled Tree — v3.36 · Paths + Kau</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -33,8 +33,21 @@
   nav#rail button:hover{color:var(--papyrus)}
   nav#rail button.on{color:var(--gold); border-left-color:var(--gold); background:#171C30}
 
-  #treewrap{flex:1 1 auto; min-width:0; overflow:auto; display:flex; justify-content:center}
-  svg{height:100%; min-height:640px; display:block}
+  #treewrap{flex:1 1 auto; min-width:0; overflow:hidden; display:flex}
+  #stage{flex:1 1 auto; min-width:0; position:relative; display:flex}
+  #zoomport{flex:1 1 auto; min-width:0; overflow:auto; display:flex; cursor:grab}
+  #zoomport.panning{cursor:grabbing}
+  svg{height:100%; min-height:640px; display:block; margin:auto; flex:0 0 auto}
+  #zoomctl{position:absolute; top:10px; right:12px; display:flex; flex-direction:column; gap:5px; z-index:6; align-items:flex-end}
+  #zoomctl button{width:30px; height:30px; background:#171C30; border:1px solid #3A4060; border-radius:5px;
+    color:#CFC7B0; font-family:'IBM Plex Mono',monospace; font-size:15px; line-height:1; cursor:pointer;
+    transition:border-color .15s, color .15s}
+  #zoomctl button:hover{border-color:var(--gold); color:var(--gold)}
+  #zoomctl button:disabled{opacity:.35; cursor:default}
+  #zoomctl #zoomReset{font-size:9.5px}
+  #panpad{display:grid; grid-template-columns:repeat(3,21px); grid-template-areas:'. up .' 'left down right'; gap:2px; margin-top:2px}
+  #panpad #panUp{grid-area:up} #panpad #panLeft{grid-area:left} #panpad #panDown{grid-area:down} #panpad #panRight{grid-area:right}
+  #zoomctl #panpad button{width:21px; height:21px; font-size:8px; padding:0}
 
   aside{flex:0 0 340px; max-width:40%; background:var(--papyrus); color:var(--ink);
     border-left:3px solid var(--gold); overflow-y:auto; padding:20px 20px 40px;}
@@ -52,7 +65,7 @@
 
   /* deity caption — finished-product layout */
   .glyph-block{margin:2px 0 14px; text-align:center}
-  .hiero-name{font-family:'Noto Egyptian Subset','Noto Sans Egyptian Hieroglyphs',serif; font-size:34px; line-height:1.3;
+  .hiero-name{font-family:'Noto Egyptian Subset','Noto Sans Egyptian Hieroglyphs',serif; font-size:52px; line-height:1.2;
     color:#A8821F; letter-spacing:.05em; text-shadow:0 1px 0 rgba(255,246,214,.7)}
   .glyph-block .cap{font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:#8A6D1F; margin-top:5px}
   .glyph-block .flag{font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:.14em; text-transform:uppercase; color:#A0522D; margin-top:2px}
@@ -108,7 +121,7 @@
   @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 
   /* —— Paths mode —— */
-  #treewrap{flex-direction:row; align-items:stretch; justify-content:center}
+  #treewrap{flex-direction:row; align-items:stretch}
   .ruler-side{display:none; flex:0 0 176px; flex-direction:column; background:#12182A; padding:6px 6px 10px; overflow-y:auto}
   #galleryF{border-right:1px solid #2A3050}
   #galleryM{border-left:1px solid #2A3050}
@@ -143,15 +156,38 @@
   .kau-seat.contested circle{stroke:#C0392B; stroke-width:2.2}
   .kau-seat:hover circle,.kau-seat:focus-visible circle{filter:brightness(1.3)}
   .kau-seat.sel circle{stroke:var(--gold); stroke-width:3.2}
-  .kseat-num{font-family:'IBM Plex Mono',monospace; font-size:8px; fill:#8A91AC; text-anchor:middle; pointer-events:none}
-  .kseat-name{font-family:'Cinzel',serif; font-size:10px; font-weight:600; letter-spacing:.06em; fill:#EDE4CC; text-anchor:middle; pointer-events:none}
+  .kseat-num{font-family:'IBM Plex Mono',monospace; font-size:9px; fill:#8A91AC; text-anchor:middle; pointer-events:none}
+  .kseat-name{font-family:'Cinzel',serif; font-size:12px; font-weight:600; letter-spacing:.06em; fill:#EDE4CC; pointer-events:none}
   .kseat-gloss{font-family:'IBM Plex Mono',monospace; font-size:8px; fill:#A8B0C8; text-anchor:middle; pointer-events:none}
-  .kseat-alt{font-family:'IBM Plex Mono',monospace; font-size:7.5px; fill:#9A8A50; font-style:italic; text-anchor:middle; pointer-events:none}
-  .kseat-tier{font-family:'IBM Plex Mono',monospace; font-size:7.5px; fill:#D4A93C; text-anchor:middle; pointer-events:none}
-  .kcontest{font-family:'IBM Plex Mono',monospace; font-size:7.5px; fill:#E05040; text-anchor:middle; pointer-events:none}
-  .kau-portrait{pointer-events:none}
-  .barque-img{pointer-events:none}
+  .kau-side{display:none; flex:0 0 196px; flex-direction:column; background:#12182A; padding:6px 6px 10px; overflow-y:auto}
+  #kauL{border-right:1px solid #2A3050}
+  #kauR{border-left:1px solid #2A3050}
+  #treewrap.kau-mode .kau-side{display:flex}
+  .kau-list{display:flex; flex-direction:column; gap:5px}
+  .kau-card{display:flex; gap:7px; align-items:center; background:#171C30; border:2px solid #3A4060; border-radius:5px;
+    padding:4px 6px; cursor:pointer; text-align:left; width:100%; transition:border-color .15s}
+  .kau-card:hover{border-color:#565B72}
+  .kau-card.on{border-color:var(--gold)}
+  .kau-card.contested{border-left-color:#C0392B; border-left-width:3px}
+  .kau-card .kc-img{flex:0 0 34px; height:62px; display:flex; align-items:flex-end; justify-content:center;
+    background:#0E1220; border-radius:3px; overflow:hidden}
+  .kau-card .kc-img img{max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block}
+  .kau-card .kc-body{min-width:0; flex:1 1 auto}
+  .kau-card .kc-name,.kau-card .kc-gloss,.kau-card .kc-meta{display:block}
+  .kau-card .kc-name{font-family:'Cinzel',serif; font-size:11px; font-weight:600; letter-spacing:.04em; color:#EDE4CC; line-height:1.25}
+  .kau-card .kc-name .n{font-family:'IBM Plex Mono',monospace; font-size:8px; color:#8A91AC; margin-right:4px}
+  .kau-card .kc-gloss{font-family:'IBM Plex Mono',monospace; font-size:8px; color:#A8B0C8; line-height:1.35; margin-top:1px}
+  .kau-card .kc-meta{font-family:'IBM Plex Mono',monospace; font-size:7.5px; color:#D4A93C; line-height:1.35; margin-top:1px}
+  .kau-card .kc-meta .warn{color:#E05040}
+  .kau-card .kc-meta .alt{color:#9A8A50; font-style:italic}
+  .pgroup.kau-path-hilite .path-line{stroke:var(--gold); stroke-width:3.2}
+  .lg.kau-path-hilite .plabel{fill:var(--gold); font-size:13px; stroke:#0A0E18; stroke-width:6px}
+  .lg.kau-path-hilite .pmark{fill:#F5E6A8; font-size:9.5px; stroke-width:4.5px}
+  .sphere.kau-hilite circle.body{stroke:var(--gold); stroke-width:4; filter:drop-shadow(0 0 7px rgba(212,169,60,.75))}
+  .barque-img{cursor:pointer; outline:none}
   .barque-img .kseat-name{font-size:11px; fill:var(--gold)}
+  .barque-img:hover image,.barque-img:focus-visible image{filter:brightness(1.3)}
+  .barque-img.sel .kseat-name{fill:#F5E6A8}
   .benefact{font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:.08em; fill:var(--gold); pointer-events:none}
   .benefact-bg{fill:#171C30; stroke:var(--gold); stroke-width:1; pointer-events:none; opacity:.92}
   aside .portrait-wrap{text-align:center; margin:4px 0 14px}
@@ -162,7 +198,7 @@
 <body>
 <header>
   <h1>THE RECONCILED TREE</h1>
-  <div class="sub"><b>v3.34</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
+  <div class="sub"><b>v3.36</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
 </header>
 <main>
   <nav id="rail" aria-label="Lenses"></nav>
@@ -171,7 +207,30 @@
       <div class="gal-head">♀ Rulers</div>
       <div class="gal-grid"></div>
     </div>
-    <svg id="tree" viewBox="0 0 800 1150" role="img" aria-label="The Reconciled Tree with switchable lenses"></svg>
+    <div id="kauL" class="kau-side" aria-label="Kau seats 1 to 7">
+      <div class="gal-head">Kau · Seats 1–7</div>
+      <div class="kau-list"></div>
+    </div>
+    <div id="stage">
+      <div id="zoomport">
+        <svg id="tree" viewBox="0 0 800 1150" role="img" aria-label="The Reconciled Tree with switchable lenses"></svg>
+      </div>
+      <div id="zoomctl" role="group" aria-label="Zoom and pan controls">
+        <button id="zoomIn" title="Zoom in" aria-label="Zoom in">+</button>
+        <button id="zoomOut" title="Zoom out" aria-label="Zoom out">−</button>
+        <button id="zoomReset" title="Reset zoom" aria-label="Reset zoom">1×</button>
+        <div id="panpad" role="group" aria-label="Pan controls">
+          <button id="panUp" title="Pan up" aria-label="Pan up">▲</button>
+          <button id="panLeft" title="Pan left" aria-label="Pan left">◀</button>
+          <button id="panDown" title="Pan down" aria-label="Pan down">▼</button>
+          <button id="panRight" title="Pan right" aria-label="Pan right">▶</button>
+        </div>
+      </div>
+    </div>
+    <div id="kauR" class="kau-side" aria-label="Kau seats 8 to 14">
+      <div class="gal-head">Kau · Seats 8–14</div>
+      <div class="kau-list"></div>
+    </div>
     <div id="galleryM" class="ruler-side" aria-label="Path rulers — masculine">
       <div class="gal-head">♂ Rulers</div>
       <div class="gal-grid"></div>
@@ -186,7 +245,7 @@ const IMG_BASE=(()=>{const p=location.pathname||location.href||'';return (/\/bas
 function img(p){return (p||'').replace(/^images\//,IMG_BASE);}
 function portraitHtml(src,alt){return '<div class="portrait-wrap"><img class="portrait-preview" src="'+img(src)+'" alt="'+alt+'"></div>';}
 
-/* ================= CANON v3.34 ================= */
+/* ================= CANON v3.36 ================= */
 const NODES = {
  kether:{x:400,y:95,r:48,c:"#F2EBD7",num:"0",seph:"Kether",kem:"AMEN",planet:"SOURCE"},
  chokmah:{x:595,y:300,r:46,c:"#C9CFDD",num:"1",seph:"Chokmah",kem:"ATUM",planet:"CONSTELLATIONS"},
@@ -291,7 +350,7 @@ const PATHS = [
  {id:"flame",name:"Flame of Consumption",pts:["binah","chokmah"],marker:"Elemental Fire · Khepesh (Big Dipper) “MSXTYW” · Orion",mshort:"FIRE · KHEPESH",mtype:"element",ruler:"Sekhmet",el:"fire",lab:{t:.5,dy:-9}},
  {id:"skillcommand",name:"Divine Skill & Command",pts:["kether","ausar","tiphereth"],marker:"Orion",mtype:"star",ruler:"Ptah",lab:{t:.28,dx:14,rot:90}},
  {id:"fortress",name:"Mobile Fortress",pts:["binah","ausar","chesed"],marker:"Cancer",mtype:"sign",ruler:"Taweret",lab:{t:.269,dy:-10}},
- {id:"conjoin",name:"Conjoining & Separation",pts:["chokmah","ausar","gevurah"],marker:"Gemini",mtype:"sign",ruler:"Anubis — psychopomp",lab:{t:.75,dy:13,rot:"auto",lines:["CONJOINING &","SEPARATION"]}},
+ {id:"conjoin",name:"Conjoining & Separation",pts:["chokmah","ausar","gevurah"],marker:"Gemini",mtype:"sign",ruler:"Anpu (Anubis) — psychopomp",lab:{t:.75,dy:13,rot:"auto",lines:["CONJOINING &","SEPARATION"]}},
  {id:"dwelling",name:"Fertile Dwelling",pts:["binah","gevurah"],marker:"Virgo",mtype:"sign",ruler:"Het-Heru",lab:{t:.5,dx:-17,rot:"auto"}},
  {id:"revelation",name:"Flowing Revelation",pts:["chokmah","chesed"],marker:"Aquarius",mtype:"sign",ruler:"Heka",lab:{t:.5,dx:19,rot:"auto"}},
  {id:"dualcurrent",name:"The Dual Current",pts:["gevurah","chesed"],marker:"Electricity ↔ Magnetism",mshort:"E ↔ M",mtype:"principle",ruler:"Shu",el:"air",lab:{t:.5,dy:-9}},
@@ -328,7 +387,7 @@ const PATH_META={
  flame:{subtitle:"The Fuse",lore:"Sekhmet is the Devouring Flame, the Eye sent forth in the Book of the Heavenly Cow — slaughter halted only by seven thousand jars of red-ochre beer. Seven Arrows, year-turn slaughterers: fire that purges fatal flaws.",function:"Purifying fire doing exactly its office — the overcurrent burned off so the installation survives; righteous force, cauterization, the will to burn through what must go."},
  skillcommand:{subtitle:"The Central Channel",lore:"Ptah: what the heart conceives, the tongue commands, the hand executes — Memphite Theology on the Shabaka Stone. Master craftsman whose divine skill shapes existence; the architect before the current is applied.",function:"Word becomes work — crown-to-will open; creative authority with craft behind it. Central channel where intention crosses into reality."},
  fortress:{subtitle:"The Enclosure",lore:"Taweret, the Great One — Middle Kingdom birth tusks inscribed for protection by day and night. Northern-sky hippopotamus holding the mooring-post; fierce defense of the vulnerable before threat crosses the threshold.",function:"Protection that travels with the protected — guardianship by day and night; the mooring-post held fast while everything wheels around it."},
- conjoin:{subtitle:"The Adze",lore:"Anubis at the balance, hand on the cord steadying the plumb bob; embalmer who binds the dismembered. Presides at the threshold — the mouth opened, passage crossed under ritual exactitude.",function:"Right discernment of union and division — the clean cut that preserves, the true joining; threshold crossed under a steady hand at the balance."},
+ conjoin:{subtitle:"The Adze",lore:"Anpu at the balance, hand on the cord steadying the plumb bob; embalmer who binds the dismembered. Presides at the threshold — the mouth opened, passage crossed under ritual exactitude.",function:"Right discernment of union and division — the clean cut that preserves, the true joining; threshold crossed under a steady hand at the balance."},
  dwelling:{subtitle:"The Receptacle",lore:"Ḥwt-Ḥr — House of Horus; the ruler's name is the path-name. Lady of the Southern Sycamore pouring water and bread; love made a place where things grow.",function:"The house that feeds — the Dwelling by name; love made a place where things grow; nourishment and containment."},
  revelation:{subtitle:"The Step-Down",lore:"Heka — older than the gods (Coffin Texts); the one carrier every neter can ride. Not spell but fundamental physics: the conductive medium by which divine power steps down to the mundane.",function:"The higher pours in at a voltage the vessel can take — genuine revelation, invocation that lands. Provocation vector: operator strikes the Wheel via this path (Operating Doctrine §3)."},
  dualcurrent:{subtitle:"The Twin Winds",lore:"Shu holds Nut and Geb apart — the generative gap, breath of life, calm and Ma'at. The same substance at different values names why the current is bidirectional; nothing below Shu/Tefnut can act without them.",function:"Productive tension — oscillation that generates; two poles held apart so novelty sparks in the gap. Delivery mechanism: carries provoked charge to Het-Heru or Heru-Behudet poles (§3)."},
@@ -356,15 +415,15 @@ const RULERS=[
  {id:"tefnut",name:"Tefnut",sex:"f",img:"images/10_tefnut.png",paths:["immersion"]},
  {id:"sia",name:"Sia",sex:"m",img:"images/Sia_revised_raw.png",paths:["images"]},
  {id:"ptah",name:"Ptah",sex:"m",img:"images/04_ptah.png",paths:["skillcommand","appliedskill"]},
- {id:"anubis",name:"Anubis",sex:"m",img:"images/05_anubis.png",paths:["conjoin"]},
+ {id:"anubis",name:"Anpu (Anubis)",sex:"m",img:"images/05_anubis.png",paths:["conjoin"]},
  {id:"heka",name:"Heka",sex:"m",img:"images/03_heka.png",paths:["revelation"]},
  {id:"shu",name:"Shu",sex:"m",img:"images/06_shu.png",paths:["dualcurrent"]},
- {id:"set_higher",name:"Set (higher)",sex:"m",img:"images/08_sutekh.png",paths:["coiledpower"]},
+ {id:"set_higher",name:"Set (higher form)",sex:"m",img:"images/08_sutekh.png",paths:["coiledpower"]},
  {id:"hu",name:"Hu",sex:"m",img:"images/Hu_revised_raw.png",paths:["utterance"]},
  {id:"ausar",name:"Ausar",sex:"m",img:"images/11_ausar.png",paths:["regeneration"]},
  {id:"atum",name:"Atum",sex:"m",img:"images/Atum_34_final.png",paths:["impulse"]},
  {id:"heru",name:"Heru",sex:"m",img:"images/heru_pschent_generated.png",paths:["solarrising"]},
- {id:"set_lower",name:"Set (lower)",sex:"m",img:"images/12_set_animal.png",paths:["eyeofmatter"]},
+ {id:"set_lower",name:"Set (lower form)",sex:"m",img:"images/12_set_animal.png",paths:["eyeofmatter"]},
  {id:"khonsu",name:"Khonsu",sex:"m",img:"images/09_khonsu.png",paths:["hiddeninfluence"]},
  {id:"wepwawet",name:"Wepwawet",sex:"m",img:"images/08_wepwawet.png",paths:["huntcatch"]},
  {id:"geb",name:"Geb",sex:"m",img:"images/10_geb.png",paths:["timelocation"]}
@@ -516,7 +575,7 @@ const KAU_SEATS=[
  {n:5,seat:"Uha",gloss:"prosperity",deity:"Het-Heru",tier:"G/T3",contested:false,alt:"Geb",stable:false,img:"images/05_het_heru.png"},
  {n:6,seat:"Zef",gloss:"nourishment; fullness",deity:"Het-Heru",tier:"G/T3",contested:false,alt:null,stable:true,img:"images/05_het_heru.png"},
  {n:7,seat:"Sep",gloss:"wealth",deity:"Amen-Ra",tier:"G/T3",contested:false,alt:null,stable:false,img:"images/04_amen_ra.png"},
- {n:8,seat:"Amen",gloss:"burial; service",deity:"Yesod-station",tier:"G/T3",contested:false,alt:"Atum",stable:false,img:"images/07_auset.png"},
+ {n:8,seat:"Amen",gloss:"burial; service",deity:"Auset",tier:"G/T3",contested:false,alt:"Atum",stable:false,img:"images/07_auset.png"},
  {n:9,seat:"Maa",gloss:"sight; doing/making",deity:"Ma'at",tier:"T2+G",contested:true,alt:null,stable:true,img:"images/01_maat.png",note:"downward sight seated; upward sight at Hu-ruled path"},
  {n:10,seat:"Sund",gloss:"abundance",deity:"Fertile Dwelling",tier:"G/T3",contested:false,alt:"Het-Heru",stable:true,img:"images/05_het_heru.png"},
  {n:11,seat:"Set",gloss:"stability",deity:"Sutekh",tier:"G/T3→T1",contested:true,alt:null,stable:false,img:"images/08_sutekh.png",note:"bearing the was in nobility; barque-prow hinge"},
@@ -525,12 +584,11 @@ const KAU_SEATS=[
  {n:14,seat:"Suu",gloss:"taste",deity:"Geb",tier:"G/T3",contested:false,alt:null,stable:false,img:"images/10_geb.png"}
 ];
 const BARQUE_OVERLAY=[
- {name:"Hu",img:"images/Hu_revised_raw.png",x:228,y:-75,w:68,h:120,role:"Presides Sdem (#12); upward-sight of Maa (#9)"},
- {name:"Sia",img:"images/Sia_revised_raw.png",x:366,y:-85,w:68,h:120,role:"No seat — perception entire from the barque (D2)"},
- {name:"Heka",img:"images/03_heka.png",x:504,y:-75,w:68,h:120,role:"Routed to Flowing Revelation path; absence displayed not repaired"}
+ {name:"Hu",img:"images/Hu_revised_raw.png",x:232,y:-108,w:60,h:96,role:"Presides Sdem (#12); upward-sight of Maa (#9)"},
+ {name:"Sia",img:"images/Sia_revised_raw.png",x:370,y:-108,w:60,h:96,role:"No seat — perception entire from the barque (D2)"},
+ {name:"Heka",img:"images/03_heka.png",x:508,y:-108,w:60,h:96,role:"Routed to Flowing Revelation path; absence displayed not repaired"}
 ];
-const KAU_PORTRAIT_W=48, KAU_PORTRAIT_H=86; /* 1440×2560 portrait — full figure, meet */
-const KAU_VIEWBOX='-110 -100 1020 1340';
+const KAU_VIEWBOX='-110 -140 1020 1380';
 const BENEFACTIONS=[
  {label:"venerability",sphere:"chesed",x:0,y:-58},
  {label:"faithfulness",sphere:"yesod",x:0,y:-58},
@@ -683,7 +741,7 @@ function selectRuler(id){
     ${portraitHtml(r.img,r.name)}
     <h2>${r.name}</h2>
     ${sub?`<h3 class="route">${sub}</h3>`:''}
-    ${L.hiero?`<div class="glyph-block"><div class="hiero-name">${L.hiero}</div><div class="cap">The name in hieroglyphs · attested spelling</div>${L.hieroFlag?'<div class="flag">spelling unverified — flagged for review</div>':''}</div>`:''}
+    ${L.hiero?`<div class="glyph-block"><div class="hiero-name">${L.hiero}</div>${L.hieroFlag?'<div class="flag">spelling unverified — flagged for review</div>':''}</div>`:''}
     ${field('Name meaning',L.meaning)}
     ${field('Features',L.features)}
     ${field('Symbols',L.symbols)}
@@ -708,6 +766,33 @@ function showPathStudy(pid){
 }
 
 /* ================= modes: kau ring ================= */
+/* Kau power → wielder's rulerships. `ruler` pulls that ruler's paths from RULERS;
+   `paths`/`spheres` add explicit entries (sphere ids per NODES kem names).
+   Sutekh lights both Set-form paths; Fertile Dwelling lights its own path + Het-Heru's sphere. */
+const KAU_LINKS={
+ "Heru":{ruler:"heru",spheres:["tiphereth"]},
+ "Heru-Behudet":{spheres:["gevurah"]},
+ "Het-Heru":{ruler:"het_heru",spheres:["netzach"]},
+ "Amen-Ra":{spheres:["chesed"]},
+ "Auset":{ruler:"auset",spheres:["yesod"]},
+ "Ma'at":{ruler:"maat"},
+ "Fertile Dwelling":{paths:["dwelling"],spheres:["netzach"]},
+ "Sutekh":{paths:["coiledpower","eyeofmatter"],spheres:["hod"]},
+ "Hu":{ruler:"hu"},
+ "Geb":{ruler:"geb",spheres:["malkuth"]},
+ "Sia":{ruler:"sia"},
+ "Heka":{ruler:"heka"}
+};
+function kauHighlight(link){
+  PATHS.forEach(p=>{pathGroups[p.id].classList.remove('kau-path-hilite');pathLabels[p.id].classList.remove('kau-path-hilite');});
+  for(const id in NODES) sphereGroups[id].classList.remove('kau-hilite');
+  if(!link) return [];
+  let pids=(link.paths||[]).slice();
+  if(link.ruler){const r=RULERS.find(x=>x.id===link.ruler); if(r) pids=pids.concat(r.paths);}
+  pids.forEach(pid=>{ if(pathGroups[pid]){pathGroups[pid].classList.add('kau-path-hilite');pathLabels[pid].classList.add('kau-path-hilite');} });
+  (link.spheres||[]).forEach(sid=>{ if(sphereGroups[sid]) sphereGroups[sid].classList.add('kau-hilite'); });
+  return pids;
+}
 function renderKau(){
   kauLayer.innerHTML=''; barqueLayer.innerHTML=''; benefactLayer.innerHTML='';
   const cx=400, cy=590, rx=418, ry=578;
@@ -716,36 +801,24 @@ function renderKau(){
     const x=cx+rx*Math.cos(ang), y=cy+ry*Math.sin(ang);
     const g=el('g',{class:'kau-seat'+(ks.stable?' stable':' open')+(ks.contested?' contested':''),
       tabindex:0,role:'button','aria-label':'Kau seat '+ks.n+' '+ks.seat},kauLayer);
-    el('circle',{cx:x,cy:y,r:ks.stable?13:11,stroke:ks.stable?'#565B72':'#454A62'},g);
-    el('text',{class:'kseat-num',x:x,y:y+4},g).textContent=ks.n;
-    if(ks.img){
-      const iw=KAU_PORTRAIT_W, ih=KAU_PORTRAIT_H;
-      el('image',{class:'kau-portrait',href:img(ks.img),'xlink:href':img(ks.img),
-        x:x-iw/2,y:y-ih-10,width:iw,height:ih,preserveAspectRatio:'xMidYMid meet'},g);
-    }
-    const out=36, lx=x+out*Math.cos(ang), ly=y+out*Math.sin(ang);
+    el('circle',{cx:x,cy:y,r:ks.stable?14:12,stroke:ks.stable?'#565B72':'#454A62'},g);
+    el('text',{class:'kseat-num',x:x,y:y+3.5},g).textContent=ks.n;
+    /* seat 1 sits at the ring apex under the barque — its name drops below the circle */
+    const out=30;
+    let lx=x+out*Math.cos(ang), ly=y+out*Math.sin(ang)+4;
+    if(idx===0){ lx=x; ly=y+32; }
     const anch=Math.cos(ang)>0.35?'start':(Math.cos(ang)<-0.35?'end':'middle');
-    el('text',{class:'kseat-name',x:lx,y:ly-10,'text-anchor':anch},g).textContent=ks.seat.toUpperCase();
-    el('text',{class:'kseat-gloss',x:lx,y:ly+2,'text-anchor':anch},g).textContent=ks.gloss;
-    el('text',{class:'kseat-tier',x:lx,y:ly+13,'text-anchor':anch},g).textContent=ks.tier;
-    if(ks.alt) el('text',{class:'kseat-alt',x:lx,y:ly+23,'text-anchor':anch},g).textContent='alt: '+ks.alt;
-    if(ks.contested) el('text',{class:'kcontest',x:lx,y:ly+(ks.alt?33:23),'text-anchor':anch},g).textContent='*contested';
+    el('text',{class:'kseat-name',x:lx,y:ly,'text-anchor':anch},g).textContent=ks.seat.toUpperCase();
     g.addEventListener('click',()=>selectKauSeat(ks));
     g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectKauSeat(ks);}});
   });
   BARQUE_OVERLAY.forEach(b=>{
-    const g=el('g',{class:'barque-img'},barqueLayer);
+    const g=el('g',{class:'barque-img',tabindex:0,role:'button','aria-label':'Barque figure '+b.name},barqueLayer);
     el('image',{href:img(b.img),'xlink:href':img(b.img),x:b.x,y:b.y,width:b.w,height:b.h,preserveAspectRatio:'xMidYMid meet'},g);
-    el('text',{class:'kseat-name',x:b.x+b.w/2,y:b.y+b.h+14,'text-anchor':'middle'},g).textContent=b.name.toUpperCase();
+    el('text',{class:'kseat-name',x:b.x+b.w/2,y:b.y-8,'text-anchor':'middle'},g).textContent=b.name.toUpperCase();
+    g.addEventListener('click',()=>selectBarque(b,g));
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectBarque(b,g);}});
   });
-  const prow=KAU_SEATS.find(k=>k.n===11);
-  if(prow){
-    const ang=((10)/14)*2*Math.PI - Math.PI/2;
-    const sx=cx+rx*Math.cos(ang), sy=cy+ry*Math.sin(ang);
-    const px=sx-90, py=sy-KAU_PORTRAIT_H-30;
-    el('line',{x1:px+34,y1:py+KAU_PORTRAIT_H+8,x2:sx,y2:sy,stroke:'#565B72','stroke-width':1.4,'stroke-dasharray':'4 3',opacity:.65},barqueLayer);
-    el('text',{class:'kseat-gloss',x:px,y:py+KAU_PORTRAIT_H+22,'font-size':'8',fill:'#A8B0C8'},barqueLayer).textContent='prow → #11 · Sutekh';
-  }
   BENEFACTIONS.forEach(bf=>{
     const n=NODES[bf.sphere]; if(!n) return;
     const bx=n.x+(bf.x||0), by=n.y+(bf.y||0);
@@ -755,9 +828,42 @@ function renderKau(){
     el('text',{class:'benefact',x:bx,y:by+2,'text-anchor':'middle'},tg).textContent=label;
   });
 }
+function buildKauPanels(){
+  const listL=document.querySelector('#kauL .kau-list'), listR=document.querySelector('#kauR .kau-list');
+  listL.innerHTML=''; listR.innerHTML='';
+  KAU_SEATS.forEach(ks=>{
+    const b=document.createElement('button');
+    b.className='kau-card'+(ks.contested?' contested':'');
+    b.dataset.n=ks.n;
+    b.setAttribute('aria-label','Kau seat '+ks.n+' '+ks.seat);
+    b.innerHTML=`<span class="kc-img"><img src="${img(ks.img)}" alt="${ks.deity}" loading="lazy"></span>
+      <span class="kc-body">
+        <span class="kc-name"><span class="n">${ks.n}</span>${ks.seat.toUpperCase()}</span>
+        <span class="kc-gloss">${ks.gloss}</span>
+        <span class="kc-meta">${ks.tier}${ks.alt?` · <span class="alt">alt: ${ks.alt}</span>`:''}${ks.contested?' · <span class="warn">*contested</span>':''}</span>
+      </span>`;
+    b.addEventListener('click',()=>selectKauSeat(ks));
+    (ks.n<=7?listL:listR).appendChild(b);
+  });
+}
+function selectBarque(b,g){
+  clearSel();
+  if(g) g.classList.add('sel');
+  const pids=kauHighlight(KAU_LINKS[b.name]||null);
+  const pnames=pids.map(pid=>{const p=PATHS.find(x=>x.id===pid);return p?p.name:pid;});
+  panel.innerHTML=`
+    <div class="eyebrow">Barque overlay — Layer 2</div>
+    ${portraitHtml(b.img,b.name)}
+    <h2>${b.name}</h2>
+    ${field('Role',b.role)}
+    ${pnames.length?field('Ruled path'+(pnames.length>1?'s':'')+' — highlighted',pnames.join(' · ')):''}
+    <div class="prov">Kau_Comparative_Register_v2_RATIFIED · Layer 2 barque overlay.</div>`;
+}
 function selectKauSeat(ks){
   clearSel();
   kauLayer.querySelectorAll('.kau-seat').forEach((g,i)=>g.classList.toggle('sel',KAU_SEATS[i].n===ks.n));
+  document.querySelectorAll('.kau-card').forEach(c=>c.classList.toggle('on',+c.dataset.n===ks.n));
+  kauHighlight(KAU_LINKS[ks.deity]||null);
   panel.innerHTML=`
     <div class="eyebrow">Kau seat ${ks.n} of 14</div>
     ${ks.img?portraitHtml(ks.img,ks.deity):''}
@@ -771,6 +877,60 @@ function selectKauSeat(ks){
     <div class="prov">Kau_Comparative_Register_v2_RATIFIED · Layer 1 table · O4 visualization spec. Apep: never depicted.</div>`;
 }
 buildRulerGallery();
+buildKauPanels();
+
+/* ================= zoom (1x–3.5x) + pan ================= */
+const zoomport=document.getElementById('zoomport');
+const zoomInBtn=document.getElementById('zoomIn'), zoomOutBtn=document.getElementById('zoomOut'), zoomResetBtn=document.getElementById('zoomReset');
+const ZOOM_MAX=3.5;
+let zoom=1;
+function setZoom(z,fx,fy){
+  z=Math.max(1,Math.min(ZOOM_MAX,Math.round(z*100)/100));
+  if(z===zoom) return;
+  // keep the focal point (or viewport centre) fixed while rescaling
+  const cx=fx!=null?fx:zoomport.clientWidth/2, cy=fy!=null?fy:zoomport.clientHeight/2;
+  const relX=(zoomport.scrollLeft+cx)/zoomport.scrollWidth, relY=(zoomport.scrollTop+cy)/zoomport.scrollHeight;
+  zoom=z;
+  svg.style.height=(zoom*100)+'%';
+  zoomport.scrollLeft=relX*zoomport.scrollWidth-cx;
+  zoomport.scrollTop=relY*zoomport.scrollHeight-cy;
+  zoomInBtn.disabled=zoom>=ZOOM_MAX;
+  zoomOutBtn.disabled=zoom<=1;
+  zoomResetBtn.textContent=(zoom===1?'1':(Math.round(zoom*10)/10).toString().replace(/\.0$/,''))+'×';
+}
+zoomOutBtn.disabled=true;
+zoomInBtn.addEventListener('click',()=>setZoom(zoom*1.4));
+zoomOutBtn.addEventListener('click',()=>setZoom(zoom/1.4));
+zoomResetBtn.addEventListener('click',()=>setZoom(1));
+zoomport.addEventListener('wheel',e=>{
+  if(!(e.ctrlKey||e.metaKey)) return; // pinch / ctrl+scroll zooms; plain scroll pans
+  e.preventDefault();
+  const r=zoomport.getBoundingClientRect();
+  setZoom(zoom*(e.deltaY<0?1.12:1/1.12), e.clientX-r.left, e.clientY-r.top);
+},{passive:false});
+/* pan buttons — nudge by a quarter viewport */
+[['panUp',0,-1],['panDown',0,1],['panLeft',-1,0],['panRight',1,0]].forEach(([bid,dx,dy])=>{
+  document.getElementById(bid).addEventListener('click',()=>{
+    zoomport.scrollBy({left:dx*zoomport.clientWidth*0.25, top:dy*zoomport.clientHeight*0.25, behavior:'smooth'});
+  });
+});
+/* drag-to-pan — a >5px drag pans; anything shorter passes through as a normal click */
+let panActive=false, panMoved=false, panX0=0, panY0=0, panL0=0, panT0=0;
+zoomport.addEventListener('pointerdown',e=>{
+  if(e.button!==0) return;
+  panActive=true; panMoved=false;
+  panX0=e.clientX; panY0=e.clientY; panL0=zoomport.scrollLeft; panT0=zoomport.scrollTop;
+});
+window.addEventListener('pointermove',e=>{
+  if(!panActive) return;
+  const dx=e.clientX-panX0, dy=e.clientY-panY0;
+  if(!panMoved){ if(Math.hypot(dx,dy)<5) return; panMoved=true; zoomport.classList.add('panning'); }
+  zoomport.scrollLeft=panL0-dx; zoomport.scrollTop=panT0-dy;
+});
+window.addEventListener('pointerup',()=>{ panActive=false; zoomport.classList.remove('panning'); });
+zoomport.addEventListener('click',e=>{
+  if(panMoved){ e.stopPropagation(); e.preventDefault(); panMoved=false; }
+},true);
 
 /* ================= lenses ================= */
 let activeLens='sky';
@@ -851,7 +1011,7 @@ function dress(lensId){
     const _g=sphereGroups[_id], _c=_g.querySelector('circle.body');
     const _potent=(lensId==='divfem'&&POT[_id]);
     const _hasImg=_dz && (lensId==='divmasc'?DEITY_M:DEITY_F)[_id];
-    _g.classList.remove('potent','under');
+    _g.classList.remove('potent','under','kau-hilite');
     if(_potent){ _c.style.fill=POT[_id].fill; _g.classList.add('potent'); _g.querySelectorAll('.sname,.snum').forEach(t=>t.style.fill=POT[_id].txt); }
     else { _c.style.fill=''; _g.querySelectorAll('.sname,.snum').forEach(t=>t.style.fill=''); if(_hasImg) _g.classList.add('under'); }
   }
@@ -866,8 +1026,8 @@ function dress(lensId){
   // circuit / paths ruler highlight
   PATHS.forEach(p=>{
     const g=pathGroups[p.id];
-    g.classList.remove('hilite','dim','ruler-hilite','ruler-dim');
-    pathLabels[p.id].classList.remove('dim','ruler-hilite','ruler-dim');
+    g.classList.remove('hilite','dim','ruler-hilite','ruler-dim','kau-path-hilite');
+    pathLabels[p.id].classList.remove('dim','ruler-hilite','ruler-dim','kau-path-hilite');
     if(activeMode==='paths' && activeRuler){
       const r=RULERS.find(x=>x.id===activeRuler);
       const ruled=new Set(r?r.paths:[]);
@@ -904,16 +1064,16 @@ LENSES.forEach(l=>{
 /* ================= inspector ================= */
 const panel=document.getElementById('panel');
 function field(k,v){return v?`<div class="field"><div class="k">${k}</div><div class="v">${v}</div></div>`:'';}
-function clearSel(){document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));}
+function clearSel(){document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));document.querySelectorAll('.kau-card.on').forEach(c=>c.classList.remove('on'));document.querySelectorAll('.kau-path-hilite').forEach(x=>x.classList.remove('kau-path-hilite'));document.querySelectorAll('.sphere.kau-hilite').forEach(x=>x.classList.remove('kau-hilite'));}
 function home(lens){
   lens=lens|| (activeMode? MODES.find(m=>m.id===activeMode) : LENSES.find(l=>l.id===activeLens));
-  const ver='v3.34 · closed canon + Paths + Kau modes';
+  const ver='v3.36 · closed canon + Paths + Kau modes';
   panel.innerHTML=`
    <div class="eyebrow">${activeMode?'Mode':'Lens'}</div>
    <h2>${lens.name}</h2>
    <h3 class="route">${ver}</h3>
    <div class="note">${lens.desc}</div>
-   <div class="field" style="margin-top:12px"><div class="k">Select</div><div class="v">${activeMode==='paths'?'Click a ruler portrait, then a highlighted path for lore.':activeMode==='kau'?'Click any Kau seat on the ring.':'Any sphere or path — every register appears here, whatever lens is active.'}</div></div>
+   <div class="field" style="margin-top:12px"><div class="k">Select</div><div class="v">${activeMode==='paths'?'Click a ruler portrait, then a highlighted path for lore.':activeMode==='kau'?'Click a seat card, a numbered seat on the ring, or a barque figure at the top — the wielder\u2019s ruled paths and spheres light up gold.':'Any sphere or path — every register appears here, whatever lens is active.'}</div></div>
    <div class="prov">AUTHORITY — the rectified diagram; Ali's rulings, passes 1–50. Each lens is one pure facet; nothing merged. Paths/Kau data from ratified registers (Aug 2026).</div>`;
 }
 const REGNAMES={sky:"Sky",neteru:"Rulers",soul:"Soul-part",week:"Week",body:"Body",forces:"Force",symbols:"Symbol",

@@ -1,3 +1,25 @@
+# CHANGES — v3.36 (Pan, Kau rulership highlights)
+
+**v3.36** — navigation + Kau interactivity round:
+
+- **Pan:** the tree canvas can now be moved directly — drag anywhere on the stage to pan (short clicks still select), a ▲◀▼▶ pad under the zoom buttons nudges a quarter-viewport per press, and plain scroll/trackpad panning still works. Zoom cap lowered **5× → 3.5×**.
+- **Seat 8:** presiding deity corrected "Yesod-station" → **Auset** (alt Atum retained).
+- **Kau rulership highlights:** clicking a seat card or ring seat now also lights up (gold) the paths and spheres ruled by that power's wielder, alongside the existing card/ring selection. Mapping (`KAU_LINKS`): Heru → Solar Rising + HERU sphere; Heru-Behudet → BEHDETY sphere; Het-Heru → Fertile Dwelling + Pillar of Harmony + HET-HERU sphere; Amen-Ra → AMEN-RA sphere; Auset → Impulse + AUSET sphere; Ma'at → Covenant path; Sutekh → both Set-form paths (Coiled Power, Eye of Matter) + SUTEKH sphere; Hu → Utterance path; Geb → Time & Location + GEB sphere; seat 10 (Fertile Dwelling) → its own path + HET-HERU sphere. Lore deliberately not added — highlight only, per instruction.
+- **Barque figures clickable:** Hu, Sia and Heka at the top of the Kau page now respond to click/keyboard — each lights his ruled path (Hu → Utterance; Sia → Sequenced Images; Heka → Flowing Revelation) and shows a minimal inspector entry (portrait, role, highlighted path name).
+
+---
+
+# CHANGES — v3.35 (Zoom, Kau declutter, caption polish)
+
+**v3.35** — readability round:
+
+- **Zoom (1×–5×):** the tree stage (all lenses, Paths and Kau modes) is now zoomable via floating +/−/reset buttons in the top-right corner of the tree area, and via pinch / Ctrl+scroll toward the cursor. Zoom is capped at 5×; when zoomed the stage pans with scroll, while side panels and the inspector stay fixed.
+- **Hieroglyph captions:** the redundant "The name in hieroglyphs · attested spelling" line removed; hieroglyphs enlarged 34px → 52px in the space saved.
+- **Renames:** ruler "Anubis" → **"Anpu (Anubis)"** (Egyptian name foregrounded; path ruler line and Adze lore updated to match); "Set (higher)" / "Set (lower)" → **"Set (higher form)" / "Set (lower form)"**.
+- **Kau mode decluttered:** seat portraits, glosses, tiers, alternates and contested markers moved off the ring into two flanking panels of seat cards (seats 1–7 left, 8–14 right — portrait, number + seat name, gloss, tier/alt/contested per card; contested cards carry a red left edge). The SVG ring keeps only numbered circles with a single seat-name label each (stable/open/contested still encoded in the stroke). Barque trio (Hu · Sia · Heka) raised above the ring with names above the figures; the prow leader-line dropped (the hinge note stays on seat 11's card and inspector entry). Cards and ring circles are both clickable and stay in sync.
+
+---
+
 # CHANGES — v3.34 (Hieroglyphic names as text)
 
 **v3.34** — seshkemet-derived name-block graphics replaced with attested hieroglyphic text, to preempt any copyright claim:

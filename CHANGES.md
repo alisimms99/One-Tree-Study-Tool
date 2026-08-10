@@ -1,3 +1,15 @@
+# CHANGES — v3.34 (Hieroglyphic names as text)
+
+**v3.34** — seshkemet-derived name-block graphics replaced with attested hieroglyphic text, to preempt any copyright claim:
+
+- Each ruler's name is now written in **Unicode Egyptian hieroglyphs**, taken sign-for-sign from the attested spelling in the deity's Wikipedia infobox (WikiHiero markup → Gardiner codes → Unicode), with the extracted reference graphics used only as a cross-check. Rendered in gold in every caption.
+- **Font:** Noto Sans Egyptian Hieroglyphs (OFL licensed), subset to the 46 signs used (~19 KB) and embedded as a data-URI `@font-face`, so the glyphs render offline with no external dependency.
+- `images/glyphs/` (the graphics extracted from the reference PDFs) **removed from the repo**. Note: they remain in git history from v3.33; history rewrite needed if full removal is required.
+- Shu, previously without a glyph image, now has his attested name 𓈙𓆄𓅱𓀭 like the rest. Set (higher) and Set (lower) both use the primary attested spelling 𓋴𓏏𓈙𓃩 (stẖ).
+- **FLAG — Iusaaset:** Wikipedia's spelling (𓂻𓍢𓋴𓌇𓂝𓄿𓋴𓏏𓆇𓆗) includes signs I could not independently verify (V1 rope-coil, T1 mace) and the article is low-quality; caption carries a visible “spelling unverified” flag. All other 19 names verified against both Wikipedia and the reference graphics.
+
+---
+
 # CHANGES — v3.33 (Deity lore captions)
 
 **v3.33** — Paths-mode ruler captions rebuilt as finished, public-facing entries:

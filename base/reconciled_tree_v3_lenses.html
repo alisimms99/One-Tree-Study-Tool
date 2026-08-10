@@ -92,14 +92,16 @@
 
   /* —— Paths mode —— */
   #treewrap{flex-direction:column; align-items:center}
-  #rulerGallery{display:none; width:100%; max-width:900px; padding:8px 12px 4px;
-    border-bottom:1px solid #2A3050; background:#12182A; gap:6px; flex-wrap:wrap; justify-content:center}
+  #rulerGallery{display:none; width:100%; padding:10px 16px 12px;
+    border-bottom:1px solid #2A3050; background:#12182A; gap:10px 8px; flex-wrap:wrap; justify-content:center;
+    max-height:min(38vh,320px); overflow-y:auto}
   #treewrap.paths-mode #rulerGallery{display:flex}
-  .ruler-btn{background:none; border:2px solid transparent; border-radius:4px; cursor:pointer;
-    padding:3px; text-align:center; transition:border-color .15s, opacity .15s}
-  .ruler-btn img{width:44px; height:44px; object-fit:cover; border-radius:3px; display:block}
-  .ruler-btn .rlab{font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:.06em;
-    color:#8A91AC; margin-top:2px; max-width:52px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .ruler-btn{background:#171C30; border:2px solid #3A4060; border-radius:6px; cursor:pointer;
+    padding:6px 5px 5px; text-align:center; transition:border-color .15s, opacity .15s; width:78px; flex:0 0 auto}
+  .ruler-btn img{width:56px; height:100px; object-fit:contain; object-position:center bottom;
+    border-radius:4px; display:block; margin:0 auto; background:#0E1220}
+  .ruler-btn .rlab{font-family:'IBM Plex Mono',monospace; font-size:8.5px; letter-spacing:.04em;
+    color:#B0B8D0; margin-top:5px; max-width:74px; line-height:1.25; white-space:normal}
   .ruler-btn:hover{border-color:#565B72}
   .ruler-btn.on{border-color:var(--gold); background:#171C30}
   .ruler-btn.dim{opacity:.45}
@@ -117,15 +119,20 @@
   .kau-seat.contested circle{stroke:#C0392B; stroke-width:2.2}
   .kau-seat:hover circle,.kau-seat:focus-visible circle{filter:brightness(1.3)}
   .kau-seat.sel circle{stroke:var(--gold); stroke-width:3.2}
-  .kseat-num{font-family:'IBM Plex Mono',monospace; font-size:7px; fill:#6A7190; text-anchor:middle; pointer-events:none}
-  .kseat-name{font-family:'Cinzel',serif; font-size:8px; font-weight:600; letter-spacing:.06em; fill:#CFC7B0; text-anchor:middle; pointer-events:none}
-  .kseat-gloss{font-family:'IBM Plex Mono',monospace; font-size:6.5px; fill:#8A91AC; text-anchor:middle; pointer-events:none}
-  .kseat-alt{font-family:'IBM Plex Mono',monospace; font-size:6px; fill:#7A6A40; font-style:italic; text-anchor:middle; pointer-events:none}
-  .kseat-tier{font-family:'IBM Plex Mono',monospace; font-size:6px; fill:#8A6D1F; text-anchor:middle; pointer-events:none}
-  .kcontest{font-family:'IBM Plex Mono',monospace; font-size:6px; fill:#C0392B; text-anchor:middle; pointer-events:none}
+  .kseat-num{font-family:'IBM Plex Mono',monospace; font-size:8px; fill:#8A91AC; text-anchor:middle; pointer-events:none}
+  .kseat-name{font-family:'Cinzel',serif; font-size:10px; font-weight:600; letter-spacing:.06em; fill:#EDE4CC; text-anchor:middle; pointer-events:none}
+  .kseat-gloss{font-family:'IBM Plex Mono',monospace; font-size:8px; fill:#A8B0C8; text-anchor:middle; pointer-events:none}
+  .kseat-alt{font-family:'IBM Plex Mono',monospace; font-size:7.5px; fill:#9A8A50; font-style:italic; text-anchor:middle; pointer-events:none}
+  .kseat-tier{font-family:'IBM Plex Mono',monospace; font-size:7.5px; fill:#D4A93C; text-anchor:middle; pointer-events:none}
+  .kcontest{font-family:'IBM Plex Mono',monospace; font-size:7.5px; fill:#E05040; text-anchor:middle; pointer-events:none}
+  .kau-portrait{pointer-events:none}
   .barque-img{pointer-events:none}
+  .barque-img .kseat-name{font-size:11px; fill:var(--gold)}
   .benefact{font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:.08em; fill:var(--gold); pointer-events:none}
   .benefact-bg{fill:#171C30; stroke:var(--gold); stroke-width:1; pointer-events:none; opacity:.92}
+  aside .portrait-wrap{text-align:center; margin:4px 0 14px}
+  aside .portrait-preview{display:block; max-width:100%; width:auto; max-height:340px; margin:0 auto;
+    object-fit:contain; background:#171C30; border:2px solid var(--gold); border-radius:6px; padding:6px}
 </style>
 </head>
 <body>
@@ -146,6 +153,7 @@
 /* Resolve images/ relative to repo root when HTML lives in base/ */
 const IMG_BASE=(()=>{const p=location.pathname||location.href||'';return (/\/base(?:\/|$|\\)/.test(p)||/\\base\\/.test(p))?'../images/':'images/';})();
 function img(p){return (p||'').replace(/^images\//,IMG_BASE);}
+function portraitHtml(src,alt){return '<div class="portrait-wrap"><img class="portrait-preview" src="'+img(src)+'" alt="'+alt+'"></div>';}
 
 /* ================= CANON v3.32 ================= */
 const NODES = {
@@ -348,10 +356,12 @@ const KAU_SEATS=[
  {n:14,seat:"Suu",gloss:"taste",deity:"Geb",tier:"G/T3",contested:false,alt:null,stable:false,img:"images/10_geb.png"}
 ];
 const BARQUE_OVERLAY=[
- {name:"Hu",img:"images/Hu_revised_raw.png",x:280,y:18,w:72,h:72,role:"Presides Sdem (#12); upward-sight of Maa (#9)"},
- {name:"Sia",img:"images/Sia_revised_raw.png",x:364,y:8,w:72,h:72,role:"No seat — perception entire from the barque (D2)"},
- {name:"Heka",img:"images/03_heka.png",x:448,y:18,w:72,h:72,role:"Routed to Flowing Revelation path; absence displayed not repaired"}
+ {name:"Hu",img:"images/Hu_revised_raw.png",x:228,y:-75,w:68,h:120,role:"Presides Sdem (#12); upward-sight of Maa (#9)"},
+ {name:"Sia",img:"images/Sia_revised_raw.png",x:366,y:-85,w:68,h:120,role:"No seat — perception entire from the barque (D2)"},
+ {name:"Heka",img:"images/03_heka.png",x:504,y:-75,w:68,h:120,role:"Routed to Flowing Revelation path; absence displayed not repaired"}
 ];
+const KAU_PORTRAIT_W=48, KAU_PORTRAIT_H=86; /* 1440×2560 portrait — full figure, meet */
+const KAU_VIEWBOX='-110 -100 1020 1340';
 const BENEFACTIONS=[
  {label:"venerability",sphere:"chesed",x:0,y:-58},
  {label:"faithfulness",sphere:"yesod",x:0,y:-58},
@@ -497,6 +507,7 @@ function selectRuler(id){
   }).join('');
   panel.innerHTML=`
     <div class="eyebrow">Path ruler</div>
+    ${portraitHtml(r.img,r.name)}
     <h2>${r.name}</h2>
     <h3 class="route">v3.32 · Paths mode · ${r.paths.length} path${r.paths.length>1?'s':''}</h3>
     ${field('Paths ruled',pathList)}
@@ -521,39 +532,41 @@ function showPathStudy(pid){
 /* ================= modes: kau ring ================= */
 function renderKau(){
   kauLayer.innerHTML=''; barqueLayer.innerHTML=''; benefactLayer.innerHTML='';
-  const cx=400, cy=575, rx=390, ry=560;
+  const cx=400, cy=590, rx=418, ry=578;
   KAU_SEATS.forEach((ks,idx)=>{
     const ang=((idx)/14)*2*Math.PI - Math.PI/2;
     const x=cx+rx*Math.cos(ang), y=cy+ry*Math.sin(ang);
     const g=el('g',{class:'kau-seat'+(ks.stable?' stable':' open')+(ks.contested?' contested':''),
       tabindex:0,role:'button','aria-label':'Kau seat '+ks.n+' '+ks.seat},kauLayer);
-    el('circle',{cx:x,cy:y,r:ks.stable?11:9,stroke:ks.stable?'#565B72':'#454A62'},g);
-    el('text',{class:'kseat-num',x:x,y:y+3},g).textContent=ks.n;
+    el('circle',{cx:x,cy:y,r:ks.stable?13:11,stroke:ks.stable?'#565B72':'#454A62'},g);
+    el('text',{class:'kseat-num',x:x,y:y+4},g).textContent=ks.n;
     if(ks.img){
-      const iw=22, ih=22;
-      el('image',{href:img(ks.img),'xlink:href':img(ks.img),x:x-iw/2,y:y-28,width:iw,height:ih,preserveAspectRatio:'xMidYMid meet'},g);
+      const iw=KAU_PORTRAIT_W, ih=KAU_PORTRAIT_H;
+      el('image',{class:'kau-portrait',href:img(ks.img),'xlink:href':img(ks.img),
+        x:x-iw/2,y:y-ih-10,width:iw,height:ih,preserveAspectRatio:'xMidYMid meet'},g);
     }
-    const out=22, lx=x+out*Math.cos(ang), ly=y+out*Math.sin(ang);
+    const out=36, lx=x+out*Math.cos(ang), ly=y+out*Math.sin(ang);
     const anch=Math.cos(ang)>0.35?'start':(Math.cos(ang)<-0.35?'end':'middle');
-    el('text',{class:'kseat-name',x:lx,y:ly-8,'text-anchor':anch},g).textContent=ks.seat.toUpperCase();
+    el('text',{class:'kseat-name',x:lx,y:ly-10,'text-anchor':anch},g).textContent=ks.seat.toUpperCase();
     el('text',{class:'kseat-gloss',x:lx,y:ly+2,'text-anchor':anch},g).textContent=ks.gloss;
-    el('text',{class:'kseat-tier',x:lx,y:ly+11,'text-anchor':anch},g).textContent=ks.tier;
-    if(ks.alt) el('text',{class:'kseat-alt',x:lx,y:ly+19,'text-anchor':anch},g).textContent='alt: '+ks.alt;
-    if(ks.contested) el('text',{class:'kcontest',x:lx,y:ly+(ks.alt?27:19),'text-anchor':anch},g).textContent='*contested';
+    el('text',{class:'kseat-tier',x:lx,y:ly+13,'text-anchor':anch},g).textContent=ks.tier;
+    if(ks.alt) el('text',{class:'kseat-alt',x:lx,y:ly+23,'text-anchor':anch},g).textContent='alt: '+ks.alt;
+    if(ks.contested) el('text',{class:'kcontest',x:lx,y:ly+(ks.alt?33:23),'text-anchor':anch},g).textContent='*contested';
     g.addEventListener('click',()=>selectKauSeat(ks));
     g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectKauSeat(ks);}});
   });
   BARQUE_OVERLAY.forEach(b=>{
     const g=el('g',{class:'barque-img'},barqueLayer);
     el('image',{href:img(b.img),'xlink:href':img(b.img),x:b.x,y:b.y,width:b.w,height:b.h,preserveAspectRatio:'xMidYMid meet'},g);
-    el('text',{class:'kseat-name',x:b.x+b.w/2,y:b.y+b.h+10,'text-anchor':'middle','font-size':'9'},g).textContent=b.name.toUpperCase();
+    el('text',{class:'kseat-name',x:b.x+b.w/2,y:b.y+b.h+14,'text-anchor':'middle'},g).textContent=b.name.toUpperCase();
   });
   const prow=KAU_SEATS.find(k=>k.n===11);
   if(prow){
     const ang=((10)/14)*2*Math.PI - Math.PI/2;
-    const px=cx+rx*Math.cos(ang)-55, py=cy+ry*Math.sin(ang)-20;
-    el('line',{x1:px+40,y1:py+50,x2:cx+rx*Math.cos(ang),y2:cy+ry*Math.sin(ang),stroke:'#565B72','stroke-width':1.2,'stroke-dasharray':'3 2',opacity:.6},barqueLayer);
-    el('text',{class:'kseat-gloss',x:px+20,y:py+68,'font-size':'7',fill:'#8A91AC'},barqueLayer).textContent='prow → #11';
+    const sx=cx+rx*Math.cos(ang), sy=cy+ry*Math.sin(ang);
+    const px=sx-90, py=sy-KAU_PORTRAIT_H-30;
+    el('line',{x1:px+34,y1:py+KAU_PORTRAIT_H+8,x2:sx,y2:sy,stroke:'#565B72','stroke-width':1.4,'stroke-dasharray':'4 3',opacity:.65},barqueLayer);
+    el('text',{class:'kseat-gloss',x:px,y:py+KAU_PORTRAIT_H+22,'font-size':'8',fill:'#A8B0C8'},barqueLayer).textContent='prow → #11 · Sutekh';
   }
   BENEFACTIONS.forEach(bf=>{
     const n=NODES[bf.sphere]; if(!n) return;
@@ -569,6 +582,7 @@ function selectKauSeat(ks){
   kauLayer.querySelectorAll('.kau-seat').forEach((g,i)=>g.classList.toggle('sel',KAU_SEATS[i].n===ks.n));
   panel.innerHTML=`
     <div class="eyebrow">Kau seat ${ks.n} of 14</div>
+    ${ks.img?portraitHtml(ks.img,ks.deity):''}
     <h2>${ks.seat}</h2>
     <h3 class="route">${ks.gloss} · tier ${ks.tier}</h3>
     ${field('Presiding deity',ks.deity)}
@@ -587,6 +601,7 @@ function setMode(modeId){
   document.querySelectorAll('#rail .mode-btn').forEach(b=>b.classList.toggle('on',b.dataset.id===modeId));
   document.querySelectorAll('#rail .lens-btn').forEach(b=>b.classList.remove('on'));
   treewrap.classList.toggle('paths-mode',modeId==='paths');
+  treewrap.classList.toggle('kau-mode',modeId==='kau');
   if(modeId!=='paths') activeRuler=null;
   dress('sky');
   if(modeId==='paths') highlightRulerPaths(activeRuler);
@@ -607,7 +622,7 @@ function dress(lensId){
   }
   // decan ring / kau ring viewBox
   const _kauOn=activeMode==='kau', _decOn=lensId==='decans'&&!activeMode;
-  svg.setAttribute('viewBox', (_kauOn||_decOn) ? '-70 -45 940 1245' : '0 0 800 1150');
+  svg.setAttribute('viewBox', _kauOn ? KAU_VIEWBOX : (_decOn ? '-70 -45 940 1245' : '0 0 800 1150'));
   ringLayer.innerHTML='';
   kauLayer.innerHTML=''; barqueLayer.innerHTML=''; benefactLayer.innerHTML='';
   if(_kauOn){ renderKau(); }
@@ -704,7 +719,7 @@ rail.insertAdjacentHTML('beforeend','<div class="railhead">Lenses</div>');
 LENSES.forEach(l=>{
   const b=document.createElement('button');
   b.className='lens-btn'; b.textContent=l.name; b.dataset.id=l.id;
-  b.addEventListener('click',()=>{clearSel();activeMode=null;activeRuler=null;treewrap.classList.remove('paths-mode');highlightRulerPaths(null);dress(l.id);home(l);});
+  b.addEventListener('click',()=>{clearSel();activeMode=null;activeRuler=null;treewrap.classList.remove('paths-mode','kau-mode');highlightRulerPaths(null);dress(l.id);home(l);});
   rail.appendChild(b);
 });
 

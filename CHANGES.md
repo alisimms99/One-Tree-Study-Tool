@@ -1,3 +1,18 @@
+# CHANGES — v3.37 (Decan Pass v1)
+
+**v3.37** — Decan Pass v1 (structured star anchors; no new star→tree rulings beyond the three canon hooks):
+
+- **Item 1:** Removed the repeating "Layer doctrine" field from every `selectDecan()` panel. Doctrine lives once on the Decans lens home `desc` (expanded with Naos / Sphere-of-Iah sentences that were only in the boilerplate).
+- **Item 2:** Mounted `STAR_ANCHORS` for decades 2, 3, 4, 9, 32–36 with full schema (`direction`/`elections` null placeholders). Inspector renders Star · Naos power · Planetary pair · Divergence verdict · Flags (ochre-bordered rows) · Tree hook. Cells 32–34 show both Pass-50 and register names when NAME CONFLICT is flagged. Ring marks the nine anchors with a 4-point star (solid gold if clean; hollow ochre if flagged).
+- **Item 3:** Connectors for **exactly** decades 2 → Tiphereth, 34 → Divine Skill & Command, 36 → Solar Rising — faint gold line (opacity ~0.35) + incident/sel highlight; cleared on deselect/Escape.
+- **Item 4:** `WEP_RONPET = "YYYY-MM-DD"` left unset — Decans home shows **⚑ AWAITING ANCHOR DATE**; today-cell breathing and NOW math stay dormant until Ali sets a real date.
+- **Item 5:** Season arcs behind the ring — AKHET (lapis), PERET (faience), SHEMU (ochre), opacity 0.12; epagomenal cell sits in the gap outside all three.
+- **Item 6:** Lens rail regrouped under STRUCTURE / CONSCIOUSNESS / PRACTICE / DIVINE (Modes header unchanged; railheads still hide on mobile).
+- **Item 7:** Header **TIERS ?** popover (papyrus) with T1–T3/G legend; Escape and outside-click dismiss.
+- **Item 8:** One-shot soft gold pulse on sphere/path/decan select (0.4s); lens sub-label / ring / band crossfade (~0.18s). All motion gated by `prefers-reduced-motion`. Palette unchanged.
+
+---
+
 # CHANGES — v3.36 (Pan, Kau rulership highlights)
 
 **v3.36** — navigation + Kau interactivity round:

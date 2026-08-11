@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reconciled Tree — v3.36 · Paths + Kau</title>
+<title>The Reconciled Tree — v3.37 · Decan Pass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -17,7 +17,7 @@
   *{box-sizing:border-box; margin:0; padding:0}
   html,body{height:100%}
   body{background:var(--night); color:var(--label); font-family:'Spectral',Georgia,serif; overflow:hidden;}
-  header{display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; padding:12px 20px 9px;
+  header{position:relative; display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; padding:12px 20px 9px;
     border-bottom:1px solid #2A3050; background:linear-gradient(180deg,#141930,#101423);}
   header h1{font-family:'Cinzel',serif; font-weight:700; font-size:18px; letter-spacing:.14em; color:var(--gold);}
   header .sub{font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.08em; color:#8A91AC;}
@@ -118,7 +118,6 @@
     #treewrap{flex:1 1 55%}
     aside{flex:1 1 100%; max-width:none; border-left:none; border-top:3px solid var(--gold)}
   }
-  @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 
   /* —— Paths mode —— */
   #treewrap{flex-direction:row; align-items:stretch}
@@ -193,12 +192,70 @@
   aside .portrait-wrap{text-align:center; margin:4px 0 14px}
   aside .portrait-preview{display:block; max-width:100%; width:auto; max-height:340px; margin:0 auto;
     object-fit:contain; background:#171C30; border:2px solid var(--gold); border-radius:6px; padding:6px}
+
+  /* —— Decan Pass v1 —— */
+  #tierBtn{margin-left:auto; background:transparent; border:1px solid #3A4060; border-radius:4px;
+    font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.16em; color:#8A91AC;
+    padding:4px 9px; cursor:pointer; transition:color .15s, border-color .15s}
+  #tierBtn:hover,#tierBtn[aria-expanded="true"]{color:var(--gold); border-color:var(--gold)}
+  #tierPop{position:absolute; top:44px; right:16px; z-index:40; width:min(420px,92vw);
+    background:var(--papyrus); color:var(--ink); border:2px solid var(--gold); border-radius:6px;
+    padding:14px 16px; box-shadow:0 8px 28px rgba(0,0,0,.45); font-size:13px; line-height:1.5}
+  #tierPop[hidden]{display:none}
+  #tierPop b{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; color:#8A6D1F}
+  #tierPop .tier-note{margin-top:8px; font-size:12px; color:#5A4A22}
+  .flag-row{margin:5px 0; padding:7px 10px; background:var(--papyrus2); border-left:3px solid var(--ochre);
+    font-size:12.5px; line-height:1.45; color:var(--ink)}
+  .flag-row .fk{font-family:'IBM Plex Mono',monospace; font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:var(--ochre); display:block; margin-bottom:2px}
+  .tier-inline{font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.08em; color:#8A6D1F; margin-left:6px}
+  .now-block{margin-top:12px; padding:10px 12px; background:var(--papyrus2); border-left:3px solid var(--gold)}
+  .now-block .nk{font-family:'IBM Plex Mono',monospace; font-size:8.5px; letter-spacing:.18em; text-transform:uppercase; color:#8A6D1F; margin-bottom:4px}
+  .now-block .nv{font-size:13.5px; line-height:1.45; color:var(--ink)}
+  .now-block .await{color:var(--ochre); font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em}
+  .star-anchor{pointer-events:none}
+  .decan-today circle{animation:todayBreathe 3s ease-in-out infinite}
+  @keyframes todayBreathe{
+    0%,100%{filter:drop-shadow(0 0 2px rgba(212,169,60,.35)); stroke-width:2.2}
+    50%{filter:drop-shadow(0 0 10px rgba(212,169,60,.95)); stroke-width:3.6}
+  }
+  .hook-line{stroke:var(--gold); stroke-width:1.4; fill:none; opacity:0; transition:opacity .2s ease}
+  .hook-line.on{opacity:.35}
+  @keyframes selPulseSphere{
+    0%{filter:drop-shadow(0 0 0 rgba(212,169,60,0)); stroke-width:2.4}
+    45%{filter:drop-shadow(0 0 14px rgba(212,169,60,.9)); stroke-width:5.2}
+    100%{filter:brightness(1.4); stroke-width:3.4}
+  }
+  @keyframes selPulsePath{
+    0%{stroke-width:1.6; filter:drop-shadow(0 0 0 rgba(212,169,60,0))}
+    45%{stroke-width:4.2; filter:drop-shadow(0 0 8px rgba(212,169,60,.75))}
+    100%{stroke-width:2.6; filter:none}
+  }
+  @keyframes selPulseDecan{
+    0%{filter:drop-shadow(0 0 0 rgba(212,169,60,0))}
+    45%{filter:drop-shadow(0 0 12px rgba(212,169,60,.9))}
+    100%{filter:none}
+  }
+  .sphere.sel circle.body{animation:selPulseSphere .4s ease-out forwards}
+  .pgroup.sel .path-line{animation:selPulsePath .4s ease-out forwards}
+  .decan-cell.sel circle{stroke:var(--gold); stroke-width:3; animation:selPulseDecan .4s ease-out forwards}
+  #ring, #bands{transition:opacity .18s ease}
+  .slens{transition:opacity .18s ease, fill .18s ease}
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important; animation:none !important}
+    .hook-line{opacity:.35}
+    .hook-line:not(.on){opacity:0}
+  }
 </style>
 </head>
 <body>
 <header>
   <h1>THE RECONCILED TREE</h1>
-  <div class="sub"><b>v3.36</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
+  <div class="sub"><b>v3.37</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
+  <button type="button" id="tierBtn" aria-expanded="false" aria-controls="tierPop" title="Tier vocabulary">TIERS ?</button>
+  <div id="tierPop" role="dialog" aria-label="Tier legend" hidden>
+    <p><b>T1</b> attested primary source · <b>T2</b> interpretive / lineage · <b>T2-L</b> living lineage · <b>T3</b> owned construction · <b>G</b> resonance / gnosis</p>
+    <p class="tier-note"><i>Gnosis may not dress as text; text may not overrule gnosis; G is a column, not a rung.</i></p>
+  </div>
 </header>
 <main>
   <nav id="rail" aria-label="Lenses"></nav>
@@ -245,7 +302,7 @@ const IMG_BASE=(()=>{const p=location.pathname||location.href||'';return (/\/bas
 function img(p){return (p||'').replace(/^images\//,IMG_BASE);}
 function portraitHtml(src,alt){return '<div class="portrait-wrap"><img class="portrait-preview" src="'+img(src)+'" alt="'+alt+'"></div>';}
 
-/* ================= CANON v3.36 ================= */
+/* ================= CANON v3.37 ================= */
 const NODES = {
  kether:{x:400,y:95,r:48,c:"#F2EBD7",num:"0",seph:"Kether",kem:"AMEN",planet:"SOURCE"},
  chokmah:{x:595,y:300,r:46,c:"#C9CFDD",num:"1",seph:"Chokmah",kem:"ATUM",planet:"CONSTELLATIONS"},
@@ -339,7 +396,7 @@ const LENSES = [
  {id:"rulerships",name:"Rulerships",desc:"Dominion pairs — Free Will and Fertility stand unpaired on the pillar."},
  {id:"questions",name:"Questions",desc:"What consciousness asks at each station. Left: space. Right: time."},
  {id:"circuit",name:"The Circuit",desc:"§4d — rail, neutral, ground, supply, bus, winding, magnet. The operator closes switches."},
- {id:"decans",name:"Decans",desc:"The 36 decades + the epagomenal Geb-cell as a ring around the tree — the sky surrounds; nothing lands on a sphere or path. All 37 cells named (Chronos-canonical, Pass 50; the alternate chat names printed as T2-L variants, not harmonized). Command: Ra → Shu (promoted, theater commander) → Thoth (Lord of the Books) → Sekhmet/Sirius (field-regent, T2-L) → the 36. Sopdet keys the ring at Solar Rising; the year anchors to the heliacal rising of Sirius. Effect-texts = Negative/martial register; the competitive-ops overlay is private and print-excluded."},
+ {id:"decans",name:"Decans",desc:"The 36 decades + the epagomenal Geb-cell as a ring around the tree — the sky surrounds; nothing lands on a sphere or path. Per the Naos of the Decades (T1 monument; von Bomhard’s “war machine / texts of execration,” T2, confirmed via associate T2-L). All 37 cells named (Chronos-canonical, Pass 50; the alternate chat names printed as T2-L variants, not harmonized). Command: Ra → Shu (promoted, theater commander) → Thoth (Lord of the Books) → Sekhmet/Sirius (field-regent, T2-L) → the 36. Sopdet keys the ring at Solar Rising; the year anchors to the heliacal rising of Sirius. Effect-texts = Negative/martial register; effects-content and live-decade computation remain Sphere-of-Iah / Strike Window territory; the competitive-ops overlay is private and print-excluded."},
  {id:"divmasc",name:"Divine ♂",desc:"The Tree of Dua — the masculine godform seated in each sphere. Click a sphere to light the paths that touch it."},
  {id:"divfem",name:"Divine ♀",desc:"The Tree of Dua — the feminine layer as a receptive chalice: the sole-masculine central axis (Amen · Ausar · Heru) descends as the Kamutef seed-ray through Auset into Geb. Amunet appears twice — Red-Crowned Amenet-Menit at Binah (Saturn), solar-crowned Amenet-Rait haloed at Chesed (Jupiter). Click a sphere to light its paths."}
 ];
@@ -605,6 +662,63 @@ for(let i=1;i<=36;i++){
   DECANS.push({n:i,name:DECAN_NAMES[i]||null,dates:`${m} ${d0}–${d0+9}`,note:DECAN_NOTES[i]||null});
 }
 DECANS.push({n:37,name:"EPAGOMENAL · GEB",dates:"the 5 days outside the year",note:DECAN_NOTES[37]});
+/* Civil New Year anchor — SET BY ALI. Leave unset until supplied; do not guess. */
+const WEP_RONPET = "YYYY-MM-DD"; // ⚑ AWAITING ANCHOR DATE
+const STAR_ANCHORS = {
+  2:  {star:"Regulus (Heart of the Lion)", starTier:"T2",
+       power:"Death; redness, sweat; fatal one-day fever", powerTier:"T2-L",
+       planets:"Sun·Mars", planetsTier:"T3",
+       verdict:"DIVERGENT — royal in the West, martial plague in the Naos",
+       flags:[], treeHook:{target:"tiphereth", kind:"sphere", label:"Tiphereth (Master v2, Pass 36)"},
+       direction:null, elections:null},
+  3:  {star:"Denebola (Tail of the Lion)", starTier:"T2",
+       power:"\u201cCrushing fear\u201d cast against enemies; blood-clots; 3-day fever", powerTier:"T2-L",
+       planets:"Mars·Mercury", planetsTier:"T3",
+       verdict:"AGREES — malefic in both systems",
+       flags:[], treeHook:null, direction:null, elections:null},
+  4:  {star:"Alkes (\u03b1 Crateris)", starTier:"T3",
+       power:"Fever; plant-sickness; sacrifice of dogs", powerTier:"T2-L",
+       planets:"Mars·Saturn", planetsTier:"T3",
+       verdict:"Malefic in Naos; Western tradition obscure",
+       flags:["WEAK STAR-ID — \u03b1 Crateris is faint; the identification itself is soft"],
+       treeHook:null, direction:null, elections:null},
+  9:  {star:"Zubenelgenubi (\u03b1\u00b2 Librae)", starTier:"T3",
+       power:"Bloodbaths, war, carnage — the total-war cell", powerTier:"T2-L",
+       planets:"Mars·Mercury·Moon", planetsTier:"T3",
+       verdict:"AGREES on malefic",
+       flags:["CONTESTED STAR — Chronos asserts Libra's southern claw; the name \u0131\u0357p-\u1E0Fs reads as Sopdu, pulling toward Orion's horizon. Opposite regions. Not settled."],
+       treeHook:null, direction:null, elections:null},
+  32: {star:"Orion (region — register: rmn \u1E25ry s\uA723\u1E25)", starTier:"region only",
+       power:"(little surviving text)", powerTier:"T2-L",
+       planets:null, planetsTier:null,
+       verdict:null,
+       flags:["SLOT-TENTATIVE", "NAME CONFLICT — register names this cell an Arm of Sah; Pass-50 canonical name is KENEMU SOPDET. Unresolved; both shown."],
+       treeHook:null, direction:null, elections:null},
+  33: {star:"Orion (region — register: rmn \u1E2Bry s\uA723\u1E25)", starTier:"region only",
+       power:"(little surviving text)", powerTier:"T2-L",
+       planets:null, planetsTier:null,
+       verdict:null,
+       flags:["SLOT-TENTATIVE", "NAME CONFLICT — register names this cell an Arm of Sah; Pass-50 canonical name is SESHEMU SOPDET. Unresolved; both shown."],
+       treeHook:null, direction:null, elections:null},
+  34: {star:"Orion (Sah — Belt/Betelgeuse/Rigel)", starTier:"T1 region / T3 star",
+       power:"Protection against rebels; kills serpents", powerTier:"T2-L",
+       planets:"Jupiter·Mars", planetsTier:"T3",
+       verdict:"Martial-protective in both systems",
+       flags:["SLOT-TENTATIVE", "NAME CONFLICT — register names this cell s\uA723\u1E25 (Sah); Pass-50 canonical name is APED SOPDET. Unresolved; both shown."],
+       treeHook:{target:"skillcommand", kind:"path", label:"Divine Skill & Command (canonical marker: Orion; ruler Ptah)"},
+       direction:null, elections:null},
+  35: {star:"Procyon (\u201cForemost of Sopdet\u201d)", starTier:"T2 — double-confirmed",
+       power:"Vanquishes chaos; saves Ra from Apep on the eastern sandbanks", powerTier:"T2-L",
+       planets:"Mars·Jupiter", planetsTier:"T3",
+       verdict:"DOUBLE-CONFIRMED — name self-locates AND star-field agrees; as solid as this system gets",
+       flags:[], treeHook:null, direction:null, elections:null},
+  36: {star:"Sirius (Sopdet)", starTier:"T1",
+       power:"Power over life and death; brings the inundation", powerTier:"T2-L",
+       planets:"Moon·Venus", planetsTier:"T3",
+       verdict:"DIVERGENT on register (benefic-West vs life-and-death Naos); life-giving/flood aspect agrees",
+       flags:[], treeHook:{target:"solarrising", kind:"path", label:"Solar Rising (canonical marker: Sirius; ruler Heru)"},
+       direction:null, elections:null}
+};
 const CIRCUIT_HILITE=["coiledpower","dualcurrent","skillcommand","solarrising","timelocation"];
 const BANDS=[ // elements strata
  {name:"FIRE",y1:265,y2:340,c:"#A03A2E"},
@@ -632,6 +746,7 @@ function pointAt(pts,t){
 
 const bandLayer=el('g',{id:'bands'});
 const ringLayer=el('g',{id:'ring'});
+const hookLayer=el('g',{id:'hooks'});
 const kauLayer=el('g',{id:'kau'});
 const benefactLayer=el('g',{id:'benefact'});
 const barqueLayer=el('g',{id:'barque'});
@@ -685,6 +800,7 @@ for(const id in NODES){
   sphereGroups[id]=g;
 }
 svg.appendChild(labelLayer);
+svg.insertBefore(hookLayer, labelLayer);
 svg.insertBefore(kauLayer, labelLayer);
 svg.insertBefore(barqueLayer, kauLayer);
 svg.insertBefore(benefactLayer, barqueLayer);
@@ -947,6 +1063,8 @@ function setMode(modeId){
 }
 function dress(lensId){
   activeLens=lensId;
+  ringLayer.style.opacity='0'; bandLayer.style.opacity='0';
+  document.querySelectorAll('.slens').forEach(t=>{t.style.opacity='0';});
   if(activeMode){ document.querySelectorAll('#rail .lens-btn').forEach(b=>b.classList.remove('on')); }
   else { document.querySelectorAll('#rail .lens-btn').forEach(b=>b.classList.toggle('on',b.dataset.id===lensId)); }
   document.querySelectorAll('#rail .mode-btn').forEach(b=>b.classList.toggle('on',!!activeMode && b.dataset.id===activeMode));
@@ -960,28 +1078,11 @@ function dress(lensId){
   }
   // decan ring / kau ring viewBox
   const _kauOn=activeMode==='kau', _decOn=lensId==='decans'&&!activeMode;
-  svg.setAttribute('viewBox', _kauOn ? KAU_VIEWBOX : (_decOn ? '-70 -45 940 1245' : '0 0 800 1150'));
-  ringLayer.innerHTML='';
+  svg.setAttribute('viewBox', _kauOn ? KAU_VIEWBOX : (_decOn ? '-100 -80 1000 1310' : '0 0 800 1150'));
+  ringLayer.innerHTML=''; hookLayer.innerHTML='';
   kauLayer.innerHTML=''; barqueLayer.innerHTML=''; benefactLayer.innerHTML='';
   if(_kauOn){ renderKau(); }
-  else if(_decOn){
-    const cx=400, cy=575, rx=372, ry=552;
-    DECANS.forEach((dc,idx)=>{
-      // key decade 36 at the lower-right (Solar Rising side): angle offset so idx 35 lands at ~100°
-      const ang = ((idx - 35) / 37) * 2*Math.PI + Math.PI*0.56;
-      const x=cx+rx*Math.cos(ang), y=cy+ry*Math.sin(ang);
-      const g=el('g',{class:'sphere',tabindex:0,role:'button','aria-label':'Decade '+dc.n},ringLayer);
-      el('circle',{cx:x,cy:y,r:dc.n===37?11:9,fill:'#171C30',stroke:dc.n===36?'#D4A93C':(dc.n===37?'#7A5A3A':'#565B72'),'stroke-width':dc.n>=36?2.4:1.5},g);
-      el('text',{class:'snum',x:x,y:y+3,'font-size':'8.2',fill:dc.n===36?'#D4A93C':'#C9CFDD'},g).textContent=dc.n;
-      const out=17;
-      const lx=x+out*Math.cos(ang), ly=y+out*Math.sin(ang)+3;
-      const anch = Math.cos(ang)>0.35?'start':(Math.cos(ang)<-0.35?'end':'middle');
-      const lab = dc.name || dc.dates.toUpperCase();
-      el('text',{class:'pmark',x:lx,y:ly,'text-anchor':anch,'font-size':'8',fill:dc.name?(dc.n>=36?'#D4A93C':'#CFC7B0'):'#7A8098','letter-spacing':'.06em'},g).textContent=lab;
-      g.addEventListener('click',()=>selectDecan(dc));
-      g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectDecan(dc);}});
-    });
-  }
+  else if(_decOn){ renderDecanRing(); }
   // deity layer (Tree of Dua) + the Kamutef descending axis
   deityLayer.innerHTML='';
   const _dz=(lensId==='divmasc'||lensId==='divfem');
@@ -1040,6 +1141,10 @@ function dress(lensId){
     }
   });
   if(activeMode==='paths') highlightRulerPaths(activeRuler);
+  requestAnimationFrame(()=>{
+    ringLayer.style.opacity='1'; bandLayer.style.opacity='1';
+    document.querySelectorAll('.slens').forEach(t=>{t.style.opacity='';});
+  });
   const lens=LENSES.find(l=>l.id===lensId);
   if(!document.querySelector('.sel') && !activeMode) home(lens);
   else if(activeMode==='paths' && activeRuler && !document.querySelector('.sel')) selectRuler(activeRuler);
@@ -1053,27 +1158,156 @@ MODES.forEach(m=>{
   b.addEventListener('click',()=>{clearSel();activeRuler=null;setMode(m.id);});
   rail.appendChild(b);
 });
-rail.insertAdjacentHTML('beforeend','<div class="railhead">Lenses</div>');
-LENSES.forEach(l=>{
+const LENS_GROUPS=[
+  {head:'Structure', ids:['sky','elements','circuit','decans']},
+  {head:'Consciousness', ids:['soul','forces','strengths','weaknesses','distortions','questions']},
+  {head:'Practice', ids:['week','body','rulerships','symbols']},
+  {head:'Divine', ids:['neteru','divmasc','divfem']}
+];
+function addLensBtn(l){
   const b=document.createElement('button');
   b.className='lens-btn'; b.textContent=l.name; b.dataset.id=l.id;
   b.addEventListener('click',()=>{clearSel();activeMode=null;activeRuler=null;treewrap.classList.remove('paths-mode','kau-mode');highlightRulerPaths(null);dress(l.id);home(l);});
   rail.appendChild(b);
+}
+LENS_GROUPS.forEach(g=>{
+  rail.insertAdjacentHTML('beforeend','<div class="railhead">'+g.head+'</div>');
+  g.ids.forEach(id=>{ const l=LENSES.find(x=>x.id===id); if(l) addLensBtn(l); });
 });
+
+
+/* ================= Decan Pass v1 helpers ================= */
+const decanGroups={};
+const decanPos={};
+function wepRonpetReady(){
+  return typeof WEP_RONPET==='string' && /^\d{4}-\d{2}-\d{2}$/.test(WEP_RONPET) && WEP_RONPET!=='YYYY-MM-DD';
+}
+function civilDayInfo(){
+  if(!wepRonpetReady()) return null;
+  const parts=WEP_RONPET.split('-').map(Number);
+  const now=new Date();
+  let a=new Date(now.getFullYear(), parts[1]-1, parts[2], 12, 0, 0);
+  if(now < a) a=new Date(now.getFullYear()-1, parts[1]-1, parts[2], 12, 0, 0);
+  let days=Math.floor((now - a)/86400000);
+  if(days<0) days=0;
+  if(days>364) days=364;
+  if(days>=360){
+    const dayIn=days-360+1;
+    return {n:37, name:(DECANS[36]&&DECANS[36].name)||'EPAGOMENAL · GEB', dayIn, of:5, daysLeft:5-dayIn, nextName:(DECANS[0]&&DECANS[0].name)||'TEPY-A KENMET'};
+  }
+  const n=Math.floor(days/10)+1;
+  const dayIn=(days%10)+1;
+  const nextN=n===36?37:n+1;
+  const next=DECANS.find(d=>d.n===nextN);
+  return {n, name:(DECANS[n-1]&&DECANS[n-1].name)||('Decade '+n), dayIn, of:10, daysLeft:10-dayIn, nextName:next?next.name:('Decade '+nextN)};
+}
+function nowBlockHtml(){
+  if(!wepRonpetReady()){
+    return `<div class="now-block"><div class="nk">Now</div><div class="nv await">⚑ AWAITING ANCHOR DATE — set WEP_RONPET (civil New Year / heliacal Sirius) before the live decade can be computed.</div></div>`;
+  }
+  const info=civilDayInfo();
+  if(!info) return '';
+  return `<div class="now-block"><div class="nk">Now</div><div class="nv">Decade <b>${info.n}</b> · ${info.name}<br>Day ${info.dayIn} of ${info.of} · ${info.daysLeft} day${info.daysLeft===1?'':'s'} remaining<br>Next: ${info.nextName}</div></div>`;
+}
+function fourPointStar(cx,cy,r,filled,color,parent){
+  const pts=[];
+  for(let i=0;i<8;i++){
+    const a=-Math.PI/2+i*Math.PI/4;
+    const rad=i%2===0?r:r*0.38;
+    pts.push((cx+rad*Math.cos(a)).toFixed(2)+','+(cy+rad*Math.sin(a)).toFixed(2));
+  }
+  el('polygon',{class:'star-anchor',points:pts.join(' '),fill:filled?color:'none',stroke:color,'stroke-width':'1.15','pointer-events':'none'},parent);
+}
+function decanAngle(idx){ return ((idx - 35) / 37) * 2*Math.PI + Math.PI*0.56; }
+function polarXY(cx,cy,rx,ry,ang){ return {x:cx+rx*Math.cos(ang), y:cy+ry*Math.sin(ang)}; }
+function ellipseArc(cx,cy,rx,ry,a0,a1){
+  let da=a1-a0;
+  while(da<=0) da+=2*Math.PI;
+  while(da>2*Math.PI) da-=2*Math.PI;
+  const s=polarXY(cx,cy,rx,ry,a0), e=polarXY(cx,cy,rx,ry,a1);
+  const large=da>Math.PI?1:0;
+  return `M ${s.x.toFixed(1)} ${s.y.toFixed(1)} A ${rx} ${ry} 0 ${large} 1 ${e.x.toFixed(1)} ${e.y.toFixed(1)}`;
+}
+function renderDecanRing(){
+  Object.keys(decanGroups).forEach(k=>delete decanGroups[k]);
+  Object.keys(decanPos).forEach(k=>delete decanPos[k]);
+  const cx=400, cy=575, rx=372, ry=552;
+  const today=civilDayInfo();
+  // Season arcs behind cells (opacity ≤ 0.12); epagomenal sits in the gap outside all three
+  const seasons=[
+    {name:'AKHET · INUNDATION', i0:0, i1:11, c:'#3A6BC4'},
+    {name:'PERET · EMERGENCE', i0:12, i1:23, c:'#3E9B7A'},
+    {name:'SHEMU · HARVEST', i0:24, i1:35, c:'#C0392B'}
+  ];
+  const arx=rx+34, ary=ry+34, lrx=rx+58, lry=ry+58;
+  seasons.forEach(se=>{
+    const a0=decanAngle(se.i0)- (Math.PI/37), a1=decanAngle(se.i1)+(Math.PI/37);
+    el('path',{d:ellipseArc(cx,cy,arx,ary,a0,a1),fill:'none',stroke:se.c,'stroke-width':22,opacity:0.12,'pointer-events':'none'},ringLayer);
+    let amid=a0+((a1-a0)<0?(a1-a0+2*Math.PI):(a1-a0))/2;
+    const lp=polarXY(cx,cy,lrx,lry,amid);
+    const anch=Math.cos(amid)>0.35?'start':(Math.cos(amid)<-0.35?'end':'middle');
+    el('text',{class:'bandlab',x:lp.x,y:lp.y,fill:se.c,'text-anchor':anch,'font-size':'10',opacity:0.75,'pointer-events':'none'},ringLayer).textContent=se.name;
+  });
+  DECANS.forEach((dc,idx)=>{
+    const ang=decanAngle(idx);
+    const x=cx+rx*Math.cos(ang), y=cy+ry*Math.sin(ang);
+    const isToday=today && today.n===dc.n;
+    const g=el('g',{class:'sphere decan-cell'+(isToday?' decan-today':''),tabindex:0,role:'button','aria-label':'Decade '+dc.n},ringLayer);
+    el('circle',{cx:x,cy:y,r:dc.n===37?11:9,fill:'#171C30',stroke:dc.n===36?'#D4A93C':(dc.n===37?'#7A5A3A':'#565B72'),'stroke-width':dc.n>=36?2.4:1.5},g);
+    el('text',{class:'snum',x:x,y:y+3,'font-size':'8.2',fill:dc.n===36?'#D4A93C':'#C9CFDD'},g).textContent=dc.n;
+    const A=STAR_ANCHORS[dc.n];
+    if(A){
+      const filled=!(A.flags&&A.flags.length);
+      const color=filled?'#D4A93C':'#C0392B'; // gold / --ochre
+      const sx=x+Math.cos(ang)*14, sy=y+Math.sin(ang)*14;
+      fourPointStar(sx, sy, filled?5.2:5.0, filled, color, g);
+    }
+    const out=17;
+    const lx=x+out*Math.cos(ang), ly=y+out*Math.sin(ang)+3;
+    const anch=Math.cos(ang)>0.35?'start':(Math.cos(ang)<-0.35?'end':'middle');
+    const lab=dc.name || dc.dates.toUpperCase();
+    el('text',{class:'pmark',x:lx,y:ly,'text-anchor':anch,'font-size':'8',fill:dc.name?(dc.n>=36?'#D4A93C':'#CFC7B0'):'#7A8098','letter-spacing':'.06em'},g).textContent=lab;
+    g.addEventListener('click',()=>selectDecan(dc));
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectDecan(dc);}});
+    decanGroups[dc.n]=g;
+    decanPos[dc.n]={x,y,ang};
+  });
+}
+function drawDecanHook(n, hook){
+  hookLayer.innerHTML='';
+  if(!hook) return;
+  const from=decanPos[n]; if(!from) return;
+  let tx,ty;
+  if(hook.kind==='sphere'){
+    const nd=NODES[hook.target]; if(!nd) return;
+    tx=nd.x; ty=nd.y;
+    if(sphereGroups[hook.target]) sphereGroups[hook.target].classList.add('sel');
+  } else if(hook.kind==='path'){
+    const p=PATHS.find(x=>x.id===hook.target); if(!p) return;
+    const pts=pathGeom(p);
+    const mid=pointAt(pts, 0.5);
+    tx=mid.x; ty=mid.y;
+    if(pathGroups[hook.target]) pathGroups[hook.target].classList.add('incident');
+  } else return;
+  const line=el('line',{class:'hook-line',x1:from.x,y1:from.y,x2:tx,y2:ty,'pointer-events':'none'},hookLayer);
+  requestAnimationFrame(()=>line.classList.add('on'));
+}
 
 /* ================= inspector ================= */
 const panel=document.getElementById('panel');
 function field(k,v){return v?`<div class="field"><div class="k">${k}</div><div class="v">${v}</div></div>`:'';}
-function clearSel(){document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));document.querySelectorAll('.kau-card.on').forEach(c=>c.classList.remove('on'));document.querySelectorAll('.kau-path-hilite').forEach(x=>x.classList.remove('kau-path-hilite'));document.querySelectorAll('.sphere.kau-hilite').forEach(x=>x.classList.remove('kau-hilite'));}
+function clearSel(){document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));document.querySelectorAll('.kau-card.on').forEach(c=>c.classList.remove('on'));document.querySelectorAll('.kau-path-hilite').forEach(x=>x.classList.remove('kau-path-hilite'));document.querySelectorAll('.sphere.kau-hilite').forEach(x=>x.classList.remove('kau-hilite'));if(hookLayer){hookLayer.querySelectorAll('.hook-line').forEach(l=>l.classList.remove('on'));hookLayer.innerHTML='';}document.querySelectorAll('.decan-cell.sel').forEach(g=>g.classList.remove('sel'));}
 function home(lens){
   lens=lens|| (activeMode? MODES.find(m=>m.id===activeMode) : LENSES.find(l=>l.id===activeLens));
-  const ver='v3.36 · closed canon + Paths + Kau modes';
+  const ver='v3.37 · closed canon + Paths + Kau + Decan Pass';
+  const nowBlock=(!activeMode && lens && lens.id==='decans')?nowBlockHtml():'';
   panel.innerHTML=`
    <div class="eyebrow">${activeMode?'Mode':'Lens'}</div>
    <h2>${lens.name}</h2>
    <h3 class="route">${ver}</h3>
    <div class="note">${lens.desc}</div>
-   <div class="field" style="margin-top:12px"><div class="k">Select</div><div class="v">${activeMode==='paths'?'Click a ruler portrait, then a highlighted path for lore.':activeMode==='kau'?'Click a seat card, a numbered seat on the ring, or a barque figure at the top — the wielder\u2019s ruled paths and spheres light up gold.':'Any sphere or path — every register appears here, whatever lens is active.'}</div></div>
+   ${nowBlock}
+   <div class="field" style="margin-top:12px"><div class="k">Select</div><div class="v">${activeMode==='paths'?'Click a ruler portrait, then a highlighted path for lore.':activeMode==='kau'?'Click a seat card, a numbered seat on the ring, or a barque figure at the top — the wielder\u2019s ruled paths and spheres light up gold.':(lens.id==='decans'?'Click any decade on the ring — star anchors, flags, and notes appear here.':'Any sphere or path — every register appears here, whatever lens is active.')}</div></div>
    <div class="prov">AUTHORITY — the rectified diagram; Ali's rulings, passes 1–50. Each lens is one pure facet; nothing merged. Paths/Kau data from ratified registers (Aug 2026).</div>`;
 }
 const REGNAMES={sky:"Sky",neteru:"Rulers",soul:"Soul-part",week:"Week",body:"Body",forces:"Force",symbols:"Symbol",
@@ -1111,14 +1345,45 @@ function select(kind,id){
 }
 function selectDecan(dc){
   clearSel();
+  const cell=decanGroups[dc.n]; if(cell) cell.classList.add('sel');
+  const A=STAR_ANCHORS[dc.n]||null;
+  let anchorHtml='';
+  if(A){
+    const tier=t=>t?`<span class="tier-inline">${t}</span>`:'';
+    anchorHtml += field('Star', A.star + tier(A.starTier));
+    if(A.flags && A.flags.some(f=>f.indexOf('NAME CONFLICT')===0)){
+      anchorHtml += field('Pass-50 name', dc.name||'—');
+      anchorHtml += field('Register name', A.star);
+    }
+    anchorHtml += field('Naos power', A.power + tier(A.powerTier));
+    if(A.planets) anchorHtml += field('Planetary pair', A.planets + tier(A.planetsTier));
+    if(A.verdict) anchorHtml += field('Divergence verdict', A.verdict);
+    if(A.flags && A.flags.length){
+      anchorHtml += A.flags.map(f=>`<div class="flag-row"><span class="fk">Flag</span>${f}</div>`).join('');
+    }
+    if(A.treeHook) anchorHtml += field('Tree hook', A.treeHook.label);
+    drawDecanHook(dc.n, A.treeHook);
+  }
   panel.innerHTML=`
     <div class="eyebrow">${dc.n===37?'The days outside the year':'Decade '+dc.n+' of 36'}</div>
     <h2>${dc.name||'(name awaiting von Bomhard)'}</h2>
     <h3 class="route">${dc.dates}</h3>
+    ${anchorHtml}
     ${dc.note?field('Note','<span class="note">'+dc.note+'</span>'):''}
-    ${field('Layer doctrine','The decanal belt surrounds the tree as the sky surrounds — 37 cells (36 decades + the epagomenal Geb-cell) per the Naos of the Decades (T1 monument; von Bomhard\'s “war machine / texts of execration,” T2, confirmed via associate T2-L). Command: Ra → Shu → Thoth → Sekhmet/Sirius (field-regent) → the decans. Names Chronos-canonical (Pass 50). The year anchors to the heliacal rising of Sirius. Effects-content and live-decade computation remain Sphere-of-Iah / Strike Window territory; the competitive-operations overlay is private and print-excluded.')}
     <div class="prov">T1: the Naos (von Bomhard 2008) · Chronos warfare module + associate verification (T2-L) · ring arrangement T3, owned. Decan effects = Negative/martial register.</div>`;
 }
+
+/* ================= tier legend ================= */
+(function(){
+  const btn=document.getElementById('tierBtn'), pop=document.getElementById('tierPop');
+  if(!btn||!pop) return;
+  function close(){ pop.hidden=true; btn.setAttribute('aria-expanded','false'); }
+  function open(){ pop.hidden=false; btn.setAttribute('aria-expanded','true'); }
+  btn.addEventListener('click',e=>{ e.stopPropagation(); if(pop.hidden) open(); else close(); });
+  document.addEventListener('click',e=>{ if(!pop.hidden && !pop.contains(e.target) && e.target!==btn) close(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !pop.hidden){ close(); e.stopPropagation(); } }, true);
+})();
+
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){clearSel();if(activeMode==='paths'&&activeRuler)selectRuler(activeRuler);else if(activeMode)home(MODES.find(m=>m.id===activeMode));else home();}});
 dress('sky'); home();
 </script>

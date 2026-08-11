@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reconciled Tree — v3.37 · Decan Pass</title>
+<title>The Reconciled Tree — v3.38 · Decan Pass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -183,6 +183,13 @@
   .lg.kau-path-hilite .plabel{fill:var(--gold); font-size:13px; stroke:#0A0E18; stroke-width:6px}
   .lg.kau-path-hilite .pmark{fill:#F5E6A8; font-size:9.5px; stroke-width:4.5px}
   .sphere.kau-hilite circle.body{stroke:var(--gold); stroke-width:4; filter:drop-shadow(0 0 7px rgba(212,169,60,.75))}
+  /* planet–sphere resonance — own-color glow, distinct from gold .sel */
+  .sphere.linked circle.body{stroke:var(--link-c); stroke-width:3.2;
+    filter:drop-shadow(0 0 9px var(--link-c)) drop-shadow(0 0 3px var(--link-c))}
+  .sphere.sel.linked circle.body{stroke:var(--link-c); stroke-width:3.6;
+    filter:brightness(1.15) drop-shadow(0 0 10px var(--link-c)) drop-shadow(0 0 4px rgba(212,169,60,.55))}
+  .decan-cell.linked circle{stroke:#E6C765; stroke-width:2.8;
+    filter:drop-shadow(0 0 8px rgba(230,199,101,.7))}
   .barque-img{cursor:pointer; outline:none}
   .barque-img .kseat-name{font-size:11px; fill:var(--gold)}
   .barque-img:hover image,.barque-img:focus-visible image{filter:brightness(1.3)}
@@ -250,7 +257,7 @@
 <body>
 <header>
   <h1>THE RECONCILED TREE</h1>
-  <div class="sub"><b>v3.37</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
+  <div class="sub"><b>v3.38</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
   <button type="button" id="tierBtn" aria-expanded="false" aria-controls="tierPop" title="Tier vocabulary">TIERS ?</button>
   <div id="tierPop" role="dialog" aria-label="Tier legend" hidden>
     <p><b>T1</b> attested primary source · <b>T2</b> interpretive / lineage · <b>T2-L</b> living lineage · <b>T3</b> owned construction · <b>G</b> resonance / gnosis</p>
@@ -302,7 +309,7 @@ const IMG_BASE=(()=>{const p=location.pathname||location.href||'';return (/\/bas
 function img(p){return (p||'').replace(/^images\//,IMG_BASE);}
 function portraitHtml(src,alt){return '<div class="portrait-wrap"><img class="portrait-preview" src="'+img(src)+'" alt="'+alt+'"></div>';}
 
-/* ================= CANON v3.37 ================= */
+/* ================= CANON v3.38 ================= */
 const NODES = {
  kether:{x:400,y:95,r:48,c:"#F2EBD7",num:"0",seph:"Kether",kem:"AMEN",planet:"SOURCE"},
  chokmah:{x:595,y:300,r:46,c:"#C9CFDD",num:"1",seph:"Chokmah",kem:"ATUM",planet:"CONSTELLATIONS"},
@@ -316,6 +323,10 @@ const NODES = {
  yesod:{x:400,y:895,r:46,c:"#8A5FBF",num:"9",seph:"Yesod",kem:"AUSET",planet:"MOON"},
  malkuth:{x:400,y:1060,r:46,c:"#7A5A3A",num:"10",seph:"Malkuth",kem:"GEB",planet:"EARTH"}
 };
+/* Planets and spheres are the same thing (Ali, canon). */
+const PLANET_SPHERE = { "Saturn":"binah", "Jupiter":"chesed", "Mars":"gevurah",
+  "Sun":"tiphereth", "Venus":"netzach", "Mercury":"hod", "Moon":"yesod",
+  "Earth":"malkuth", "Neptune":"ausar" };
 
 /* per-node layer values — [] = drawn blank by canon */
 const L = {
@@ -665,59 +676,71 @@ DECANS.push({n:37,name:"EPAGOMENAL · GEB",dates:"the 5 days outside the year",n
 /* Civil New Year anchor — SET BY ALI. Leave unset until supplied; do not guess. */
 const WEP_RONPET = "YYYY-MM-DD"; // ⚑ AWAITING ANCHOR DATE
 const STAR_ANCHORS = {
+  1:  {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
+       verdict:null, flags:[], treeHook:null, spheres:["gevurah","binah"], direction:null, elections:null},
   2:  {star:"Regulus (Heart of the Lion)", starTier:"T2",
        power:"Death; redness, sweat; fatal one-day fever", powerTier:"T2-L",
        planets:"Sun·Mars", planetsTier:"T3",
        verdict:"DIVERGENT — royal in the West, martial plague in the Naos",
        flags:[], treeHook:{target:"tiphereth", kind:"sphere", label:"Tiphereth (Master v2, Pass 36)"},
-       direction:null, elections:null},
+       spheres:["tiphereth","gevurah"], direction:null, elections:null},
   3:  {star:"Denebola (Tail of the Lion)", starTier:"T2",
        power:"\u201cCrushing fear\u201d cast against enemies; blood-clots; 3-day fever", powerTier:"T2-L",
        planets:"Mars·Mercury", planetsTier:"T3",
        verdict:"AGREES — malefic in both systems",
-       flags:[], treeHook:null, direction:null, elections:null},
+       flags:[], treeHook:null, spheres:["gevurah","hod"], direction:null, elections:null},
   4:  {star:"Alkes (\u03b1 Crateris)", starTier:"T3",
        power:"Fever; plant-sickness; sacrifice of dogs", powerTier:"T2-L",
        planets:"Mars·Saturn", planetsTier:"T3",
        verdict:"Malefic in Naos; Western tradition obscure",
        flags:["WEAK STAR-ID — \u03b1 Crateris is faint; the identification itself is soft"],
-       treeHook:null, direction:null, elections:null},
+       treeHook:null, spheres:["gevurah","binah"], direction:null, elections:null},
   9:  {star:"Zubenelgenubi (\u03b1\u00b2 Librae)", starTier:"T3",
        power:"Bloodbaths, war, carnage — the total-war cell", powerTier:"T2-L",
        planets:"Mars·Mercury·Moon", planetsTier:"T3",
        verdict:"AGREES on malefic",
        flags:["CONTESTED STAR — Chronos asserts Libra's southern claw; the name \u0131\u0357p-\u1E0Fs reads as Sopdu, pulling toward Orion's horizon. Opposite regions. Not settled."],
-       treeHook:null, direction:null, elections:null},
+       treeHook:null, spheres:["gevurah","hod","yesod"], direction:null, elections:null},
+  11: {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
+       verdict:null, flags:[], treeHook:null, spheres:["binah","yesod"], direction:null, elections:null},
+  13: {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
+       verdict:null, flags:[], treeHook:null, spheres:["binah","chesed"], direction:null, elections:null},
+  26: {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
+       verdict:null, flags:[], treeHook:null, spheres:["gevurah"], direction:null, elections:null},
+  31: {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
+       verdict:null, flags:[], treeHook:null, spheres:["hod","binah"], direction:null, elections:null},
   32: {star:"Orion (region — register: rmn \u1E25ry s\uA723\u1E25)", starTier:"region only",
        power:"(little surviving text)", powerTier:"T2-L",
        planets:null, planetsTier:null,
        verdict:null,
        flags:["SLOT-TENTATIVE", "NAME CONFLICT — register names this cell an Arm of Sah; Pass-50 canonical name is KENEMU SOPDET. Unresolved; both shown."],
-       treeHook:null, direction:null, elections:null},
+       treeHook:null, spheres:[], direction:null, elections:null},
   33: {star:"Orion (region — register: rmn \u1E2Bry s\uA723\u1E25)", starTier:"region only",
        power:"(little surviving text)", powerTier:"T2-L",
        planets:null, planetsTier:null,
        verdict:null,
        flags:["SLOT-TENTATIVE", "NAME CONFLICT — register names this cell an Arm of Sah; Pass-50 canonical name is SESHEMU SOPDET. Unresolved; both shown."],
-       treeHook:null, direction:null, elections:null},
+       treeHook:null, spheres:[], direction:null, elections:null},
   34: {star:"Orion (Sah — Belt/Betelgeuse/Rigel)", starTier:"T1 region / T3 star",
        power:"Protection against rebels; kills serpents", powerTier:"T2-L",
        planets:"Jupiter·Mars", planetsTier:"T3",
        verdict:"Martial-protective in both systems",
        flags:["SLOT-TENTATIVE", "NAME CONFLICT — register names this cell s\uA723\u1E25 (Sah); Pass-50 canonical name is APED SOPDET. Unresolved; both shown."],
        treeHook:{target:"skillcommand", kind:"path", label:"Divine Skill & Command (canonical marker: Orion; ruler Ptah)"},
-       direction:null, elections:null},
+       spheres:["chesed","gevurah"], direction:null, elections:null},
   35: {star:"Procyon (\u201cForemost of Sopdet\u201d)", starTier:"T2 — double-confirmed",
        power:"Vanquishes chaos; saves Ra from Apep on the eastern sandbanks", powerTier:"T2-L",
        planets:"Mars·Jupiter", planetsTier:"T3",
        verdict:"DOUBLE-CONFIRMED — name self-locates AND star-field agrees; as solid as this system gets",
-       flags:[], treeHook:null, direction:null, elections:null},
+       flags:[], treeHook:null, spheres:["gevurah","chesed"], direction:null, elections:null},
   36: {star:"Sirius (Sopdet)", starTier:"T1",
        power:"Power over life and death; brings the inundation", powerTier:"T2-L",
        planets:"Moon·Venus", planetsTier:"T3",
        verdict:"DIVERGENT on register (benefic-West vs life-and-death Naos); life-giving/flood aspect agrees",
        flags:[], treeHook:{target:"solarrising", kind:"path", label:"Solar Rising (canonical marker: Sirius; ruler Heru)"},
-       direction:null, elections:null}
+       spheres:["yesod","netzach"], direction:null, elections:null},
+  37: {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
+       verdict:null, flags:[], treeHook:null, spheres:["hod","chesed"], direction:null, elections:null}
 };
 const CIRCUIT_HILITE=["coiledpower","dualcurrent","skillcommand","solarrising","timelocation"];
 const BANDS=[ // elements strata
@@ -1112,7 +1135,7 @@ function dress(lensId){
     const _g=sphereGroups[_id], _c=_g.querySelector('circle.body');
     const _potent=(lensId==='divfem'&&POT[_id]);
     const _hasImg=_dz && (lensId==='divmasc'?DEITY_M:DEITY_F)[_id];
-    _g.classList.remove('potent','under','kau-hilite');
+    _g.classList.remove('potent','under','kau-hilite','linked'); _g.style.removeProperty('--link-c'); const _body=_g.querySelector('circle.body'); if(_body) _body.style.stroke='';
     if(_potent){ _c.style.fill=POT[_id].fill; _g.classList.add('potent'); _g.querySelectorAll('.sname,.snum').forEach(t=>t.style.fill=POT[_id].txt); }
     else { _c.style.fill=''; _g.querySelectorAll('.sname,.snum').forEach(t=>t.style.fill=''); if(_hasImg) _g.classList.add('under'); }
   }
@@ -1256,7 +1279,7 @@ function renderDecanRing(){
     el('circle',{cx:x,cy:y,r:dc.n===37?11:9,fill:'#171C30',stroke:dc.n===36?'#D4A93C':(dc.n===37?'#7A5A3A':'#565B72'),'stroke-width':dc.n>=36?2.4:1.5},g);
     el('text',{class:'snum',x:x,y:y+3,'font-size':'8.2',fill:dc.n===36?'#D4A93C':'#C9CFDD'},g).textContent=dc.n;
     const A=STAR_ANCHORS[dc.n];
-    if(A){
+    if(A && A.star){
       const filled=!(A.flags&&A.flags.length);
       const color=filled?'#D4A93C':'#C0392B'; // gold / --ochre
       const sx=x+Math.cos(ang)*14, sy=y+Math.sin(ang)*14;
@@ -1292,14 +1315,54 @@ function drawDecanHook(n, hook){
   const line=el('line',{class:'hook-line',x1:from.x,y1:from.y,x2:tx,y2:ty,'pointer-events':'none'},hookLayer);
   requestAnimationFrame(()=>line.classList.add('on'));
 }
+function clearLinked(){
+  document.querySelectorAll('.sphere.linked').forEach(g=>{
+    g.classList.remove('linked');
+    g.style.removeProperty('--link-c');
+    const body=g.querySelector('circle.body');
+    if(body){ body.style.stroke=''; }
+  });
+  document.querySelectorAll('.decan-cell.linked').forEach(g=>g.classList.remove('linked'));
+}
+function linkSpheres(ids){
+  (ids||[]).forEach(sid=>{
+    const g=sphereGroups[sid], n=NODES[sid];
+    if(!g||!n) return;
+    g.classList.add('linked');
+    g.style.setProperty('--link-c', n.c);
+    const body=g.querySelector('circle.body');
+    if(body) body.style.stroke=n.c;
+  });
+}
+function linkDecanCells(ns){
+  (ns||[]).forEach(n=>{ const g=decanGroups[n]; if(g) g.classList.add('linked'); });
+}
+function formatPlanetaryPair(A){
+  if(!A||!A.planets) return null;
+  const names=A.planets.split('\u00b7').map(p=>p.trim()).filter(Boolean);
+  const bits=names.map(p=>{
+    const sid=PLANET_SPHERE[p];
+    if(!sid||!NODES[sid]) return null;
+    return NODES[sid].kem+' ('+NODES[sid].seph+')';
+  }).filter(Boolean);
+  return bits.length? (A.planets+' \u2192 '+bits.join(' \u00b7 ')) : A.planets;
+}
+function decansForSphere(sid){
+  const out=[];
+  for(const k in STAR_ANCHORS){
+    const A=STAR_ANCHORS[k];
+    if(A.spheres && A.spheres.indexOf(sid)>=0) out.push(+k);
+  }
+  return out.sort((a,b)=>a-b);
+}
 
 /* ================= inspector ================= */
 const panel=document.getElementById('panel');
 function field(k,v){return v?`<div class="field"><div class="k">${k}</div><div class="v">${v}</div></div>`:'';}
-function clearSel(){document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));document.querySelectorAll('.kau-card.on').forEach(c=>c.classList.remove('on'));document.querySelectorAll('.kau-path-hilite').forEach(x=>x.classList.remove('kau-path-hilite'));document.querySelectorAll('.sphere.kau-hilite').forEach(x=>x.classList.remove('kau-hilite'));if(hookLayer){hookLayer.querySelectorAll('.hook-line').forEach(l=>l.classList.remove('on'));hookLayer.innerHTML='';}document.querySelectorAll('.decan-cell.sel').forEach(g=>g.classList.remove('sel'));}
+function clearSel(){document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));document.querySelectorAll('.kau-card.on').forEach(c=>c.classList.remove('on'));document.querySelectorAll('.kau-path-hilite').forEach(x=>x.classList.remove('kau-path-hilite'));document.querySelectorAll('.sphere.kau-hilite').forEach(x=>x.classList.remove('kau-hilite'));if(hookLayer){hookLayer.querySelectorAll('.hook-line').forEach(l=>l.classList.remove('on'));hookLayer.innerHTML='';}document.querySelectorAll('.decan-cell.sel').forEach(g=>g.classList.remove('sel'));clearLinked();}
 function home(lens){
   lens=lens|| (activeMode? MODES.find(m=>m.id===activeMode) : LENSES.find(l=>l.id===activeLens));
-  const ver='v3.37 · closed canon + Paths + Kau + Decan Pass';
+  const ver='v3.38 · closed canon + Paths + Kau + Decan Pass';
   const nowBlock=(!activeMode && lens && lens.id==='decans')?nowBlockHtml():'';
   panel.innerHTML=`
    <div class="eyebrow">${activeMode?'Mode':'Lens'}</div>
@@ -1322,11 +1385,24 @@ function select(kind,id){
       const v=(L[reg]&&L[reg][id]&&L[reg][id].length)?L[reg][id].join(' '):null;
       if(v) rows+=field(REGNAMES[reg],v);
     }
+    let decanRes='';
+    if(activeLens==='decans' && !activeMode){
+      const hits=decansForSphere(id);
+      if(hits.length){
+        linkDecanCells(hits);
+        const list=hits.map(nn=>{
+          const dc=DECANS.find(d=>d.n===nn);
+          return nn+' — '+(dc && dc.name ? dc.name : 'Decade '+nn);
+        }).join(' · ');
+        decanRes=field('Decan resonance', list);
+      }
+    }
     panel.innerHTML=`
       <div class="eyebrow">Sphere ${n.num} · ${n.seph}</div>
       <h2>${n.kem}</h2>
       <h3 class="route">${n.planet}</h3>
       ${rows}
+      ${decanRes}
       <div class="prov">Every register shown; blanks are canon. Full provenance per cell lives in the master dataset v3.32.</div>`;
   } else {
     pathGroups[id].classList.add('sel'); pathLabels[id].classList.add('sel');
@@ -1348,7 +1424,7 @@ function selectDecan(dc){
   const cell=decanGroups[dc.n]; if(cell) cell.classList.add('sel');
   const A=STAR_ANCHORS[dc.n]||null;
   let anchorHtml='';
-  if(A){
+  if(A && A.star){
     const tier=t=>t?`<span class="tier-inline">${t}</span>`:'';
     anchorHtml += field('Star', A.star + tier(A.starTier));
     if(A.flags && A.flags.some(f=>f.indexOf('NAME CONFLICT')===0)){
@@ -1356,14 +1432,20 @@ function selectDecan(dc){
       anchorHtml += field('Register name', A.star);
     }
     anchorHtml += field('Naos power', A.power + tier(A.powerTier));
-    if(A.planets) anchorHtml += field('Planetary pair', A.planets + tier(A.planetsTier));
+    if(A.planets){
+      const pair=formatPlanetaryPair(A);
+      anchorHtml += field('Planetary pair', (pair||A.planets) + tier(A.planetsTier));
+    }
     if(A.verdict) anchorHtml += field('Divergence verdict', A.verdict);
     if(A.flags && A.flags.length){
       anchorHtml += A.flags.map(f=>`<div class="flag-row"><span class="fk">Flag</span>${f}</div>`).join('');
     }
     if(A.treeHook) anchorHtml += field('Tree hook', A.treeHook.label);
     drawDecanHook(dc.n, A.treeHook);
+  } else if(A && A.treeHook){
+    drawDecanHook(dc.n, A.treeHook);
   }
+  if(A) linkSpheres(A.spheres||[]);
   panel.innerHTML=`
     <div class="eyebrow">${dc.n===37?'The days outside the year':'Decade '+dc.n+' of 36'}</div>
     <h2>${dc.name||'(name awaiting von Bomhard)'}</h2>

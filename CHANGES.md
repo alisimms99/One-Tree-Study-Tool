@@ -1,3 +1,16 @@
+# CHANGES — v3.38 (Decan Pass v2 — planet–sphere resonance)
+
+**v3.38** — planets and spheres are the same thing (Ali, canon):
+
+- Added `PLANET_SPHERE` mapping constant.
+- Every `STAR_ANCHORS` entry now carries an explicit `spheres` array (no runtime parsing of the planets string). Six non-anchor cells whose `DECAN_NOTES` already name planets (1, 11, 13, 26, 31, 37) added as sphere-only entries — no star glyphs, no new attributions.
+- **Decan → sphere:** selecting a decan lights each listed sphere with `.linked` — stroke in the sphere's own color at ~3.2px plus a soft own-color glow, visually distinct from gold `.sel`. Tree-hook connectors (2 / 34 / 36) unchanged; when a hooked sphere is also linked (decan 2 / Tiphereth), both treatments apply.
+- **Inspector:** Planetary Pair now resolves as e.g. `Moon·Venus → AUSET (Yesod) · HET-HERU (Netzach)`. Cells 32/33 (empty spheres / no pair) unchanged.
+- **Reverse lookup:** in the Decans lens only, selecting a sphere appends "Decan resonance" listing every cell whose `spheres` includes it, and those ring cells take `.linked` while selected. Display-only.
+- Clears on deselect/Escape with the existing connector lifecycle. Palette unchanged; reduced-motion respected.
+
+---
+
 # CHANGES — v3.37 (Decan Pass v1)
 
 **v3.37** — Decan Pass v1 (structured star anchors; no new star→tree rulings beyond the three canon hooks):

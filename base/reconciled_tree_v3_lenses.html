@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reconciled Tree — v3.39 · Decan Pass</title>
+<title>The Reconciled Tree — v3.40 · Decan Pass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -258,6 +258,28 @@
   .decan-cell.sel circle{stroke:var(--gold); stroke-width:3; animation:selPulseDecan .4s ease-out forwards}
   #ring, #bands{transition:opacity .18s ease}
   .slens{transition:opacity .18s ease, fill .18s ease}
+
+  .now-block .anchor{display:block; margin-top:6px; font-family:'IBM Plex Mono',monospace; font-size:9px;
+    letter-spacing:.06em; color:#8A6D1F}
+  .deity-link{background:none; border:none; padding:0; margin:0; font:inherit; color:inherit;
+    text-decoration:underline dotted rgba(138,109,31,.7); text-underline-offset:2px; cursor:pointer}
+  .deity-link:hover,.deity-link:focus-visible{color:var(--gold); text-decoration-color:var(--gold); outline:none}
+  .deity-chooser{position:absolute; z-index:50; min-width:180px; max-width:280px; background:var(--papyrus);
+    border:2px solid var(--gold); border-radius:5px; padding:6px; box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  .deity-chooser button{display:block; width:100%; text-align:left; background:#F3ECD8; border:1px solid #C9B37E;
+    border-radius:3px; padding:6px 8px; margin:3px 0; font-family:'Spectral',Georgia,serif; font-size:12.5px;
+    color:var(--ink); cursor:pointer}
+  .deity-chooser button:hover,.deity-chooser button:focus-visible{border-color:var(--gold); background:#E9DFC8; outline:none}
+  #compareBtn{display:block; width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.16em; text-transform:uppercase;
+    color:#8A91AC; padding:8px 14px 6px; border-left:3px solid transparent}
+  #compareBtn:hover{color:var(--papyrus)}
+  #compareBtn.on{color:var(--gold); border-left-color:var(--gold); background:#171C30}
+  .lens-btn.compare-blocked{opacity:.35; pointer-events:none}
+  .lens-btn.compare-secondary{color:#DFD2B4; border-left-color:#9A8A50; background:#1A2035}
+  .slens-sec{fill:#DFD2B4; opacity:.65}
+  .hook-line.herald{stroke-dasharray:4 4}
+
   @media (prefers-reduced-motion:reduce){
     *{transition:none !important; animation:none !important}
     .hook-line{opacity:.35}
@@ -270,7 +292,7 @@
 <body>
 <header>
   <h1>THE RECONCILED TREE</h1>
-  <div class="sub"><b>v3.39</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
+  <div class="sub"><b>v3.40</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
   <button type="button" id="tierBtn" aria-expanded="false" aria-controls="tierPop" title="Tier vocabulary">TIERS ?</button>
   <div id="tierPop" role="dialog" aria-label="Tier legend" hidden>
     <p><b>T1</b> attested primary source · <b>T2</b> interpretive / lineage · <b>T2-L</b> living lineage · <b>T3</b> owned construction · <b>G</b> resonance / gnosis</p>
@@ -322,7 +344,7 @@ const IMG_BASE=(()=>{const p=location.pathname||location.href||'';return (/\/bas
 function img(p){return (p||'').replace(/^images\//,IMG_BASE);}
 function portraitHtml(src,alt){return '<div class="portrait-wrap"><img class="portrait-preview" src="'+img(src)+'" alt="'+alt+'"></div>';}
 
-/* ================= CANON v3.39 ================= */
+/* ================= CANON v3.40 ================= */
 const NODES = {
  kether:{x:400,y:95,r:48,c:"#F2EBD7",num:"0",seph:"Kether",kem:"AMEN",planet:"SOURCE"},
  chokmah:{x:595,y:300,r:46,c:"#C9CFDD",num:"1",seph:"Chokmah",kem:"ATUM",planet:"CONSTELLATIONS"},
@@ -687,7 +709,7 @@ for(let i=1;i<=36;i++){
 }
 DECANS.push({n:37,name:"EPAGOMENAL · GEB",dates:"the 5 days outside the year",note:DECAN_NOTES[37]});
 /* Civil New Year anchor — SET BY ALI. Leave unset until supplied; do not guess. */
-const WEP_RONPET = "YYYY-MM-DD"; // ⚑ AWAITING ANCHOR DATE
+const WEP_RONPET = "2026-08-07"; // Giza-calibrated heliacal rising, Ali's ruling
 const STAR_ANCHORS = {
   1:  {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
        verdict:null, flags:[], treeHook:null, spheres:["gevurah","binah"], direction:null, elections:null},
@@ -745,7 +767,9 @@ const STAR_ANCHORS = {
        power:"Vanquishes chaos; saves Ra from Apep on the eastern sandbanks", powerTier:"T2-L",
        planets:"Mars·Jupiter", planetsTier:"T3",
        verdict:"DOUBLE-CONFIRMED — name self-locates AND star-field agrees; as solid as this system gets",
-       flags:[], treeHook:null, spheres:["gevurah","chesed"], direction:null, elections:null},
+       flags:[], treeHook:{target:"solarrising", kind:"path", t:0.62, style:"herald",
+         label:"Herald of Solar Rising — outrider position (T3, owned; name-derived: \u201cForemost of Sopdet\u201d = the star that announces Sirius's rising)"},
+       spheres:["gevurah","chesed"], direction:null, elections:null},
   36: {star:"Sirius (Sopdet)", starTier:"T1",
        power:"Power over life and death; brings the inundation", powerTier:"T2-L",
        planets:"Moon·Venus", planetsTier:"T3",
@@ -888,7 +912,7 @@ function selectRuler(id){
   }).join('')+'</ul>';
   const epithets=L.epithets?'<ul class="epithets">'+L.epithets.map(e=>'<li>'+(e.t?'<span class="tr">'+e.t+'</span> — ':'')+e.e+'</li>').join('')+'</ul>':'';
   const sub=[L.pron?'“'+L.pron+'”':'',L.translit||''].filter(Boolean).join(' · ');
-  panel.innerHTML=`
+  setPanel(`
     <div class="eyebrow">Path ruler</div>
     ${portraitHtml(r.img,r.name)}
     <h2>${r.name}</h2>
@@ -900,13 +924,13 @@ function selectRuler(id){
     ${field('Roles',L.roles)}
     ${field('Epithets',epithets)}
     ${L.invocation?`<div class="field"><div class="k">Invocation</div><blockquote class="invoke">${L.invocation.text}${L.invocation.src?'<span class="src">— '+L.invocation.src+'</span>':''}</blockquote></div>`:''}
-    ${field('Paths ruled',pathList)}`;
+    ${field('Paths ruled',pathList)}`);
 }
 function showPathStudy(pid){
   const p=PATHS.find(x=>x.id===pid), m=PATH_META[pid];
   if(!p||!m) return;
   const route=p.pts.map((q,i)=> (i>0&&i<p.pts.length-1)?'→ '+NODES[q].kem+' →':NODES[q].kem).join(' ');
-  panel.innerHTML=`
+  setPanel(`
     <div class="eyebrow">Path</div>
     <h2>${p.name}</h2>
     <h3 class="route"><i>${m.subtitle}</i> · ${route}</h3>
@@ -914,7 +938,7 @@ function showPathStudy(pid){
     ${field('Ruler',p.ruler)}
     ${field('Lore',m.lore)}
     ${field('Function in the tree',m.function)}
-    ${p.circuit?field('Circuit role',p.circuit):''}`;
+    ${p.circuit?field('Circuit role',p.circuit):''}`);
 }
 
 /* ================= modes: kau ring ================= */
@@ -1003,20 +1027,20 @@ function selectBarque(b,g){
   if(g) g.classList.add('sel');
   const pids=kauHighlight(KAU_LINKS[b.name]||null);
   const pnames=pids.map(pid=>{const p=PATHS.find(x=>x.id===pid);return p?p.name:pid;});
-  panel.innerHTML=`
+  setPanel(`
     <div class="eyebrow">Barque overlay — Layer 2</div>
     ${portraitHtml(b.img,b.name)}
     <h2>${b.name}</h2>
     ${field('Role',b.role)}
     ${pnames.length?field('Ruled path'+(pnames.length>1?'s':'')+' — highlighted',pnames.join(' · ')):''}
-    <div class="prov">Kau_Comparative_Register_v2_RATIFIED · Layer 2 barque overlay.</div>`;
+    <div class="prov">Kau_Comparative_Register_v2_RATIFIED · Layer 2 barque overlay.</div>`);
 }
 function selectKauSeat(ks){
   clearSel();
   kauLayer.querySelectorAll('.kau-seat').forEach((g,i)=>g.classList.toggle('sel',KAU_SEATS[i].n===ks.n));
   document.querySelectorAll('.kau-card').forEach(c=>c.classList.toggle('on',+c.dataset.n===ks.n));
   kauHighlight(KAU_LINKS[ks.deity]||null);
-  panel.innerHTML=`
+  setPanel(`
     <div class="eyebrow">Kau seat ${ks.n} of 14</div>
     ${ks.img?portraitHtml(ks.img,ks.deity):''}
     <h2>${ks.seat}</h2>
@@ -1026,7 +1050,7 @@ function selectKauSeat(ks){
     ${ks.note?field('Note',ks.note):''}
     ${ks.contested?field('Status','*contested — pending O'+(ks.n===9?'1':ks.n===11?'2':'?')):''}
     ${field('Layer','Layer 1 — Lanzone ring seat')}
-    <div class="prov">Kau_Comparative_Register_v2_RATIFIED · Layer 1 table · O4 visualization spec. Apep: never depicted.</div>`;
+    <div class="prov">Kau_Comparative_Register_v2_RATIFIED · Layer 1 table · O4 visualization spec. Apep: never depicted.</div>`);
 }
 buildRulerGallery();
 buildKauPanels();
@@ -1152,13 +1176,28 @@ function dress(lensId){
     if(_potent){ _c.style.fill=POT[_id].fill; _g.classList.add('potent'); _g.querySelectorAll('.sname,.snum').forEach(t=>t.style.fill=POT[_id].txt); }
     else { _c.style.fill=''; _g.querySelectorAll('.sname,.snum').forEach(t=>t.style.fill=''); if(_hasImg) _g.classList.add('under'); }
   }
-  // sphere sub-labels
+  // sphere sub-labels (+ optional compare secondary)
   for(const id in NODES){
+    const n=NODES[id];
+    const g=sphereGroups[id];
+    g.querySelectorAll('.slens-sec').forEach(t=>t.remove());
     const vals=(lensId==='elements'||lensId==='decans')? (L.sky[id]||[]) : (L[lensId]?L[lensId][id]:[])||[];
     lensTexts[id].forEach((t,i)=>{
       t.textContent=vals[i]||'';
       t.classList.toggle('gold', lensId!=='sky' && !!vals[i]);
     });
+    const canCompare=secondaryLens && COMPARE_OK.has(lensId) && COMPARE_OK.has(secondaryLens);
+    if(canCompare){
+      let sec=(L[secondaryLens]&&L[secondaryLens][id])?L[secondaryLens][id].slice():[];
+      const pCount=vals.filter(Boolean).length;
+      if(pCount>=2 && sec.length>=2){ sec=[(sec[0]||'')+'\u2026']; }
+      const words=n.kem.split(' · ');
+      const y0=n.y+(words.length>1?7:4)+Math.max(pCount,1)*10;
+      sec.filter(Boolean).forEach((line,i)=>{
+        const t=el('text',{class:'slens slens-sec',x:n.x,y:y0+i*10},g);
+        t.textContent=line;
+      });
+    }
   }
   // circuit / paths ruler highlight
   PATHS.forEach(p=>{
@@ -1187,11 +1226,38 @@ function dress(lensId){
 }
 
 const rail=document.getElementById('rail');
+const COMPARE_OK=new Set(['neteru','soul','week','body','forces','symbols','strengths','weaknesses','distortions','rulerships','questions','circuit']);
+const COMPARE_BLOCK=new Set(['sky','elements','decans','divmasc','divfem']);
+let compareArmed=false, secondaryLens=null;
+const compareBtn=document.createElement('button');
+compareBtn.id='compareBtn'; compareBtn.type='button'; compareBtn.textContent='+ Compare';
+compareBtn.setAttribute('aria-pressed','false');
+compareBtn.title='Pin a second text-register lens for side-by-side sub-labels';
+compareBtn.addEventListener('click',()=>{ setCompareArmed(!compareArmed); });
+rail.appendChild(compareBtn);
+function setCompareArmed(on){
+  compareArmed=!!on;
+  if(!compareArmed) secondaryLens=null;
+  compareBtn.textContent=compareArmed?'\u00d7 Compare':'+ Compare';
+  compareBtn.classList.toggle('on', compareArmed);
+  compareBtn.setAttribute('aria-pressed', compareArmed?'true':'false');
+  document.querySelectorAll('#rail .lens-btn').forEach(b=>{
+    const id=b.dataset.id;
+    b.classList.toggle('compare-blocked', compareArmed && COMPARE_BLOCK.has(id));
+    b.classList.toggle('compare-secondary', !!secondaryLens && b.dataset.id===secondaryLens);
+  });
+  if(!compareArmed){ dress(activeLens); if(!document.querySelector('.sel') && !activeMode) home(); }
+}
+function refreshCompareSecondaryClass(){
+  document.querySelectorAll('#rail .lens-btn').forEach(b=>{
+    b.classList.toggle('compare-secondary', !!secondaryLens && b.dataset.id===secondaryLens);
+  });
+}
 rail.insertAdjacentHTML('beforeend','<div class="railhead">Modes</div>');
 MODES.forEach(m=>{
   const b=document.createElement('button');
   b.className='mode-btn'; b.textContent=m.name; b.dataset.id=m.id;
-  b.addEventListener('click',()=>{clearSel();activeRuler=null;setMode(m.id);});
+  b.addEventListener('click',()=>{ if(compareArmed) setCompareArmed(false); clearSel();activeRuler=null;setMode(m.id);});
   rail.appendChild(b);
 });
 const LENS_GROUPS=[
@@ -1203,7 +1269,21 @@ const LENS_GROUPS=[
 function addLensBtn(l){
   const b=document.createElement('button');
   b.className='lens-btn'; b.textContent=l.name; b.dataset.id=l.id;
-  b.addEventListener('click',()=>{clearSel();activeMode=null;activeRuler=null;treewrap.classList.remove('paths-mode','kau-mode');highlightRulerPaths(null);dress(l.id);home(l);});
+  b.addEventListener('click',()=>{
+    if(compareArmed){
+      if(!COMPARE_OK.has(l.id)) return;
+      if(l.id===activeLens){ secondaryLens=null; refreshCompareSecondaryClass(); dress(activeLens); return; }
+      if(!COMPARE_OK.has(activeLens)){
+        /* primary is geometry — switch primary first into a compare-ok lens? Spec: next click pins SECONDARY. If primary blocked, dim those buttons. */
+        return;
+      }
+      secondaryLens=l.id;
+      refreshCompareSecondaryClass();
+      dress(activeLens);
+      return;
+    }
+    clearSel();activeMode=null;activeRuler=null;treewrap.classList.remove('paths-mode','kau-mode');highlightRulerPaths(null);secondaryLens=null;dress(l.id);home(l);
+  });
   rail.appendChild(b);
 }
 LENS_GROUPS.forEach(g=>{
@@ -1222,9 +1302,11 @@ function civilDayInfo(){
   if(!wepRonpetReady()) return null;
   const parts=WEP_RONPET.split('-').map(Number);
   const now=new Date();
+  /* Civil decade days count by calendar date (local), not wall-clock since noon. */
+  const today=new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0);
   let a=new Date(now.getFullYear(), parts[1]-1, parts[2], 12, 0, 0);
-  if(now < a) a=new Date(now.getFullYear()-1, parts[1]-1, parts[2], 12, 0, 0);
-  let days=Math.floor((now - a)/86400000);
+  if(today < a) a=new Date(now.getFullYear()-1, parts[1]-1, parts[2], 12, 0, 0);
+  let days=Math.round((today - a)/86400000);
   if(days<0) days=0;
   if(days>364) days=364;
   if(days>=360){
@@ -1243,7 +1325,7 @@ function nowBlockHtml(){
   }
   const info=civilDayInfo();
   if(!info) return '';
-  return `<div class="now-block"><div class="nk">Now</div><div class="nv">Decade <b>${info.n}</b> · ${info.name}<br>Day ${info.dayIn} of ${info.of} · ${info.daysLeft} day${info.daysLeft===1?'':'s'} remaining<br>Next: ${info.nextName}</div></div>`;
+  return `<div class="now-block"><div class="nk">Now</div><div class="nv">Decade <b>${info.n}</b> · ${info.name}<br>Day ${info.dayIn} of ${info.of} · ${info.daysLeft} day${info.daysLeft===1?'':'s'} remaining<br>Next: ${info.nextName}<span class="anchor">Anchor: Wep Ronpet ${WEP_RONPET} · Giza heliacal rising</span></div></div>`;
 }
 function fourPointStar(cx,cy,r,filled,color,parent){
   const pts=[];
@@ -1329,6 +1411,7 @@ function drawDecanHook(n, hook){
   if(!hook) return;
   const from=decanPos[n]; if(!from) return;
   let tx,ty;
+  const herald=hook.style==='herald';
   if(hook.kind==='sphere'){
     const nd=NODES[hook.target]; if(!nd) return;
     tx=nd.x; ty=nd.y;
@@ -1336,11 +1419,17 @@ function drawDecanHook(n, hook){
   } else if(hook.kind==='path'){
     const p=PATHS.find(x=>x.id===hook.target); if(!p) return;
     const pts=pathGeom(p);
-    const mid=pointAt(pts, 0.5);
+    /* herald (Procyon) lands toward Yesod on Solar Rising — distinct from Sirius at mid */
+    const mid=pointAt(pts, (hook.t!=null?hook.t:0.5));
     tx=mid.x; ty=mid.y;
-    if(pathGroups[hook.target]) pathGroups[hook.target].classList.add('incident','decan-flow');
+    if(pathGroups[hook.target]){
+      pathGroups[hook.target].classList.add('incident');
+      if(!herald) pathGroups[hook.target].classList.add('decan-flow');
+    }
   } else return;
-  const line=el('line',{class:'hook-line',x1:from.x,y1:from.y,x2:tx,y2:ty,'pointer-events':'none'},hookLayer);
+  const attrs={class:'hook-line'+(herald?' herald':''),x1:from.x,y1:from.y,x2:tx,y2:ty,'pointer-events':'none'};
+  if(herald) attrs['stroke-dasharray']='4 4';
+  const line=el('line',attrs,hookLayer);
   requestAnimationFrame(()=>line.classList.add('on'));
 }
 function clearResonanceFocus(){
@@ -1429,22 +1518,99 @@ function decansForSphere(sid){
   return out.sort((a,b)=>a-b);
 }
 
+
+/* ================= Decan Pass v4 — deity cross-links ================= */
+const DEITY_INDEX = {
+ "Ma'at":[{k:"path",id:"covenant"}], "Sia":[{k:"path",id:"images"}],
+ "Sekhmet":[{k:"path",id:"flame"},{k:"sphere",id:"gevurah"}],
+ "Ptah":[{k:"path",id:"skillcommand"},{k:"path",id:"appliedskill"}],
+ "Taweret":[{k:"path",id:"fortress"}], "Anubis":[{k:"path",id:"conjoin"}],
+ "Het-Heru":[{k:"sphere",id:"netzach"},{k:"path",id:"dwelling"},{k:"path",id:"pillarharmony"}],
+ "Heka":[{k:"path",id:"revelation"}], "Shu":[{k:"path",id:"dualcurrent"}],
+ "Set":[{k:"path",id:"coiledpower"},{k:"path",id:"eyeofmatter"},{k:"sphere",id:"hod"}],
+ "Sutekh":[{k:"sphere",id:"hod"}], "Hu":[{k:"path",id:"utterance"}],
+ "Iusaaset":[{k:"path",id:"fate"}],
+ "Ausar":[{k:"sphere",id:"ausar"},{k:"path",id:"regeneration"}],
+ "Auset":[{k:"sphere",id:"yesod"},{k:"path",id:"impulse"}],
+ "Atum":[{k:"sphere",id:"chokmah"},{k:"path",id:"impulse"}],
+ "Tefnut":[{k:"path",id:"immersion"}],
+ "Heru":[{k:"sphere",id:"tiphereth"},{k:"path",id:"solarrising"}],
+ "Khonsu":[{k:"sphere",id:"yesod"},{k:"path",id:"hiddeninfluence"}],
+ "Wepwawet":[{k:"path",id:"huntcatch"}],
+ "Geb":[{k:"sphere",id:"malkuth"},{k:"path",id:"timelocation"}]
+};
+const RING_CELL_ONLY = new Set([3,4,9,32,33]);
+function escapeRe(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function targetLabel(t){
+  if(t.k==='sphere'){ const n=NODES[t.id]; return n? (n.kem+' ('+n.seph+')') : t.id; }
+  const p=PATHS.find(x=>x.id===t.id); return p?p.name:t.id;
+}
+function jumpTarget(t){ if(t.k==='sphere') select('sphere',t.id); else select('path',t.id); }
+function closeDeityChooser(){ document.querySelectorAll('.deity-chooser').forEach(el=>el.remove()); }
+function openDeity(name, anchor){
+  const targets=DEITY_INDEX[name]||[];
+  if(!targets.length) return;
+  if(targets.length===1){ jumpTarget(targets[0]); return; }
+  closeDeityChooser();
+  const pop=document.createElement('div');
+  pop.className='deity-chooser'; pop.setAttribute('role','listbox'); pop.setAttribute('aria-label',name+' destinations');
+  targets.forEach((t,i)=>{
+    const b=document.createElement('button'); b.type='button'; b.setAttribute('role','option');
+    b.textContent=targetLabel(t);
+    b.addEventListener('click',e=>{e.stopPropagation(); closeDeityChooser(); jumpTarget(t);});
+    pop.appendChild(b);
+  });
+  const r=anchor.getBoundingClientRect();
+  pop.style.left=Math.min(r.left, window.innerWidth-220)+'px';
+  pop.style.top=(r.bottom+4)+'px';
+  document.body.appendChild(pop);
+  pop.querySelector('button').focus();
+}
+function wireDeityLinks(root){
+  const names=Object.keys(DEITY_INDEX).sort((a,b)=>b.length-a.length);
+  if(!names.length) return;
+  const re=new RegExp('(?<![A-Za-z\'])('+names.map(escapeRe).join('|')+')(?![A-Za-z\'-])','g');
+  const walker=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+  const nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node=>{
+    const pe=node.parentElement; if(!pe) return;
+    if(pe.closest('button, a, .deity-link, .deity-chooser, .k, .eyebrow, .prov, script, style')) return;
+    const text=node.nodeValue; if(!text||!re.test(text)) return;
+    re.lastIndex=0;
+    const frag=document.createDocumentFragment();
+    let last=0, m;
+    while((m=re.exec(text))){
+      if(m.index>last) frag.appendChild(document.createTextNode(text.slice(last,m.index)));
+      const deityName=m[1];
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='deity-link'; btn.textContent=deityName;
+      btn.setAttribute('aria-label','Open '+deityName+' on the tree');
+      btn.addEventListener('click',e=>{e.stopPropagation(); openDeity(deityName, btn);});
+      frag.appendChild(btn);
+      last=m.index+m[0].length;
+    }
+    if(last<text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    pe.replaceChild(frag, node);
+  });
+}
+function setPanel(html){ panel.innerHTML=html; wireDeityLinks(panel); closeDeityChooser(); }
+
 /* ================= inspector ================= */
 const panel=document.getElementById('panel');
 function field(k,v){return v?`<div class="field"><div class="k">${k}</div><div class="v">${v}</div></div>`:'';}
 function clearSel(){document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));document.querySelectorAll('.kau-card.on').forEach(c=>c.classList.remove('on'));document.querySelectorAll('.kau-path-hilite').forEach(x=>x.classList.remove('kau-path-hilite'));document.querySelectorAll('.sphere.kau-hilite').forEach(x=>x.classList.remove('kau-hilite'));if(hookLayer){hookLayer.querySelectorAll('.hook-line').forEach(l=>l.classList.remove('on'));hookLayer.innerHTML='';}document.querySelectorAll('.decan-cell.sel').forEach(g=>g.classList.remove('sel'));clearLinked();}
 function home(lens){
   lens=lens|| (activeMode? MODES.find(m=>m.id===activeMode) : LENSES.find(l=>l.id===activeLens));
-  const ver='v3.39 · closed canon + Paths + Kau + Decan Pass';
+  const ver='v3.40 · closed canon + Paths + Kau + Decan Pass';
   const nowBlock=(!activeMode && lens && lens.id==='decans')?nowBlockHtml():'';
-  panel.innerHTML=`
+  setPanel(`
    <div class="eyebrow">${activeMode?'Mode':'Lens'}</div>
    <h2>${lens.name}</h2>
    <h3 class="route">${ver}</h3>
    <div class="note">${lens.desc}</div>
    ${nowBlock}
    <div class="field" style="margin-top:12px"><div class="k">Select</div><div class="v">${activeMode==='paths'?'Click a ruler portrait, then a highlighted path for lore.':activeMode==='kau'?'Click a seat card, a numbered seat on the ring, or a barque figure at the top — the wielder\u2019s ruled paths and spheres light up gold.':(lens.id==='decans'?'Click any decade on the ring — star anchors, flags, and notes appear here.':'Any sphere or path — every register appears here, whatever lens is active.')}</div></div>
-   <div class="prov">AUTHORITY — the rectified diagram; Ali's rulings, passes 1–50. Each lens is one pure facet; nothing merged. Paths/Kau data from ratified registers (Aug 2026).</div>`;
+   <div class="prov">AUTHORITY — the rectified diagram; Ali's rulings, passes 1–50. Each lens is one pure facet; nothing merged. Paths/Kau data from ratified registers (Aug 2026).</div>`);
 }
 const REGNAMES={sky:"Sky",neteru:"Rulers",soul:"Soul-part",week:"Week",body:"Body",forces:"Force",symbols:"Symbol",
  strengths:"Strength",weaknesses:"Weakness",distortions:"Distortion",rulerships:"Rulership",questions:"Question",circuit:"Circuit role"};
@@ -1471,26 +1637,26 @@ function select(kind,id){
         decanRes=field('Decan resonance', list);
       }
     }
-    panel.innerHTML=`
+    setPanel(`
       <div class="eyebrow">Sphere ${n.num} · ${n.seph}</div>
       <h2>${n.kem}</h2>
       <h3 class="route">${n.planet}</h3>
       ${rows}
       ${decanRes}
-      <div class="prov">Every register shown; blanks are canon. Full provenance per cell lives in the master dataset v3.32.</div>`;
+      <div class="prov">Every register shown; blanks are canon. Full provenance per cell lives in the master dataset v3.32.</div>`);
   } else {
     pathGroups[id].classList.add('sel'); pathLabels[id].classList.add('sel');
     if(activeMode==='paths'){ showPathStudy(id); return; }
     const p=PATHS.find(x=>x.id===id);
     const route=p.pts.map((q,i)=> (i>0&&i<p.pts.length-1)?'→ '+NODES[q].kem+' →':NODES[q].kem).join(' ');
-    panel.innerHTML=`
+    setPanel(`
       <div class="eyebrow">Path</div>
       <h2>${p.name}</h2>
       <h3 class="route">${route}</h3>
       ${field('Marker · '+p.mtype,p.marker)}
       ${field('Ruler',p.ruler)}
       ${p.circuit?field('Circuit role',p.circuit):''}
-      <div class="prov">Full provenance in the master dataset v3.32.</div>`;
+      <div class="prov">Full provenance in the master dataset v3.32.</div>`);
   }
 }
 function selectDecan(dc){
@@ -1520,14 +1686,17 @@ function selectDecan(dc){
     drawDecanHook(dc.n, A.treeHook);
   }
   if(A) linkSpheres(A.spheres||[]);
+  if(RING_CELL_ONLY.has(dc.n)){
+    anchorHtml += field('Tree capacity','Ring-cell only (ruled, Pass v4)');
+  }
   applyResonanceFocus();
-  panel.innerHTML=`
+  setPanel(`
     <div class="eyebrow">${dc.n===37?'The days outside the year':'Decade '+dc.n+' of 36'}</div>
     <h2>${dc.name||'(name awaiting von Bomhard)'}</h2>
     <h3 class="route">${dc.dates}</h3>
     ${anchorHtml}
     ${dc.note?field('Note','<span class="note">'+dc.note+'</span>'):''}
-    <div class="prov">T1: the Naos (von Bomhard 2008) · Chronos warfare module + associate verification (T2-L) · ring arrangement T3, owned. Decan effects = Negative/martial register.</div>`;
+    <div class="prov">T1: the Naos (von Bomhard 2008) · Chronos warfare module + associate verification (T2-L) · ring arrangement T3, owned. Decan effects = Negative/martial register.</div>`);
 }
 
 /* ================= tier legend ================= */
@@ -1541,7 +1710,16 @@ function selectDecan(dc){
   document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !pop.hidden){ close(); e.stopPropagation(); } }, true);
 })();
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){clearSel();if(activeMode==='paths'&&activeRuler)selectRuler(activeRuler);else if(activeMode)home(MODES.find(m=>m.id===activeMode));else home();}});
+document.addEventListener('click',e=>{ if(!e.target.closest('.deity-chooser') && !e.target.closest('.deity-link')) closeDeityChooser(); });
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape') return;
+  if(document.querySelector('.deity-chooser')){ closeDeityChooser(); return; }
+  if(compareArmed){ setCompareArmed(false); return; }
+  clearSel();
+  if(activeMode==='paths'&&activeRuler)selectRuler(activeRuler);
+  else if(activeMode)home(MODES.find(m=>m.id===activeMode));
+  else home();
+});
 dress('sky'); home();
 </script>
 </body>

@@ -1,3 +1,15 @@
+# CHANGES — v3.40 (Decan Pass v4 — NOW, cross-links, compare, Procyon herald)
+
+**v3.40** — Decan Pass v4:
+
+- **NOW activated:** `WEP_RONPET = "2026-08-07"` (Giza heliacal rising). Decans home shows decade / day N of 10 / remaining / next, plus footer `Anchor: Wep Ronpet 2026-08-07 · Giza heliacal rising`. Live cell breathes.
+- **Deity cross-links:** `DEITY_INDEX` (explicit, longest-name-first). Inspector names become dotted underline buttons; single target jumps, multiple open an inline chooser. Keyboard accessible.
+- **Lens compare:** `+ Compare` / `× Compare` at top of rail. Next text-register click pins secondary; sub-labels show primary (gold) + secondary beneath (papyrus ~0.65). Geometry lenses (Tree, Elements, Decans, Divine ♂/♀) dim while armed. Escape exits.
+- **Capacity ruling:** Denebola / Alkes / Ip-djes / 32 / 33 show `Tree capacity — Ring-cell only (ruled, Pass v4)`; no connectors.
+- **Procyon herald:** decan 35 hooks Solar Rising as dashed herald connector (`t:0.62` toward Yesod), distinct from Sirius's solid mid-path hook. Four connectors total: 2, 34, 35, 36.
+
+---
+
 # CHANGES — v3.39 (Decan Pass v3 — resonance visibility)
 
 **v3.39** — contrast by subtraction + restrained shimmer; no data or palette changes:

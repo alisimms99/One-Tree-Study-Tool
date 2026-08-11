@@ -1,3 +1,12 @@
+# CHANGES — v3.41 (Decan Pass v5 — hash deep-link + regression QA)
+
+**v3.41** — Decan Pass v5:
+
+- **URL hash deep-linking:** `#<lens>`, `#<lens>/<sel>`, `#<lens>+<secondary>/<sel>`; decans as `dN` (e.g. `#decans/d36`). Updates via `history.replaceState` on lens/selection/compare changes; Escape clears selection to lens-only. Load restores lens + selection (connectors/resonance/focus-dim) + compare pairing; invalid hash falls back silently. Hash is the only persistence.
+- **QA fixes:** mobile rail — Compare control no longer forces full-width (horizontal scroll preserved with group headers hidden).
+
+---
+
 # CHANGES — v3.40 (Decan Pass v4 — NOW, cross-links, compare, Procyon herald)
 
 **v3.40** — Decan Pass v4:

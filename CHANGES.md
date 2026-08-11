@@ -1,3 +1,13 @@
+# CHANGES — v3.39 (Decan Pass v3 — resonance visibility)
+
+**v3.39** — contrast by subtraction + restrained shimmer; no data or palette changes:
+
+- **Focus-dim:** on decan select (or sphere select in the Decans lens when resonances exist), everything outside the resonance set takes `.dim` at opacity ~0.30 — non-linked spheres, non-incident paths + labels, and non-selected/non-linked ring cells. Selected cell, linked spheres, hooked path/connector stay full. Clears with Escape/`clearSel`.
+- **Shimmer (CSS only):** linked spheres get a separate `.link-halo` circle (own color) pulsing scale 1→1.12 / opacity 0.7→0.15 over 1.8s — sphere body and text stay still. Hooked paths during decan select get gold dash-flow (`stroke-dasharray: 6 4`, 1.4s). Both gated by `prefers-reduced-motion` (static glow + focus-dim remain).
+- **Bottom-arc labels:** cells with `sin(ang) > 0.50` use larger radial offsets with near/far stagger on adjacent indices; labels still colliding with TIME AND LOCATION nudge further outward (path label never moves). All 37 labels remain.
+
+---
+
 # CHANGES — v3.38 (Decan Pass v2 — planet–sphere resonance)
 
 **v3.38** — planets and spheres are the same thing (Ali, canon):

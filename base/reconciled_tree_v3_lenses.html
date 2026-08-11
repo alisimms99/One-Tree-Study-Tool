@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reconciled Tree — v3.38 · Decan Pass</title>
+<title>The Reconciled Tree — v3.39 · Decan Pass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -87,7 +87,9 @@
   .pgroup.el-water .path-line{stroke:#3F6FB0}
   .pgroup.hilite .path-line{stroke:var(--gold); stroke-width:2.8}
   .pgroup.incident .path-line{stroke:#F0C24B; stroke-width:3.2}
-  .pgroup.dim .path-line{opacity:.35}
+  .pgroup.dim .path-line{opacity:.30}
+  .sphere.dim{opacity:.30}
+  .decan-cell.dim{opacity:.30}
   .sphere.under circle.body{opacity:.16}
   .sphere.under .sname,.sphere.under .snum,.sphere.under .slens{opacity:.30}
   .plabel{font-family:'Cinzel',serif; font-weight:700; font-size:11.5px; letter-spacing:.08em; fill:#EDE4CC; pointer-events:none; paint-order:stroke fill; stroke:#101423; stroke-width:4.5px; stroke-linejoin:round}
@@ -97,7 +99,7 @@
   .lg.ruler-hilite .plabel{fill:var(--gold); font-size:13px; stroke:#0A0E18; stroke-width:6px}
   .lg.ruler-hilite .pmark{fill:#F5E6A8; font-size:9.5px; stroke-width:4.5px}
   .lg.ruler-dim{opacity:.22}
-  .lg.dim{opacity:.35}
+  .lg.dim{opacity:.30}
   .sphere{cursor:pointer; outline:none}
   .sphere circle.body{fill:var(--night2); stroke-width:2.4; transition:filter .18s}
   .sphere:hover circle.body,.sphere:focus-visible circle.body{filter:brightness(1.35)}
@@ -190,6 +192,15 @@
     filter:brightness(1.15) drop-shadow(0 0 10px var(--link-c)) drop-shadow(0 0 4px rgba(212,169,60,.55))}
   .decan-cell.linked circle{stroke:#E6C765; stroke-width:2.8;
     filter:drop-shadow(0 0 8px rgba(230,199,101,.7))}
+  .sphere.linked .link-halo{fill:none; stroke:var(--link-c); stroke-width:2.4; pointer-events:none;
+    transform-box:fill-box; transform-origin:center; opacity:.7;
+    animation:linkHaloPulse 1.8s ease-in-out infinite}
+  @keyframes linkHaloPulse{
+    0%,100%{opacity:.7; transform:scale(1)}
+    50%{opacity:.15; transform:scale(1.12)}
+  }
+  .pgroup.decan-flow .path-line{stroke-dasharray:6 4; animation:pathDashFlow 1.4s linear infinite}
+  @keyframes pathDashFlow{to{stroke-dashoffset:-40}}
   .barque-img{cursor:pointer; outline:none}
   .barque-img .kseat-name{font-size:11px; fill:var(--gold)}
   .barque-img:hover image,.barque-img:focus-visible image{filter:brightness(1.3)}
@@ -251,13 +262,15 @@
     *{transition:none !important; animation:none !important}
     .hook-line{opacity:.35}
     .hook-line:not(.on){opacity:0}
+    .pgroup.decan-flow .path-line{stroke-dasharray:none !important}
+    .sphere.linked .link-halo{opacity:.45 !important; transform:none !important}
   }
 </style>
 </head>
 <body>
 <header>
   <h1>THE RECONCILED TREE</h1>
-  <div class="sub"><b>v3.38</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
+  <div class="sub"><b>v3.39</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
   <button type="button" id="tierBtn" aria-expanded="false" aria-controls="tierPop" title="Tier vocabulary">TIERS ?</button>
   <div id="tierPop" role="dialog" aria-label="Tier legend" hidden>
     <p><b>T1</b> attested primary source · <b>T2</b> interpretive / lineage · <b>T2-L</b> living lineage · <b>T3</b> owned construction · <b>G</b> resonance / gnosis</p>
@@ -309,7 +322,7 @@ const IMG_BASE=(()=>{const p=location.pathname||location.href||'';return (/\/bas
 function img(p){return (p||'').replace(/^images\//,IMG_BASE);}
 function portraitHtml(src,alt){return '<div class="portrait-wrap"><img class="portrait-preview" src="'+img(src)+'" alt="'+alt+'"></div>';}
 
-/* ================= CANON v3.38 ================= */
+/* ================= CANON v3.39 ================= */
 const NODES = {
  kether:{x:400,y:95,r:48,c:"#F2EBD7",num:"0",seph:"Kether",kem:"AMEN",planet:"SOURCE"},
  chokmah:{x:595,y:300,r:46,c:"#C9CFDD",num:"1",seph:"Chokmah",kem:"ATUM",planet:"CONSTELLATIONS"},
@@ -1285,8 +1298,23 @@ function renderDecanRing(){
       const sx=x+Math.cos(ang)*14, sy=y+Math.sin(ang)*14;
       fourPointStar(sx, sy, filled?5.2:5.0, filled, color, g);
     }
-    const out=17;
-    const lx=x+out*Math.cos(ang), ly=y+out*Math.sin(ang)+3;
+    /* Bottom-sector labels: sit further outside the arc; stagger near/far to avoid neighbor overlap */
+    const bottom=Math.sin(ang)>0.50;
+    let out=17;
+    if(bottom) out=(idx%2===0)?30:46;
+    let lx=x+out*Math.cos(ang), ly=y+out*Math.sin(ang)+3;
+    /* Nudge further out if still near the TIME AND LOCATION label — never move the path label */
+    if(bottom){
+      const tl=PATHS.find(p=>p.id==='timelocation');
+      if(tl){
+        const mid=pointAt(pathGeom(tl), tl.lab.t);
+        const tx=mid.x+(tl.lab.dx||0), ty=mid.y+(tl.lab.dy||0);
+        let guard=0;
+        while(Math.hypot(lx-tx, ly-ty)<62 && guard<4){
+          out+=14; lx=x+out*Math.cos(ang); ly=y+out*Math.sin(ang)+3; guard++;
+        }
+      }
+    }
     const anch=Math.cos(ang)>0.35?'start':(Math.cos(ang)<-0.35?'end':'middle');
     const lab=dc.name || dc.dates.toUpperCase();
     el('text',{class:'pmark',x:lx,y:ly,'text-anchor':anch,'font-size':'8',fill:dc.name?(dc.n>=36?'#D4A93C':'#CFC7B0'):'#7A8098','letter-spacing':'.06em'},g).textContent=lab;
@@ -1310,10 +1338,35 @@ function drawDecanHook(n, hook){
     const pts=pathGeom(p);
     const mid=pointAt(pts, 0.5);
     tx=mid.x; ty=mid.y;
-    if(pathGroups[hook.target]) pathGroups[hook.target].classList.add('incident');
+    if(pathGroups[hook.target]) pathGroups[hook.target].classList.add('incident','decan-flow');
   } else return;
   const line=el('line',{class:'hook-line',x1:from.x,y1:from.y,x2:tx,y2:ty,'pointer-events':'none'},hookLayer);
   requestAnimationFrame(()=>line.classList.add('on'));
+}
+function clearResonanceFocus(){
+  document.querySelectorAll('.sphere.dim').forEach(g=>g.classList.remove('dim'));
+  document.querySelectorAll('.pgroup.dim').forEach(g=>g.classList.remove('dim'));
+  document.querySelectorAll('.lg.dim').forEach(g=>g.classList.remove('dim'));
+  document.querySelectorAll('.decan-cell.dim').forEach(g=>g.classList.remove('dim'));
+}
+function applyResonanceFocus(){
+  clearResonanceFocus();
+  for(const id in sphereGroups){
+    const g=sphereGroups[id];
+    const keep=g.classList.contains('linked')||g.classList.contains('sel');
+    g.classList.toggle('dim', !keep);
+  }
+  PATHS.forEach(p=>{
+    const g=pathGroups[p.id], tg=pathLabels[p.id];
+    const keep=g.classList.contains('incident')||g.classList.contains('sel')||g.classList.contains('decan-flow');
+    g.classList.toggle('dim', !keep);
+    if(tg) tg.classList.toggle('dim', !keep);
+  });
+  for(const n in decanGroups){
+    const g=decanGroups[n];
+    const keep=g.classList.contains('sel')||g.classList.contains('linked');
+    g.classList.toggle('dim', !keep);
+  }
 }
 function clearLinked(){
   document.querySelectorAll('.sphere.linked').forEach(g=>{
@@ -1322,7 +1375,10 @@ function clearLinked(){
     const body=g.querySelector('circle.body');
     if(body){ body.style.stroke=''; }
   });
+  document.querySelectorAll('circle.link-halo').forEach(h=>h.remove());
   document.querySelectorAll('.decan-cell.linked').forEach(g=>g.classList.remove('linked'));
+  document.querySelectorAll('.pgroup.decan-flow').forEach(g=>g.classList.remove('decan-flow'));
+  clearResonanceFocus();
 }
 function linkSpheres(ids){
   (ids||[]).forEach(sid=>{
@@ -1331,7 +1387,24 @@ function linkSpheres(ids){
     g.classList.add('linked');
     g.style.setProperty('--link-c', n.c);
     const body=g.querySelector('circle.body');
-    if(body) body.style.stroke=n.c;
+    if(body){
+      body.style.stroke=n.c;
+      let halo=g.querySelector('circle.link-halo');
+      if(!halo){
+        halo=document.createElementNS(NS,'circle');
+        halo.setAttribute('class','link-halo');
+        halo.setAttribute('cx', String(n.x));
+        halo.setAttribute('cy', String(n.y));
+        halo.setAttribute('r', String(n.r+5));
+        halo.setAttribute('fill','none');
+        halo.setAttribute('stroke', n.c);
+        halo.setAttribute('stroke-width','2.4');
+        halo.setAttribute('pointer-events','none');
+        g.insertBefore(halo, body);
+      } else {
+        halo.setAttribute('stroke', n.c);
+      }
+    }
   });
 }
 function linkDecanCells(ns){
@@ -1362,7 +1435,7 @@ function field(k,v){return v?`<div class="field"><div class="k">${k}</div><div c
 function clearSel(){document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));document.querySelectorAll('.kau-card.on').forEach(c=>c.classList.remove('on'));document.querySelectorAll('.kau-path-hilite').forEach(x=>x.classList.remove('kau-path-hilite'));document.querySelectorAll('.sphere.kau-hilite').forEach(x=>x.classList.remove('kau-hilite'));if(hookLayer){hookLayer.querySelectorAll('.hook-line').forEach(l=>l.classList.remove('on'));hookLayer.innerHTML='';}document.querySelectorAll('.decan-cell.sel').forEach(g=>g.classList.remove('sel'));clearLinked();}
 function home(lens){
   lens=lens|| (activeMode? MODES.find(m=>m.id===activeMode) : LENSES.find(l=>l.id===activeLens));
-  const ver='v3.38 · closed canon + Paths + Kau + Decan Pass';
+  const ver='v3.39 · closed canon + Paths + Kau + Decan Pass';
   const nowBlock=(!activeMode && lens && lens.id==='decans')?nowBlockHtml():'';
   panel.innerHTML=`
    <div class="eyebrow">${activeMode?'Mode':'Lens'}</div>
@@ -1390,6 +1463,7 @@ function select(kind,id){
       const hits=decansForSphere(id);
       if(hits.length){
         linkDecanCells(hits);
+        applyResonanceFocus();
         const list=hits.map(nn=>{
           const dc=DECANS.find(d=>d.n===nn);
           return nn+' — '+(dc && dc.name ? dc.name : 'Decade '+nn);
@@ -1446,6 +1520,7 @@ function selectDecan(dc){
     drawDecanHook(dc.n, A.treeHook);
   }
   if(A) linkSpheres(A.spheres||[]);
+  applyResonanceFocus();
   panel.innerHTML=`
     <div class="eyebrow">${dc.n===37?'The days outside the year':'Decade '+dc.n+' of 36'}</div>
     <h2>${dc.name||'(name awaiting von Bomhard)'}</h2>

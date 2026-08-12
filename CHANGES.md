@@ -1,3 +1,39 @@
+# CHANGES — v3.42 (Timing & Election Layer)
+
+**v3.42** — Pass v5 Timing & Election (schema: `data/claude_Timing_Election_Data_Model_v1.md`):
+
+### Geometry verification (required before wiring)
+- Canon objects are **`NODES`** (spheres) + **`PATHS`** — there is no `SPHERES` identifier in this file. Treated as the authoritative sphere table.
+- All `PLANET_SPHERE` targets resolve to `NODES` keys; all `PATHS` endpoints resolve to `NODES`. **No Golden Dawn remapping.**
+- Existing `PLANET_SPHERE` hard constant reused unchanged (including Earth→malkuth, Neptune→ausar).
+
+### Mounted
+- **`CALENDAR_ANCHOR`** — `wep_ronpet` aliases `WEP_RONPET` (2026-08-07); `wr_table[2027]=null` stub; Pittsburgh / America/New_York defaults.
+- **`PLANETARY_DAYS`**, **`TACTICAL_FIGURES`** (names / windows / functions / titles / tiers only).
+- **Moon phase** — 8-bin synodic from epoch 2000-01-06; ±1 day Phase-1 accuracy.
+- **Derivations:** `decanWindow`, `dayMatches`, `figureAffinity` (lookup `FIGURE_AFFINITY_BY_CLASS`), `currentFigure`, `moonPhase`.
+- **All 37 cells** carry `elections` (`day_matches`, `figure_affinity`, `function_class`, `flags`, `ephemeris:null`). Function-class assignments per work order; unlisted cells → `function_class:[]` with visible “unclassified” stub (no name-inference).
+- **Scoring:** `TREE.elections.electionScore` / `nextFavorableWindow`; weights `W_DECAN=0.45, W_DAY=0.20, W_MOON=0.15, W_FIGURE=0.20`, `THRESHOLD=0.65`. Direction recorded, never scored. `STAND_DOWN` excluded from favorable results.
+- **Inspector:** Timing block on decan select (window, day matches, figures, function, flag badges, moon-mode toggle, next favorable).
+
+### Retired
+- Per-cell **`direction`** and moon placeholders removed from `STAR_ANCHORS` (ruling 2026-08-12: operator parameters, not cell data).
+
+### Ambiguities / stubs (not silently resolved)
+- **Solar boundaries:** no prior sunrise/sunset calc in the NOW block. Phase-1 uses a standard equation-of-time / declination approximation for local dawn (sunrise−90m), sunrise, noon, sunset. Noted as approximate; location-parameterized (Pittsburgh default).
+- **`wr_table[2027]`:** null stub — extend before 2027-07; non-2026 years fall back to Aug-7 civil date when forced.
+- **Chronos business-action lists:** not mounted (open ruling — optional lens later).
+- **Cells without planet-pair strings** (and no reverse-mappable spheres): day match renders “—”.
+- **Cells created only for elections** (no prior `STAR_ANCHORS` star row): star/power remain null stubs; elections still mounted.
+- **Mixed-polarity function classes** (e.g. cell 35 protect+expel): default moon_mode = `any`.
+- **Register v1.1 / JSON mirror** (spec §5): not in this HTML pass — tool shape matches the data model; register update is a separate deliverable.
+- **PRIME/STAND-DOWN ring coloring:** schema-ready via flags; UI exposure still deferred.
+
+### Acceptance
+See `TESTS.md`.
+
+---
+
 # CHANGES — v3.41 (Decan Pass v5 — hash deep-link + regression QA)
 
 **v3.41** — Decan Pass v5:

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reconciled Tree — v3.41 · Decan Pass</title>
+<title>The Reconciled Tree — v3.42 · Decan Pass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -280,6 +280,21 @@
   .slens-sec{fill:#DFD2B4; opacity:.65}
   .hook-line.herald{stroke-dasharray:4 4}
 
+
+  .timing-block{margin-top:12px; padding:10px 12px; background:var(--papyrus2); border-left:3px solid var(--gold)}
+  .timing-block .nk{font-family:'IBM Plex Mono',monospace; font-size:8.5px; letter-spacing:.18em; text-transform:uppercase; color:#8A6D1F; margin-bottom:6px}
+  .timing-row{font-size:12.5px; line-height:1.45; color:var(--ink); margin:3px 0}
+  .timing-row .tk{font-family:'IBM Plex Mono',monospace; font-size:8.5px; letter-spacing:.12em; text-transform:uppercase; color:#8A6D1F; display:inline-block; min-width:7.5em}
+  .timing-badges{display:flex; flex-wrap:wrap; gap:4px; margin:4px 0 2px}
+  .timing-badge{font-family:'IBM Plex Mono',monospace; font-size:8.5px; letter-spacing:.1em; text-transform:uppercase;
+    padding:2px 6px; border:1px solid var(--ochre); color:var(--ochre); background:#F3ECD8; border-radius:2px}
+  .timing-badge.sup{border-color:var(--gold); color:#8A6D1F}
+  .moon-toggle{display:inline-flex; gap:0; margin-left:6px; vertical-align:middle}
+  .moon-toggle button{font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.06em; text-transform:uppercase;
+    background:#E9DFC8; border:1px solid #C9B37E; color:var(--ink); padding:2px 6px; cursor:pointer}
+  .moon-toggle button.on{background:var(--gold); border-color:var(--gold); color:#221708}
+  .moon-toggle button:focus-visible{outline:2px solid var(--gold); outline-offset:1px}
+
   @media (max-width:900px){
     #compareBtn{width:auto; border-left:none; border-bottom:3px solid transparent; padding:8px 10px 6px}
     #compareBtn.on{border-left-color:transparent; border-bottom-color:var(--gold)}
@@ -298,7 +313,7 @@
 <body>
 <header>
   <h1>THE RECONCILED TREE</h1>
-  <div class="sub"><b>v3.41</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
+  <div class="sub"><b>v3.42</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
   <button type="button" id="tierBtn" aria-expanded="false" aria-controls="tierPop" title="Tier vocabulary">TIERS ?</button>
   <div id="tierPop" role="dialog" aria-label="Tier legend" hidden>
     <p><b>T1</b> attested primary source · <b>T2</b> interpretive / lineage · <b>T2-L</b> living lineage · <b>T3</b> owned construction · <b>G</b> resonance / gnosis</p>
@@ -350,7 +365,7 @@ const IMG_BASE=(()=>{const p=location.pathname||location.href||'';return (/\/bas
 function img(p){return (p||'').replace(/^images\//,IMG_BASE);}
 function portraitHtml(src,alt){return '<div class="portrait-wrap"><img class="portrait-preview" src="'+img(src)+'" alt="'+alt+'"></div>';}
 
-/* ================= CANON v3.41 ================= */
+/* ================= CANON v3.42 ================= */
 const NODES = {
  kether:{x:400,y:95,r:48,c:"#F2EBD7",num:"0",seph:"Kether",kem:"AMEN",planet:"SOURCE"},
  chokmah:{x:595,y:300,r:46,c:"#C9CFDD",num:"1",seph:"Chokmah",kem:"ATUM",planet:"CONSTELLATIONS"},
@@ -718,73 +733,485 @@ DECANS.push({n:37,name:"EPAGOMENAL · GEB",dates:"the 5 days outside the year",n
 const WEP_RONPET = "2026-08-07"; // Giza-calibrated heliacal rising, Ali's ruling
 const STAR_ANCHORS = {
   1:  {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
-       verdict:null, flags:[], treeHook:null, spheres:["gevurah","binah"], direction:null, elections:null},
+       verdict:null, flags:[], treeHook:null, spheres:["gevurah","binah"]},
   2:  {star:"Regulus (Heart of the Lion)", starTier:"T2",
        power:"Death; redness, sweat; fatal one-day fever", powerTier:"T2-L",
        planets:"Sun·Mars", planetsTier:"T3",
        verdict:"DIVERGENT — royal in the West, martial plague in the Naos",
        flags:[], treeHook:{target:"tiphereth", kind:"sphere", label:"Tiphereth (Master v2, Pass 36)"},
-       spheres:["tiphereth","gevurah"], direction:null, elections:null},
+       spheres:["tiphereth","gevurah"]},
   3:  {star:"Denebola (Tail of the Lion)", starTier:"T2",
        power:"\u201cCrushing fear\u201d cast against enemies; blood-clots; 3-day fever", powerTier:"T2-L",
        planets:"Mars·Mercury", planetsTier:"T3",
        verdict:"AGREES — malefic in both systems",
-       flags:[], treeHook:null, spheres:["gevurah","hod"], direction:null, elections:null},
+       flags:[], treeHook:null, spheres:["gevurah","hod"]},
   4:  {star:"Alkes (\u03b1 Crateris)", starTier:"T3",
        power:"Fever; plant-sickness; sacrifice of dogs", powerTier:"T2-L",
        planets:"Mars·Saturn", planetsTier:"T3",
        verdict:"Malefic in Naos; Western tradition obscure",
        flags:["WEAK STAR-ID — \u03b1 Crateris is faint; the identification itself is soft"],
-       treeHook:null, spheres:["gevurah","binah"], direction:null, elections:null},
+       treeHook:null, spheres:["gevurah","binah"]},
   9:  {star:"Zubenelgenubi (\u03b1\u00b2 Librae)", starTier:"T3",
        power:"Bloodbaths, war, carnage — the total-war cell", powerTier:"T2-L",
        planets:"Mars·Mercury·Moon", planetsTier:"T3",
        verdict:"AGREES on malefic",
        flags:["CONTESTED STAR — Chronos asserts Libra's southern claw; the name \u0131\u0357p-\u1E0Fs reads as Sopdu, pulling toward Orion's horizon. Opposite regions. Not settled."],
-       treeHook:null, spheres:["gevurah","hod","yesod"], direction:null, elections:null},
+       treeHook:null, spheres:["gevurah","hod","yesod"]},
   11: {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
-       verdict:null, flags:[], treeHook:null, spheres:["binah","yesod"], direction:null, elections:null},
+       verdict:null, flags:[], treeHook:null, spheres:["binah","yesod"]},
   13: {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
-       verdict:null, flags:[], treeHook:null, spheres:["binah","chesed"], direction:null, elections:null},
+       verdict:null, flags:[], treeHook:null, spheres:["binah","chesed"]},
   26: {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
-       verdict:null, flags:[], treeHook:null, spheres:["gevurah"], direction:null, elections:null},
+       verdict:null, flags:[], treeHook:null, spheres:["gevurah"]},
   31: {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
-       verdict:null, flags:[], treeHook:null, spheres:["hod","binah"], direction:null, elections:null},
+       verdict:null, flags:[], treeHook:null, spheres:["hod","binah"]},
   32: {star:"Orion (region — register: rmn \u1E25ry s\uA723\u1E25)", starTier:"region only",
        power:"(little surviving text)", powerTier:"T2-L",
        planets:null, planetsTier:null,
        verdict:null,
        flags:["SLOT-TENTATIVE", "NAME CONFLICT — register names this cell an Arm of Sah; Pass-50 canonical name is KENEMU SOPDET. Unresolved; both shown."],
-       treeHook:null, spheres:[], direction:null, elections:null},
+       treeHook:null, spheres:[]},
   33: {star:"Orion (region — register: rmn \u1E2Bry s\uA723\u1E25)", starTier:"region only",
        power:"(little surviving text)", powerTier:"T2-L",
        planets:null, planetsTier:null,
        verdict:null,
        flags:["SLOT-TENTATIVE", "NAME CONFLICT — register names this cell an Arm of Sah; Pass-50 canonical name is SESHEMU SOPDET. Unresolved; both shown."],
-       treeHook:null, spheres:[], direction:null, elections:null},
+       treeHook:null, spheres:[]},
   34: {star:"Orion (Sah — Belt/Betelgeuse/Rigel)", starTier:"T1 region / T3 star",
        power:"Protection against rebels; kills serpents", powerTier:"T2-L",
        planets:"Jupiter·Mars", planetsTier:"T3",
        verdict:"Martial-protective in both systems",
        flags:["SLOT-TENTATIVE", "NAME CONFLICT — register names this cell s\uA723\u1E25 (Sah); Pass-50 canonical name is APED SOPDET. Unresolved; both shown."],
        treeHook:{target:"skillcommand", kind:"path", label:"Divine Skill & Command (canonical marker: Orion; ruler Ptah)"},
-       spheres:["chesed","gevurah"], direction:null, elections:null},
+       spheres:["chesed","gevurah"]},
   35: {star:"Procyon (\u201cForemost of Sopdet\u201d)", starTier:"T2 — double-confirmed",
        power:"Vanquishes chaos; saves Ra from Apep on the eastern sandbanks", powerTier:"T2-L",
        planets:"Mars·Jupiter", planetsTier:"T3",
        verdict:"DOUBLE-CONFIRMED — name self-locates AND star-field agrees; as solid as this system gets",
        flags:[], treeHook:{target:"solarrising", kind:"path", t:0.62, style:"herald",
          label:"Herald of Solar Rising — outrider position (T3, owned; name-derived: \u201cForemost of Sopdet\u201d = the star that announces Sirius's rising)"},
-       spheres:["gevurah","chesed"], direction:null, elections:null},
+       spheres:["gevurah","chesed"]},
   36: {star:"Sirius (Sopdet)", starTier:"T1",
        power:"Power over life and death; brings the inundation", powerTier:"T2-L",
        planets:"Moon·Venus", planetsTier:"T3",
        verdict:"DIVERGENT on register (benefic-West vs life-and-death Naos); life-giving/flood aspect agrees",
        flags:[], treeHook:{target:"solarrising", kind:"path", label:"Solar Rising (canonical marker: Sirius; ruler Heru)"},
-       spheres:["yesod","netzach"], direction:null, elections:null},
+       spheres:["yesod","netzach"]},
   37: {star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
-       verdict:null, flags:[], treeHook:null, spheres:["hod","chesed"], direction:null, elections:null}
+       verdict:null, flags:[], treeHook:null, spheres:["hod","chesed"]}
 };
+
+/* ================= Timing & Election Layer (Pass v5 / tool v3.42) ================= */
+/* Geometry verified 2026-08-12: canon uses NODES (not SPHERES) + PATHS; PLANET_SPHERE
+   targets all resolve to NODES keys; no Golden Dawn remapping applied. */
+const CALENDAR_ANCHOR = {
+  wep_ronpet: WEP_RONPET, // reuse Pass-v4 NOW anchor — do not duplicate date literal
+  calibration: "giza_heliacal",
+  year_length: 365,
+  recompute: "annual",
+  wr_table: { 2026: "2026-08-07", 2027: null /* stub — extend before 2027-07 */ },
+  timezone_default: "America/New_York",
+  location_default: { lat: 40.44, lon: -79.99, label: "Pittsburgh" },
+  tier: "T3 (anchor ruling, Pass v4)"
+};
+const PLANETARY_DAYS = {
+  sunday: "Sun", monday: "Moon", tuesday: "Mars", wednesday: "Mercury",
+  thursday: "Jupiter", friday: "Venus", saturday: "Saturn",
+  tier: "T2 (received electional convention)"
+};
+const WEEKDAY_NAMES = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+const TACTICAL_FIGURES = [
+  { fig: 1, name: "The Human-Headed Bird (Ba)", window: "pre_dawn",
+    function: "intelligence / early warning", tier: "T2-L" },
+  { fig: 2, name: "The Falcon-Headed Sphinx (Sopdu-Shu)", window: "sunrise_to_midmorning",
+    function: "offensive strike operations", title: "Lord of Combat", tier: "T2-L" },
+  { fig: 3, name: "The Lion-Headed Ram", window: "solar_noon",
+    function: "power projection / maximum force", title: "Lord of Life", tier: "T2-L" },
+  { fig: 4, name: "The Standing Canine Mummy (Tekem)", window: "late_afternoon",
+    function: "resource allocation / supply control", title: "Opener of Ways", tier: "T2-L" },
+  { fig: 5, name: "The Reclining Mummy", window: "night",
+    function: "regeneration / strategic reserve", tier: "T2-L" }
+];
+/* Chronos business-action lists intentionally NOT mounted (open ruling — see CHANGES.md). */
+
+const W_DECAN=0.45, W_DAY=0.20, W_MOON=0.15, W_FIGURE=0.20, THRESHOLD=0.65;
+const FIGURE_AFFINITY_BY_CLASS = {
+  protect:[3,4], justice_authority:[3,4], commerce_alliance:[3,4], initiate_attract:[3,4],
+  strike_fear:[2,3], war_carnage:[2,3], expel_banish:[2,3],
+  plague_afflict:[2,5], bind_restrain:[2,5], dissolve_end:[2,5],
+  de_escalate_settle:[4],
+  regenerate:[5,1], open_road:[5,1]
+};
+const MOON_DEFAULT_BY_CLASS = {
+  initiate_attract:"inflow", commerce_alliance:"inflow", protect:"inflow", regenerate:"inflow",
+  justice_authority:"inflow", open_road:"inflow",
+  expel_banish:"outflow", strike_fear:"outflow", plague_afflict:"outflow",
+  war_carnage:"outflow", bind_restrain:"outflow", dissolve_end:"outflow",
+  de_escalate_settle:"any"
+};
+/* T2-L function_class + operational flags (work order 2026-08-12). Unlisted → []. */
+const ELECTION_ASSIGN = {
+  2:{fc:["plague_afflict"], flags:[]},
+  3:{fc:["strike_fear"], flags:[]},
+  4:{fc:["plague_afflict"], flags:[]},
+  5:{fc:["bind_restrain"], flags:[]},
+  7:{fc:["plague_afflict"], flags:[]},
+  9:{fc:["war_carnage"], flags:["TOTAL_WAR"]},
+  10:{fc:["justice_authority"], flags:[]},
+  11:{fc:["plague_afflict"], flags:["STAND_DOWN"]},
+  12:{fc:["plague_afflict"], flags:[]},
+  13:{fc:["de_escalate_settle"], flags:["DE_ESCALATION"]},
+  15:{fc:["commerce_alliance"], flags:[]},
+  16:{fc:["commerce_alliance"], flags:[]},
+  17:{fc:["commerce_alliance"], flags:[]},
+  21:{fc:["war_carnage"], flags:[]},
+  26:{fc:["expel_banish"], flags:[]},
+  27:{fc:["plague_afflict"], flags:[]},
+  29:{fc:["plague_afflict"], flags:[]},
+  30:{fc:["justice_authority"], flags:[]},
+  32:{fc:["plague_afflict"], flags:[]},
+  34:{fc:["protect"], flags:["DANGER"]},
+  35:{fc:["protect","expel_banish"], flags:[]},
+  36:{fc:["dissolve_end"], flags:["SUPREME"]},
+  37:{fc:["open_road"], flags:["MAX_DANGER"]}
+};
+const UNCLASSIFIED_CELLS = [1,6,8,14,18,19,20,22,23,24,25,28,31,33];
+
+function parseISODate(iso){
+  const p=String(iso).split('-').map(Number);
+  return new Date(p[0], p[1]-1, p[2], 12, 0, 0);
+}
+function fmtISO(d){
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+day;
+}
+function addDays(d, n){ const x=new Date(d.getTime()); x.setDate(x.getDate()+n); return x; }
+function wrForYear(year){
+  const t=CALENDAR_ANCHOR.wr_table[year];
+  if(t) return parseISODate(t);
+  /* Phase 1: only 2026 is attested; other years stub — fall back to same MD as 2026 with visible gap logged */
+  if(year===2026) return parseISODate(WEP_RONPET);
+  return null;
+}
+function wepRonpetNear(date){
+  const y=date.getFullYear();
+  let a=wrForYear(y);
+  if(!a){ /* stub year — approximate with Aug 7 of that year, flagged by caller */
+    a=new Date(y, 7, 7, 12, 0, 0);
+  }
+  if(date < a){
+    const prev=wrForYear(y-1);
+    a=prev || new Date(y-1, 7, 7, 12, 0, 0);
+  }
+  return a;
+}
+function decanWindow(n, year){
+  n=+n; year=+year;
+  const wrIso=CALENDAR_ANCHOR.wr_table[year];
+  const stub=!wrIso;
+  const wr=wrIso ? parseISODate(wrIso) : new Date(year, 7, 7, 12, 0, 0);
+  let start, end;
+  if(n===37){
+    start=addDays(wr, 360); end=addDays(wr, 364);
+  } else if(n>=1 && n<=36){
+    start=addDays(wr, (n-1)*10); end=addDays(start, 9);
+  } else {
+    return {start:null, end:null, stub:true};
+  }
+  return {start, end, startISO:fmtISO(start), endISO:fmtISO(end), stub, year};
+}
+function sphereToPlanet(){
+  const rev={};
+  for(const p in PLANET_SPHERE){
+    if(["Saturn","Jupiter","Mars","Sun","Venus","Mercury","Moon"].indexOf(p)>=0)
+      rev[PLANET_SPHERE[p]]=p;
+  }
+  return rev;
+}
+function planetsOfCell(cellOrN){
+  const n=typeof cellOrN==='object' ? cellOrN.n : +cellOrN;
+  const A=STAR_ANCHORS[n];
+  if(!A) return [];
+  if(A.planets) return A.planets.split('\u00b7').map(p=>p.trim()).filter(Boolean);
+  const rev=sphereToPlanet();
+  return (A.spheres||[]).map(sid=>rev[sid]).filter(Boolean);
+}
+function dayMatches(cell){
+  const planets=new Set(planetsOfCell(cell));
+  if(!planets.size) return [];
+  return WEEKDAY_NAMES.filter(d=>planets.has(PLANETARY_DAYS[d]));
+}
+function figureAffinity(cell){
+  const n=typeof cell==='object' ? cell.n : +cell;
+  const A=STAR_ANCHORS[n];
+  const fcs=(A && A.elections && A.elections.function_class) || [];
+  const set=new Set();
+  fcs.forEach(fc=>{
+    const figs=FIGURE_AFFINITY_BY_CLASS[fc];
+    if(figs) figs.forEach(f=>set.add(f));
+  });
+  return [...set].sort((a,b)=>a-b);
+}
+/* Phase-1 solar approximation (no library). Pittsburgh default. See CHANGES.md. */
+function _deg2rad(d){return d*Math.PI/180;}
+function _rad2deg(r){return r*180/Math.PI;}
+function solarEventsLocal(date, location){
+  const loc=location||CALENDAR_ANCHOR.location_default;
+  const lat=loc.lat, lon=loc.lon;
+  const y=date.getFullYear(), m=date.getMonth(), d=date.getDate();
+  /* day-of-year */
+  const start=new Date(y,0,0); const doy=Math.floor((new Date(y,m,d)-start)/86400000);
+  const B=_deg2rad((360/365)*(doy-81));
+  const eqTime=9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B); /* minutes */
+  const decl=_deg2rad(23.45*Math.sin(_deg2rad((360/365)*(doy-81))));
+  const latR=_deg2rad(lat);
+  const ha=_rad2deg(Math.acos(Math.max(-1,Math.min(1, Math.cos(_deg2rad(90.833))/(Math.cos(latR)*Math.cos(decl)) - Math.tan(latR)*Math.tan(decl)))));
+  const noonMin=720 - 4*lon - eqTime; /* UTC minutes from local mean — treat as local clock approx for Phase 1 */
+  /* Convert to local civil by assuming America/New_York offset from Date */
+  const probe=new Date(y,m,d,12,0,0);
+  const tzOff=probe.getTimezoneOffset(); /* minutes behind UTC */
+  const localNoon=noonMin - tzOff; /* rough local minutes from midnight */
+  const sunrise=localNoon - ha*4;
+  const sunset=localNoon + ha*4;
+  const clamp=x=>Math.max(0, Math.min(24*60-1, x));
+  return {
+    dawnMin: clamp(sunrise - 90), /* astronomical dawn ≈ sunrise−90m (approx) */
+    sunriseMin: clamp(sunrise),
+    noonMin: clamp(localNoon),
+    sunsetMin: clamp(sunset),
+    approx:true
+  };
+}
+function minutesOfDay(dt){ return dt.getHours()*60 + dt.getMinutes() + dt.getSeconds()/60; }
+function currentFigure(datetime, location){
+  const dt=datetime instanceof Date ? datetime : new Date(datetime);
+  const ev=solarEventsLocal(dt, location);
+  const m=minutesOfDay(dt);
+  const dawn=ev.dawnMin, rise=ev.sunriseMin, noon=ev.noonMin, set=ev.sunsetMin;
+  if(m>=set || m<dawn) return TACTICAL_FIGURES[4]; /* night */
+  if(m>=15*60 && m<set) return TACTICAL_FIGURES[3]; /* late afternoon */
+  if(Math.abs(m-noon)<=90) return TACTICAL_FIGURES[2]; /* solar noon ±90 */
+  if(m>=rise && m<rise+4*60) return TACTICAL_FIGURES[1]; /* sunrise → +4h */
+  if(m>=dawn && m<rise) return TACTICAL_FIGURES[0]; /* pre_dawn */
+  /* midmorning after +4h but before noon−90 → still figure 2 lane */
+  if(m>=rise && m<noon-90) return TACTICAL_FIGURES[1];
+  return TACTICAL_FIGURES[2];
+}
+const MOON_BINS=["new","waxing crescent","first quarter","waxing gibbous","full","waning gibbous","last quarter","waning crescent"];
+/* Known new moon epoch: 2000-01-06 18:14 UTC; synodic month 29.530588853 d */
+const NEW_MOON_EPOCH_MS=Date.UTC(2000,0,6,18,14,0);
+const SYNODIC_MS=29.530588853*86400000;
+function moonPhase(date){
+  const dt=date instanceof Date ? date : new Date(date);
+  let age=((dt.getTime()-NEW_MOON_EPOCH_MS)%SYNODIC_MS+SYNODIC_MS)%SYNODIC_MS;
+  const frac=age/SYNODIC_MS; /* 0..1 */
+  const bin=Math.min(7, Math.floor(frac*8));
+  return {bin, name:MOON_BINS[bin], fraction:frac, ageDays:age/86400000};
+}
+function moonFit(mode, phase){
+  if(!mode || mode==='any') return 0.5;
+  const b=phase.bin; /* 0 new … 4 full … 7 waning crescent */
+  const waxing=b>=1 && b<=3;
+  const waning=b>=5 && b<=7;
+  const quarter=b===1||b===3||b===5||b===7; /* crescent/gibbous edges treated as near-quarter softness in §4.2 */
+  /* Spec: waxing↔inflow / waning↔outflow; 1, 0.5 near quarters, 0 opposed; any=0.5
+     Interpret: exact waxing bins 2 (first quarter boundary softness): use
+     inflow wants waxing (bins 1–3)=1, full/new (0,4)=0.5, waning (5–7)=0 */
+  if(mode==='inflow'){
+    if(waxing) return (b===1||b===3)?0.5:1;
+    if(b===0||b===4) return 0.5;
+    return 0;
+  }
+  if(mode==='outflow'){
+    if(waning) return (b===5||b===7)?0.5:1;
+    if(b===0||b===4) return 0.5;
+    return 0;
+  }
+  return 0.5;
+}
+function defaultMoonModeForCell(n){
+  const A=STAR_ANCHORS[n];
+  const fcs=(A && A.elections && A.elections.function_class)||[];
+  if(!fcs.length) return 'any';
+  const modes=fcs.map(fc=>MOON_DEFAULT_BY_CLASS[fc]).filter(Boolean);
+  if(!modes.length) return 'any';
+  if(modes.every(m=>m===modes[0])) return modes[0];
+  /* mixed polarity (e.g. protect+expel) → any */
+  return 'any';
+}
+function inDecanWindow(n, date){
+  const d=date instanceof Date ? date : new Date(date);
+  const day=new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0);
+  /* Determine which WR year this civil day belongs to */
+  let y=day.getFullYear();
+  let wr=wrForYear(y) || new Date(y,7,7,12,0,0);
+  if(day < wr){ y=y-1; wr=wrForYear(y)||new Date(y,7,7,12,0,0); }
+  const win=decanWindow(n, y);
+  if(!win.start) return false;
+  const t=day.getTime();
+  return t>=win.start.getTime() && t<=win.end.getTime();
+}
+function dayMatchBool(n, date){
+  const d=date instanceof Date ? date : new Date(date);
+  const wd=WEEKDAY_NAMES[d.getDay()];
+  return dayMatches(n).indexOf(wd)>=0;
+}
+function figureMatchBool(n, datetime, location){
+  const fig=currentFigure(datetime, location);
+  const aff=figureAffinity(n);
+  return aff.indexOf(fig.fig)>=0;
+}
+function electionScore(cellId, datetime, location, operatorParams){
+  const n=+cellId;
+  const dt=datetime instanceof Date ? datetime : new Date(datetime);
+  const loc=location||CALENDAR_ANCHOR.location_default;
+  const op=Object.assign({moon_mode:'any', direction:null}, operatorParams||{});
+  const A=STAR_ANCHORS[n]||{};
+  const el=A.elections||{};
+  const dec=inDecanWindow(n, dt)?1:0;
+  const day=dayMatchBool(n, dt)?1:0;
+  const moon=moonFit(op.moon_mode, moonPhase(dt));
+  const fig=figureMatchBool(n, dt, loc)?1:0;
+  const score=W_DECAN*dec + W_DAY*day + W_MOON*moon + W_FIGURE*fig;
+  return {
+    score:+score.toFixed(4),
+    parts:{decan:dec, day:day, moon:moon, figure:fig},
+    weights:{W_DECAN, W_DAY, W_MOON, W_FIGURE},
+    threshold:THRESHOLD,
+    moon_mode:op.moon_mode,
+    direction:op.direction, /* recorded, never scored */
+    flags:(el.flags||[]).slice(),
+    figure:currentFigure(dt, loc),
+    phase:moonPhase(dt),
+    stand_down:(el.flags||[]).indexOf('STAND_DOWN')>=0
+  };
+}
+function nextFavorableWindow(cellId, fromDate, operatorParams){
+  const n=+cellId;
+  const A=STAR_ANCHORS[n]||{};
+  const flags=((A.elections&&A.elections.flags)||[]).slice();
+  const standDown=flags.indexOf('STAND_DOWN')>=0;
+  const op=Object.assign({moon_mode:defaultMoonModeForCell(n), direction:null}, operatorParams||{});
+  const from=fromDate instanceof Date ? fromDate : new Date(fromDate||Date.now());
+  /* Hard rule: STAND_DOWN excluded from favorable results — still return window+flag when asked directly */
+  if(standDown){
+    const y=from.getFullYear();
+    const wr=wrForYear(y)||new Date(y,7,7,12,0,0);
+    const year=from < wr ? y-1 : y;
+    const win=decanWindow(n, year);
+    return {favorable:false, excluded:true, reason:'STAND_DOWN', flags, window:win, moon_mode:op.moon_mode, direction:op.direction};
+  }
+  const sampleHours=[6,8,12,15,18,21]; /* cover figure lanes */
+  for(let i=0;i<400;i++){
+    const day=addDays(new Date(from.getFullYear(), from.getMonth(), from.getDate(), 12,0,0), i);
+    if(!inDecanWindow(n, day)) continue;
+    for(const h of sampleHours){
+      const dt=new Date(day.getFullYear(), day.getMonth(), day.getDate(), h, 0, 0);
+      if(dt < from && i===0) continue;
+      const sc=electionScore(n, dt, CALENDAR_ANCHOR.location_default, op);
+      if(sc.score+1e-9 >= THRESHOLD){
+        /* expand contiguous favorable hours same day */
+        let end=dt;
+        for(let hh=h; hh<24; hh++){
+          const t2=new Date(day.getFullYear(), day.getMonth(), day.getDate(), hh, 0, 0);
+          if(electionScore(n, t2, CALENDAR_ANCHOR.location_default, op).score+1e-9>=THRESHOLD) end=t2;
+        }
+        return {favorable:true, excluded:false, start:dt, end:end, startISO:fmtISO(dt)+' '+String(dt.getHours()).padStart(2,'0')+':00',
+          endISO:fmtISO(end)+' '+String(end.getHours()).padStart(2,'0')+':00', score:sc.score, flags, moon_mode:op.moon_mode, direction:op.direction};
+      }
+    }
+  }
+  return {favorable:false, excluded:false, reason:'none_in_horizon', flags, moon_mode:op.moon_mode, direction:op.direction};
+}
+function mountCellElections(){
+  for(let n=1;n<=37;n++){
+    if(!STAR_ANCHORS[n]){
+      STAR_ANCHORS[n]={star:null, starTier:null, power:null, powerTier:null, planets:null, planetsTier:null,
+        verdict:null, flags:[], treeHook:null, spheres:[]};
+    }
+    const fc=ELECTION_ASSIGN[n] ? ELECTION_ASSIGN[n].fc.slice() : [];
+    const eflags=ELECTION_ASSIGN[n] ? ELECTION_ASSIGN[n].flags.slice() : [];
+    STAR_ANCHORS[n].elections={
+      day_matches: dayMatches(n),
+      day_tier: "T3 (planet pair is owned construction; day cycle T2)",
+      figure_affinity: null,
+      figure_tier: "T3 (owned mapping, rule-derived — see §3.2)",
+      function_class: fc,
+      function_tier: fc.length ? "T2-L (classed from Naos summary)" : "— unclassified stub",
+      flags: eflags,
+      ephemeris: null
+    };
+  }
+  for(let n=1;n<=37;n++){
+    STAR_ANCHORS[n].elections.figure_affinity=figureAffinity(n);
+  }
+}
+mountCellElections();
+
+const TREE = window.TREE || (window.TREE={});
+TREE.elections={
+  CALENDAR_ANCHOR, PLANETARY_DAYS, TACTICAL_FIGURES,
+  W_DECAN, W_DAY, W_MOON, W_FIGURE, THRESHOLD,
+  FIGURE_AFFINITY_BY_CLASS,
+  decanWindow, dayMatches, figureAffinity, currentFigure, moonPhase,
+  electionScore, nextFavorableWindow,
+  planetsOfCell, defaultMoonModeForCell, inDecanWindow
+};
+
+let timingMoonModeByCell={};
+
+function timingBlockHtml(dc){
+  const n=dc.n;
+  const A=STAR_ANCHORS[n];
+  const el=A && A.elections;
+  if(!el) return '';
+  const y=new Date().getFullYear();
+  const win=decanWindow(n, y);
+  const winStr=(win && win.startISO) ? (win.startISO+' \u2013 '+win.endISO+(win.stub?' (WR stub)':'')) : '\u2014';
+  const days=el.day_matches && el.day_matches.length
+    ? el.day_matches.map(d=>d.charAt(0).toUpperCase()+d.slice(1)).join(', ')
+    : '\u2014';
+  const figs=el.figure_affinity && el.figure_affinity.length
+    ? el.figure_affinity.map(f=>{ const T=TACTICAL_FIGURES.find(x=>x.fig===f); return T?('F'+f+' '+T.name.replace(/\s*\(.*\)/,'')):'F'+f; }).join(' \u00b7 ')
+    : '\u2014';
+  const fc=el.function_class && el.function_class.length ? el.function_class.join(', ') : 'unclassified';
+  const badges=(el.flags||[]).map(f=>{
+    const cls=(f==='SUPREME'||f==='TOTAL_WAR')?' timing-badge sup':' timing-badge';
+    return '<span class="'+cls.trim()+'">'+f+'</span>';
+  }).join('');
+  const mode=timingMoonModeByCell[n] || defaultMoonModeForCell(n);
+  timingMoonModeByCell[n]=mode;
+  const fav=nextFavorableWindow(n, new Date(), {moon_mode:mode, direction:null});
+  let favStr='\u2014';
+  if(fav.excluded) favStr='excluded (STAND_DOWN) \u2014 window '+((fav.window&&fav.window.startISO)?(fav.window.startISO+' \u2013 '+fav.window.endISO):'\u2014');
+  else if(fav.favorable) favStr=fav.startISO+' \u2013 '+fav.endISO+' (score '+fav.score+')';
+  else favStr='none in 400-day horizon';
+  const tog=['inflow','outflow','any'].map(m=>
+    '<button type="button" data-moon="'+m+'" class="'+(m===mode?'on':'')+'" aria-pressed="'+(m===mode?'true':'false')+'">'+m+'</button>'
+  ).join('');
+  return `<div class="timing-block" data-decan="${n}">
+    <div class="nk">Timing</div>
+    <div class="timing-row"><span class="tk">Window</span> ${winStr}</div>
+    <div class="timing-row"><span class="tk">Day match</span> ${days}</div>
+    <div class="timing-row"><span class="tk">Figures</span> ${figs}</div>
+    <div class="timing-row"><span class="tk">Function</span> ${fc}</div>
+    ${badges?`<div class="timing-badges">${badges}</div>`:''}
+    <div class="timing-row"><span class="tk">Moon mode</span><span class="moon-toggle" role="group" aria-label="Moon mode">${tog}</span></div>
+    <div class="timing-row"><span class="tk">Next favorable</span> ${favStr}</div>
+  </div>`;
+}
+function wireTimingToggle(n){
+  const root=document.querySelector('.timing-block[data-decan="'+n+'"]');
+  if(!root) return;
+  root.querySelectorAll('.moon-toggle button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      timingMoonModeByCell[n]=btn.getAttribute('data-moon');
+      const dc=DECANS.find(d=>d.n===n);
+      if(dc) selectDecan(dc);
+    });
+  });
+}
+
 const CIRCUIT_HILITE=["coiledpower","dualcurrent","skillcommand","solarrising","timelocation"];
 const BANDS=[ // elements strata
  {name:"FIRE",y1:265,y2:340,c:"#A03A2E"},
@@ -1688,7 +2115,7 @@ function field(k,v){return v?`<div class="field"><div class="k">${k}</div><div c
 function clearSel(){selectedRef=null;document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));document.querySelectorAll('.kau-card.on').forEach(c=>c.classList.remove('on'));document.querySelectorAll('.kau-path-hilite').forEach(x=>x.classList.remove('kau-path-hilite'));document.querySelectorAll('.sphere.kau-hilite').forEach(x=>x.classList.remove('kau-hilite'));if(hookLayer){hookLayer.querySelectorAll('.hook-line').forEach(l=>l.classList.remove('on'));hookLayer.innerHTML='';}document.querySelectorAll('.decan-cell.sel').forEach(g=>g.classList.remove('sel'));clearLinked();}
 function home(lens){
   lens=lens|| (activeMode? MODES.find(m=>m.id===activeMode) : LENSES.find(l=>l.id===activeLens));
-  const ver='v3.41 · closed canon + Paths + Kau + Decan Pass';
+  const ver='v3.42 · closed canon + Paths + Kau + Decan Pass';
   const nowBlock=(!activeMode && lens && lens.id==='decans')?nowBlockHtml():'';
   setPanel(`
    <div class="eyebrow">${activeMode?'Mode':'Lens'}</div>
@@ -1780,13 +2207,16 @@ function selectDecan(dc){
     anchorHtml += field('Tree capacity','Ring-cell only (ruled, Pass v4)');
   }
   applyResonanceFocus();
+  const timingHtml=timingBlockHtml(dc);
   setPanel(`
     <div class="eyebrow">${dc.n===37?'The days outside the year':'Decade '+dc.n+' of 36'}</div>
     <h2>${dc.name||'(name awaiting von Bomhard)'}</h2>
     <h3 class="route">${dc.dates}</h3>
     ${anchorHtml}
     ${dc.note?field('Note','<span class="note">'+dc.note+'</span>'):''}
+    ${timingHtml}
     <div class="prov">T1: the Naos (von Bomhard 2008) · Chronos warfare module + associate verification (T2-L) · ring arrangement T3, owned. Decan effects = Negative/martial register.</div>`);
+  wireTimingToggle(dc.n);
   syncHash();
 }
 

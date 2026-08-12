@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reconciled Tree — v3.42 · Decan Pass</title>
+<title>The Reconciled Tree — v3.43 · Decan Pass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -295,6 +295,22 @@
   .moon-toggle button.on{background:var(--gold); border-color:var(--gold); color:#221708}
   .moon-toggle button:focus-visible{outline:2px solid var(--gold); outline-offset:1px}
 
+  .timing-lens .now-strip{margin-top:10px; padding:10px 12px; background:var(--papyrus2); border-left:3px solid var(--gold)}
+  .timing-lens .now-strip .nk{font-family:'IBM Plex Mono',monospace; font-size:8.5px; letter-spacing:.18em; text-transform:uppercase; color:#8A6D1F; margin-bottom:6px}
+  .timing-lens .now-line{font-size:13px; line-height:1.45; color:var(--ink); margin:3px 0}
+  .timing-lens .query-block{margin-top:14px}
+  .timing-lens label{display:block; font-family:'IBM Plex Mono',monospace; font-size:8.5px; letter-spacing:.14em; text-transform:uppercase; color:#8A6D1F; margin:8px 0 4px}
+  .timing-lens select,.timing-lens .dir-pick{font-family:'Spectral',Georgia,serif; font-size:13px; background:#F3ECD8; border:1px solid #C9B37E; color:var(--ink); padding:5px 8px; border-radius:3px; width:100%; max-width:280px}
+  .timing-lens .result-list{margin-top:10px; display:flex; flex-direction:column; gap:6px}
+  .timing-lens .result-row{text-align:left; width:100%; background:#F3ECD8; border:1px solid #C9B37E; border-radius:4px; padding:8px 10px; cursor:pointer; color:var(--ink); font-family:'Spectral',Georgia,serif; font-size:12.5px; line-height:1.4}
+  .timing-lens .result-row:hover,.timing-lens .result-row:focus-visible{border-color:var(--gold); outline:none}
+  .timing-lens .result-row .rn{font-family:'Cinzel',serif; font-weight:700; font-size:13px; letter-spacing:.04em}
+  .timing-lens .result-row .rw{font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8A6D1F; margin-top:3px}
+  .timing-lens .result-row.stand-down{opacity:.72; border-style:dashed; border-color:var(--ochre)}
+  .timing-lens .result-row.unclass .rn{font-weight:500}
+  .timing-lens .recorded{margin-top:8px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:#5A4A22}
+  .timing-lens .empty{font-size:12.5px; color:#5A4A22; margin-top:8px}
+
   @media (max-width:900px){
     #compareBtn{width:auto; border-left:none; border-bottom:3px solid transparent; padding:8px 10px 6px}
     #compareBtn.on{border-left-color:transparent; border-bottom-color:var(--gold)}
@@ -313,7 +329,7 @@
 <body>
 <header>
   <h1>THE RECONCILED TREE</h1>
-  <div class="sub"><b>v3.42</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
+  <div class="sub"><b>v3.43</b> · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
   <button type="button" id="tierBtn" aria-expanded="false" aria-controls="tierPop" title="Tier vocabulary">TIERS ?</button>
   <div id="tierPop" role="dialog" aria-label="Tier legend" hidden>
     <p><b>T1</b> attested primary source · <b>T2</b> interpretive / lineage · <b>T2-L</b> living lineage · <b>T3</b> owned construction · <b>G</b> resonance / gnosis</p>
@@ -365,7 +381,7 @@ const IMG_BASE=(()=>{const p=location.pathname||location.href||'';return (/\/bas
 function img(p){return (p||'').replace(/^images\//,IMG_BASE);}
 function portraitHtml(src,alt){return '<div class="portrait-wrap"><img class="portrait-preview" src="'+img(src)+'" alt="'+alt+'"></div>';}
 
-/* ================= CANON v3.42 ================= */
+/* ================= CANON v3.43 ================= */
 const NODES = {
  kether:{x:400,y:95,r:48,c:"#F2EBD7",num:"0",seph:"Kether",kem:"AMEN",planet:"SOURCE"},
  chokmah:{x:595,y:300,r:46,c:"#C9CFDD",num:"1",seph:"Chokmah",kem:"ATUM",planet:"CONSTELLATIONS"},
@@ -452,11 +468,12 @@ const LENSES = [
  {id:"sky",name:"The Tree",desc:"Foundation: planets, sign-seats, path names, markers, rulers."},
  {id:"neteru",name:"Neteru",desc:"Sphere rulers — pairs and soles (§3b, canon)."},
  {id:"soul",name:"Soul",desc:"The soul-parts: Ba, Akh, Sekhem, Ka, Ib, Sheut, Ren, Khet, Sah."},
+ {id:"timing",name:"Timing",desc:"Election console — intent to cell, scored against decan window, planetary day, moon mode, and tactical figure. Full register; STAND_DOWN cells never recommended."},
  {id:"week",name:"Week",desc:"Akradinbosom: days and Akan pairs. Akua operates with Set; she does not reside at Hod. Geb & Renenutet receive dua on ANY day — the earth-pair stands outside the weekday rotation."},
- {id:"body",name:"Body",desc:"Chakras & seed sounds. The 8th chakra lies beneath the feet — soundless; seat unassigned."},
+ {id:"body",name:"Body",hidden:true,desc:"Chakras & seed sounds. The 8th chakra lies beneath the feet — soundless; seat unassigned."},
  {id:"elements",name:"Elements",desc:"Five horizontal strata: Fire · Spirit · Air · Water · Earth."},
  {id:"forces",name:"Forces",desc:"The force register; Magnetism at Malkuth per the Circuit Doctrine."},
- {id:"symbols",name:"Symbols",desc:"The teaching layer — the tree read at sight."},
+ {id:"symbols",name:"Symbols",hidden:true,desc:"The teaching layer — the tree read at sight."},
  {id:"strengths",name:"Strengths",desc:"The circuit working — with the pass-33 re-seatings and Gestation at the Moon."},
  {id:"weaknesses",name:"Weaknesses",desc:"The circuit malfunctioning — each capacity overdriven or starved."},
  {id:"distortions",name:"Distortions",desc:"The office inverted — all eleven nodes. The Qliphoth, replaced."},
@@ -801,7 +818,7 @@ const STAR_ANCHORS = {
        verdict:null, flags:[], treeHook:null, spheres:["hod","chesed"]}
 };
 
-/* ================= Timing & Election Layer (Pass v5 / tool v3.42) ================= */
+/* ================= Timing & Election Layer (Pass v5 / tool v3.43) ================= */
 /* Geometry verified 2026-08-12: canon uses NODES (not SPHERES) + PATHS; PLANET_SPHERE
    targets all resolve to NODES keys; no Golden Dawn remapping applied. */
 const CALENDAR_ANCHOR = {
@@ -1212,6 +1229,209 @@ function wireTimingToggle(n){
   });
 }
 
+
+/* ================= Timing lens rail surface (Pass v6 / tool v3.43) ================= */
+const FUNCTION_CLASS_VOCAB = [
+  "initiate_attract","protect","expel_banish","strike_fear","plague_afflict","war_carnage",
+  "bind_restrain","de_escalate_settle","dissolve_end","regenerate","justice_authority",
+  "commerce_alliance","open_road"
+];
+const timingState = {
+  intent: "all",
+  moon_mode: "any",
+  direction: null,
+  matchingIds: null, /* null = no filter yet / all; Set of cell numbers when querying */
+  lastResults: []
+};
+function clearTimingRingDim(){
+  document.querySelectorAll('.decan-cell.timing-dim').forEach(g=>g.classList.remove('timing-dim','dim'));
+}
+function applyTimingRingDim(matchingIds){
+  clearTimingRingDim();
+  if(activeLens!=='timing' || activeMode) return;
+  if(!Object.keys(decanGroups).length) return;
+  const match = matchingIds==null ? null : new Set(matchingIds);
+  for(const k in decanGroups){
+    const n=+k;
+    const g=decanGroups[n];
+    if(!g) continue;
+    if(match==null){
+      /* before first query or All with no filter dim: leave all full until query runs */
+      continue;
+    }
+    if(!match.has(n)){
+      g.classList.add('dim','timing-dim');
+    }
+  }
+}
+function moonModeForIntent(intent){
+  if(!intent || intent==='all') return 'any';
+  return MOON_DEFAULT_BY_CLASS[intent] || 'any';
+}
+function timingNowStripHtml(){
+  const info=civilDayInfo();
+  const fig=currentFigure(new Date(), CALENDAR_ANCHOR.location_default);
+  const phase=moonPhase(new Date());
+  if(!info){
+    return `<div class="now-strip"><div class="nk">Now</div><div class="now-line">\u2014 AWAITING ANCHOR</div></div>`;
+  }
+  const A=STAR_ANCHORS[info.n]||{};
+  const el=A.elections||{};
+  const star=A.star || '\u2014';
+  const badges=(el.flags||[]).map(f=>'<span class="timing-badge'+(f==='SUPREME'||f==='TOTAL_WAR'?' timing-badge sup':'')+'">'+f+'</span>').join('');
+  /* also surface star-anchor dispute flags lightly */
+  const starFlags=(A.flags||[]).filter(f=>/STAND_DOWN|DANGER|SUPREME|TOTAL_WAR|DE_ESCALATION|MAX_DANGER/.test(f));
+  const more=starFlags.map(f=>'<span class="timing-badge">'+f+'</span>').join('');
+  return `<div class="now-strip">
+    <div class="nk">Now</div>
+    <div class="now-line"><b>Decade ${info.n}</b> · ${info.name||'\u2014'}</div>
+    <div class="now-line">Star: ${star}</div>
+    ${(badges||more)?`<div class="timing-badges">${badges}${more}</div>`:''}
+    <div class="now-line">Figure: ${fig.name}${fig.function?' — '+fig.function:''}</div>
+    <div class="now-line">Moon: ${phase.name}</div>
+  </div>`;
+}
+function cellsForIntent(intent){
+  const out=[];
+  for(let n=1;n<=37;n++){
+    const A=STAR_ANCHORS[n]; if(!A||!A.elections) continue;
+    const fc=A.elections.function_class||[];
+    if(intent==='all'){
+      out.push({n, unclassified:!fc.length});
+    } else if(fc.indexOf(intent)>=0){
+      out.push({n, unclassified:false});
+    }
+  }
+  return out;
+}
+function runTimingQuery(){
+  const intent=timingState.intent;
+  const op={moon_mode:timingState.moon_mode, direction:timingState.direction};
+  const cells=cellsForIntent(intent);
+  const fav=[], stand=[], unclass=[];
+  const matching=[];
+  cells.forEach(c=>{
+    matching.push(c.n);
+    const A=STAR_ANCHORS[c.n];
+    const flags=(A.elections&&A.elections.flags)||[];
+    const isSD=flags.indexOf('STAND_DOWN')>=0;
+    const win=nextFavorableWindow(c.n, new Date(), op);
+    const dc=DECANS.find(d=>d.n===c.n);
+    const row={
+      n:c.n,
+      name:(dc&&dc.name)||('Decade '+c.n),
+      star:(A.star)||'\u2014',
+      flags:flags.slice(),
+      unclassified:!!c.unclassified,
+      win,
+      sortKey: (win.favorable && win.start) ? win.start.getTime() : (win.window && win.window.start ? win.window.start.getTime() : Number.MAX_SAFE_INTEGER)
+    };
+    if(isSD){
+      if(inDecanWindow(c.n, new Date())) stand.push(row);
+      /* else omitted — never listed as favorable; only surfaces when window is current */
+    } else if(c.unclassified && intent==='all') unclass.push(row);
+    else fav.push(row);
+  });
+  fav.sort((a,b)=>a.sortKey-b.sortKey);
+  unclass.sort((a,b)=>a.n-b.n);
+  stand.sort((a,b)=>a.n-b.n);
+  timingState.lastResults=fav.concat(unclass).concat(stand);
+  timingState.matchingIds=matching;
+  applyTimingRingDim(matching);
+  return timingState.lastResults;
+}
+function formatWinLine(win){
+  if(!win) return '\u2014';
+  if(win.excluded) return 'STAND_DOWN — not recommended'+(win.window&&win.window.startISO?' · window '+win.window.startISO+' \u2013 '+win.window.endISO:'');
+  if(win.favorable) return 'next favorable: '+win.startISO+' \u2013 '+win.endISO+(win.score!=null?' (score '+win.score+')':'');
+  return 'next favorable: \u2014';
+}
+function timingResultRowsHtml(rows){
+  if(!rows.length) return '<div class="empty">No matching cells.</div>';
+  return '<div class="result-list">'+rows.map(r=>{
+    const cls=['result-row'];
+    if(r.flags.indexOf('STAND_DOWN')>=0) cls.push('stand-down');
+    if(r.unclassified) cls.push('unclass');
+    const badges=r.flags.map(f=>'<span class="timing-badge'+(f==='SUPREME'||f==='TOTAL_WAR'?' timing-badge sup':'')+'">'+f+'</span>').join('');
+    const mark=r.unclassified?' <i>(unclassified)</i>':'';
+    return `<button type="button" class="${cls.join(' ')}" data-decan="${r.n}">
+      <div class="rn">${r.n} · ${r.name}${mark}</div>
+      <div>Star: ${r.star}</div>
+      ${badges?'<div class="timing-badges">'+badges+'</div>':''}
+      <div class="rw">${formatWinLine(r.win)}</div>
+    </button>`;
+  }).join('')+'</div>';
+}
+function timingLensPanelHtml(){
+  const intent=timingState.intent;
+  const opts=['<option value="all"'+(intent==='all'?' selected':'')+'>All</option>']
+    .concat(FUNCTION_CLASS_VOCAB.map(fc=>'<option value="'+fc+'"'+(intent===fc?' selected':'')+'>'+fc+'</option>'));
+  const moon=timingState.moon_mode;
+  const tog=['inflow','outflow','any'].map(m=>
+    '<button type="button" data-moon="'+m+'" class="'+(m===moon?'on':'')+'" aria-pressed="'+(m===moon?'true':'false')+'">'+m+'</button>'
+  ).join('');
+  const dir=timingState.direction;
+  const dirs=[['','none'],['N','N'],['S','S'],['E','E'],['W','W']];
+  const dirOpts=dirs.map(([v,lab])=>'<option value="'+v+'"'+((dir||'')===v?' selected':'')+'>'+lab+'</option>').join('');
+  const rows=runTimingQuery();
+  const rec='Recorded direction: '+(dir||'none')+' · moon_mode: '+moon+' (direction never scored)';
+  return `<div class="timing-lens">
+    <div class="eyebrow">Lens</div>
+    <h2>Timing</h2>
+    <h3 class="route">v3.43 · election console</h3>
+    <div class="note">Intent \u2192 matching cells \u2192 next favorable window. Full register; STAND_DOWN never recommended.</div>
+    ${timingNowStripHtml()}
+    <div class="query-block">
+      <label for="timingIntent">Intent (function_class)</label>
+      <select id="timingIntent">${opts.join('')}</select>
+      <label>Moon mode</label>
+      <span class="moon-toggle" role="group" aria-label="Moon mode">${tog}</span>
+      <label for="timingDir">Direction (recorded only)</label>
+      <select id="timingDir" class="dir-pick">${dirOpts}</select>
+      <div class="recorded">${rec}</div>
+      ${timingResultRowsHtml(rows)}
+    </div>
+    <div class="prov">Scoring via TREE.elections (Pass v5). Chronos business-action lists not mounted.</div>
+  </div>`;
+}
+function showTimingLens(){
+  setPanel(timingLensPanelHtml());
+  wireTimingLensPanel();
+}
+function wireTimingLensPanel(){
+  const root=document.querySelector('.timing-lens'); if(!root) return;
+  const intentEl=root.querySelector('#timingIntent');
+  const dirEl=root.querySelector('#timingDir');
+  if(intentEl){
+    intentEl.addEventListener('change',()=>{
+      timingState.intent=intentEl.value;
+      /* preselect moon by polarity; operator can still override after */
+      timingState.moon_mode=moonModeForIntent(timingState.intent);
+      showTimingLens();
+    });
+  }
+  root.querySelectorAll('.moon-toggle button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      timingState.moon_mode=btn.getAttribute('data-moon');
+      showTimingLens();
+    });
+  });
+  if(dirEl){
+    dirEl.addEventListener('change',()=>{
+      timingState.direction=dirEl.value||null;
+      showTimingLens();
+    });
+  }
+  root.querySelectorAll('.result-row').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const n=+btn.getAttribute('data-decan');
+      const dc=DECANS.find(d=>d.n===n);
+      if(dc) selectDecan(dc);
+    });
+  });
+}
+
+
 const CIRCUIT_HILITE=["coiledpower","dualcurrent","skillcommand","solarrising","timelocation"];
 const BANDS=[ // elements strata
  {name:"FIRE",y1:265,y2:340,c:"#A03A2E"},
@@ -1570,7 +1790,7 @@ function dress(lensId){
     });
   }
   // decan ring / kau ring viewBox
-  const _kauOn=activeMode==='kau', _decOn=lensId==='decans'&&!activeMode;
+  const _kauOn=activeMode==='kau', _decOn=(lensId==='decans'||lensId==='timing')&&!activeMode;
   svg.setAttribute('viewBox', _kauOn ? KAU_VIEWBOX : (_decOn ? '-100 -80 1000 1310' : '0 0 800 1150'));
   ringLayer.innerHTML=''; hookLayer.innerHTML='';
   kauLayer.innerHTML=''; barqueLayer.innerHTML=''; benefactLayer.innerHTML='';
@@ -1614,7 +1834,7 @@ function dress(lensId){
     const n=NODES[id];
     const g=sphereGroups[id];
     g.querySelectorAll('.slens-sec').forEach(t=>t.remove());
-    const vals=(lensId==='elements'||lensId==='decans')? (L.sky[id]||[]) : (L[lensId]?L[lensId][id]:[])||[];
+    const vals=(lensId==='elements'||lensId==='decans'||lensId==='timing')? (L.sky[id]||[]) : (L[lensId]?L[lensId][id]:[])||[];
     lensTexts[id].forEach((t,i)=>{
       t.textContent=vals[i]||'';
       t.classList.toggle('gold', lensId!=='sky' && !!vals[i]);
@@ -1654,13 +1874,15 @@ function dress(lensId){
     document.querySelectorAll('.slens').forEach(t=>{t.style.opacity='';});
   });
   const lens=LENSES.find(l=>l.id===lensId);
+  if(lensId!=='timing') clearTimingRingDim();
   if(!document.querySelector('.sel') && !activeMode) home(lens);
   else if(activeMode==='paths' && activeRuler && !document.querySelector('.sel')) selectRuler(activeRuler);
+  if(lensId==='timing' && !activeMode) applyTimingRingDim(timingState.matchingIds);
 }
 
 const rail=document.getElementById('rail');
 const COMPARE_OK=new Set(['neteru','soul','week','body','forces','symbols','strengths','weaknesses','distortions','rulerships','questions','circuit']);
-const COMPARE_BLOCK=new Set(['sky','elements','decans','divmasc','divfem']);
+const COMPARE_BLOCK=new Set(['sky','elements','decans','timing','divmasc','divfem']);
 let compareArmed=false, secondaryLens=null;
 let selectedRef=null; /* {k:'sphere'|'path'|'decan', id:string|number} */
 let hashSyncing=false;
@@ -1777,7 +1999,7 @@ MODES.forEach(m=>{
 const LENS_GROUPS=[
   {head:'Structure', ids:['sky','elements','circuit','decans']},
   {head:'Consciousness', ids:['soul','forces','strengths','weaknesses','distortions','questions']},
-  {head:'Practice', ids:['week','body','rulerships','symbols']},
+  {head:'Practice', ids:['week','timing','rulerships']},
   {head:'Divine', ids:['neteru','divmasc','divfem']}
 ];
 function addLensBtn(l){
@@ -1802,7 +2024,7 @@ function addLensBtn(l){
 }
 LENS_GROUPS.forEach(g=>{
   rail.insertAdjacentHTML('beforeend','<div class="railhead">'+g.head+'</div>');
-  g.ids.forEach(id=>{ const l=LENSES.find(x=>x.id===id); if(l) addLensBtn(l); });
+  g.ids.forEach(id=>{ const l=LENSES.find(x=>x.id===id); if(l && !l.hidden) addLensBtn(l); });
 });
 
 
@@ -2115,7 +2337,9 @@ function field(k,v){return v?`<div class="field"><div class="k">${k}</div><div c
 function clearSel(){selectedRef=null;document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));document.querySelectorAll('.kau-card.on').forEach(c=>c.classList.remove('on'));document.querySelectorAll('.kau-path-hilite').forEach(x=>x.classList.remove('kau-path-hilite'));document.querySelectorAll('.sphere.kau-hilite').forEach(x=>x.classList.remove('kau-hilite'));if(hookLayer){hookLayer.querySelectorAll('.hook-line').forEach(l=>l.classList.remove('on'));hookLayer.innerHTML='';}document.querySelectorAll('.decan-cell.sel').forEach(g=>g.classList.remove('sel'));clearLinked();}
 function home(lens){
   lens=lens|| (activeMode? MODES.find(m=>m.id===activeMode) : LENSES.find(l=>l.id===activeLens));
-  const ver='v3.42 · closed canon + Paths + Kau + Decan Pass';
+  if(!activeMode && lens && lens.id==='timing'){ showTimingLens(); return; }
+  if(activeLens!=='timing') clearTimingRingDim();
+  const ver='v3.43 · closed canon + Paths + Kau + Decan Pass';
   const nowBlock=(!activeMode && lens && lens.id==='decans')?nowBlockHtml():'';
   setPanel(`
    <div class="eyebrow">${activeMode?'Mode':'Lens'}</div>
@@ -2123,7 +2347,7 @@ function home(lens){
    <h3 class="route">${ver}</h3>
    <div class="note">${lens.desc}</div>
    ${nowBlock}
-   <div class="field" style="margin-top:12px"><div class="k">Select</div><div class="v">${activeMode==='paths'?'Click a ruler portrait, then a highlighted path for lore.':activeMode==='kau'?'Click a seat card, a numbered seat on the ring, or a barque figure at the top — the wielder\u2019s ruled paths and spheres light up gold.':(lens.id==='decans'?'Click any decade on the ring — star anchors, flags, and notes appear here.':'Any sphere or path — every register appears here, whatever lens is active.')}</div></div>
+   <div class="field" style="margin-top:12px"><div class="k">Select</div><div class="v">${activeMode==='paths'?'Click a ruler portrait, then a highlighted path for lore.':activeMode==='kau'?'Click a seat card, a numbered seat on the ring, or a barque figure at the top — the wielder\u2019s ruled paths and spheres light up gold.':(lens.id==='decans'?'Click any decade on the ring — star anchors, flags, and notes appear here.':(lens.id==='timing'?'Query by intent — matching decades dim the rest of the ring.':'Any sphere or path — every register appears here, whatever lens is active.'))}</div></div>
    <div class="prov">AUTHORITY — the rectified diagram; Ali's rulings, passes 1–50. Each lens is one pure facet; nothing merged. Paths/Kau data from ratified registers (Aug 2026).</div>`);
 }
 const REGNAMES={sky:"Sky",neteru:"Rulers",soul:"Soul-part",week:"Week",body:"Body",forces:"Force",symbols:"Symbol",
@@ -2217,6 +2441,7 @@ function selectDecan(dc){
     ${timingHtml}
     <div class="prov">T1: the Naos (von Bomhard 2008) · Chronos warfare module + associate verification (T2-L) · ring arrangement T3, owned. Decan effects = Negative/martial register.</div>`);
   wireTimingToggle(dc.n);
+  if(activeLens==='timing' && !activeMode) applyTimingRingDim(timingState.matchingIds);
   syncHash();
 }
 

@@ -1,3 +1,27 @@
+# CHANGES — v3.43 (Pass v6 — Timing lens rail surface)
+
+**v3.43** — Timing election console on the lens rail (builds on Pass v5 / v3.42).
+
+### Pre-flight
+- Pass v5 present: `TREE.elections`, `decanWindow`, `electionScore`, `nextFavorableWindow`, and per-cell `elections` blocks verified. v5 was **not** re-applied.
+
+### Rail
+- **`body` and `symbols` lenses hidden** (`hidden:true`) — buttons removed from rail; `L.body` / `L.symbols` data and `REGNAMES` entries retained. Restore by removing `hidden:true`.
+- **`timing` lens added** under **Practice** group as `['week','timing','rulerships']` (where `body` sat; `symbols` also dropped from that group as hidden).
+
+### Timing lens panel
+- NOW strip: today’s decade (Pass-v4 `civilDayInfo`), star/flags, `currentFigure()`, `moonPhase()`.
+- Intent select over closed `function_class` vocab + All; moon_mode toggle (preselected by polarity, overridable); direction N/S/E/W/none recorded only.
+- Results sorted by soonest favorable window; unclassified only under All; STAND_DOWN only if window is current, listed last, never as favorable.
+- Ring: Decans-style ring while Timing active; non-matching cells `.dim` (~0.30); clears on lens exit. Result row → existing `selectDecan` inspector (+ Pass-v5 Timing block).
+- Timing is in `COMPARE_BLOCK` (geometry-like; not a text-register compare pair).
+
+### Ambiguities
+- Spec’s “practice group with Strengths/Circuit/Decans” does not match this build’s groups — Placement used the existing **Practice** heading (week / timing / rulerships).
+- On intent **All**, every cell “matches,” so ring dimming is a no-op until a specific intent is chosen.
+
+---
+
 # CHANGES — v3.42 (Timing & Election Layer)
 
 **v3.42** — Pass v5 Timing & Election (schema: `data/claude_Timing_Election_Data_Model_v1.md`):

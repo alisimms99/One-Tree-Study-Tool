@@ -1,3 +1,40 @@
+# TESTS — Timing lens rail (v3.43 / Pass v6)
+
+## Rail
+- Timing button present under Practice; Body and Symbols absent from `#rail`.
+- Source still has `L.body`, `L.symbols`, and `LENSES` entries with `hidden:true`.
+
+```js
+[...document.querySelectorAll('#rail .lens-btn')].map(b=>b.dataset.id);
+// includes 'timing'; excludes 'body','symbols'
+!!L.body && !!L.symbols
+LENSES.find(l=>l.id==='body').hidden && LENSES.find(l=>l.id==='symbols').hidden
+```
+
+## NOW strip (2026-08-12)
+Select Timing. NOW strip Decade **1** (window 2026-08-07…16). Cross-check: `civilDayInfo().n===1`.
+
+## Intent protect
+```js
+// After selecting Timing and intent=protect (or drive UI):
+timingState.intent='protect'; showTimingLens();
+timingState.lastResults.map(r=>({n:r.n, flags:r.flags}));
+// → 34 (DANGER), 35 — only these as favorable rows
+```
+
+## STAND_DOWN
+Any intent: cell **11** never in favorable list (`!timingState.lastResults.some(r=>r.n===11 && !r.flags.includes('STAND_DOWN'))` for favorable rows). Only appears (dashed) if `inDecanWindow(11, new Date())`.
+
+## Moon vs direction
+- Change moon toggle → `next favorable` score/range can change; `electionScore` moon part changes.
+- Change direction → recorded line updates; score unchanged (`direction` never enters weights).
+
+## Dimming
+- Intent `protect` → cells other than 34/35 have `.dim` / `.timing-dim`.
+- Switch to The Tree (or Decans) → no `.timing-dim` remains; ring dim cleared.
+
+---
+
 # TESTS — Timing & Election Layer (v3.42)
 
 Manual acceptance checks for `TREE.elections` (browser console on the live page).

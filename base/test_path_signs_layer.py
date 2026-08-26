@@ -55,6 +55,6 @@ assert "function renderPathSign(" in source
 assert "function pathSignHtml(" in source
 assert "signsOn=lensId==='pathsigns'" in source
 assert "pathSignLabels" in source[source.index("function dress("):source.index("const rail=")]
-assert "v3.48" in source and "+ sphere constellations" in source
+assert "v3.49" in source and "+ lore-register reconciliation" in source
 
 print("Path Signs static contract PASS: 22 ratified entries")

@@ -59,6 +59,6 @@ assert "function applyPathSignConstellation(" in source
 assert "function pathSignConstellationHtml(" in source
 assert "const-terminal" in source and "const-transit" in source and "const-dim" in source
 assert "IN TRANSIT" in source
-assert "v3.48" in source and "+ sphere constellations" in source
+assert "v3.49" in source and "+ sphere constellations" in source
 
 print("Path Signs constellation contract PASS:", actual)

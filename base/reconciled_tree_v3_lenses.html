@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reconciled Tree — v3.44 · + Medu Netjer lens</title>
+<title>The Reconciled Tree — v3.45 · Medu Netjer contrast/placement patch</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -108,8 +108,18 @@
   .sphere.under .sname,.sphere.under .snum,.sphere.under .slens{opacity:.30}
   .plabel{font-family:'Cinzel',serif; font-weight:700; font-size:11.5px; letter-spacing:.08em; fill:#EDE4CC; pointer-events:none; paint-order:stroke fill; stroke:#101423; stroke-width:4.5px; stroke-linejoin:round}
   .pmark{font-family:'IBM Plex Mono',monospace; font-size:8.5px; letter-spacing:.12em; fill:#A8B0C8; pointer-events:none; paint-order:stroke fill; stroke:#101423; stroke-width:3.8px; stroke-linejoin:round}
-  .pglyph{display:none; font-size:15px; fill:#E8DFC8; pointer-events:none; paint-order:stroke fill; stroke:#171C30; stroke-width:3px; stroke-linejoin:round}
-  .pglyph.long{font-size:13px}
+  .pglyph{
+    font-family:'MeduNetjer','Noto Sans Egyptian Hieroglyphs',sans-serif;
+    font-size:18px;
+    fill:#EFE3B8;
+    stroke:#EFE3B8; stroke-width:0.45px;
+    paint-order:stroke fill;
+    pointer-events:none;
+  }
+  .pglyph.halo{
+    stroke:#171C30; stroke-width:3.5px; fill:none;
+  }
+  .pglyph.long{font-size:15px}
   .lg.hov .plabel,.lg.sel .plabel{fill:#FFF8E8; stroke-width:5px}
   .lg.hov .pmark,.lg.sel .pmark{fill:#D4A93C}
   .lg.ruler-hilite .plabel{fill:var(--gold); font-size:13px; stroke:#0A0E18; stroke-width:6px}
@@ -345,7 +355,7 @@
 <body>
 <header>
   <h1>THE RECONCILED TREE</h1>
-  <div class="sub"><b>v3.44</b> · + Medu Netjer lens · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
+  <div class="sub"><b>v3.45</b> · Medu Netjer contrast/placement patch · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
   <button type="button" id="tierBtn" aria-expanded="false" aria-controls="tierPop" title="Tier vocabulary">TIERS ?</button>
   <div id="tierPop" role="dialog" aria-label="Tier legend" hidden>
     <p><b>T1</b> attested primary source · <b>T2</b> interpretive / lineage · <b>T2-L</b> living lineage · <b>T3</b> owned construction · <b>G</b> resonance / gnosis</p>
@@ -551,6 +561,14 @@ const PATH_GLYPHS = {
  hiddeninfluence:{g:"𓐍𓈖𓊃𓅱",       tr:"ḫnsw",      gard:"AA1·N35·O34·G43"},
  huntcatch:      {g:"𓄋𓅱𓄿𓅱𓏏𓈐𓃧",    tr:"wp-wꜣwt",   gard:"F13·G43·G1·G43·X1·N31·E18"},
  timelocation:   {g:"𓅬𓃀",         tr:"gb",        gard:"G38·D58"}
+};
+const GLYPH_NUDGE = { /* pathId:{dx,dy} */
+ fortress:{dx:65,dy:-35},
+ conjoin:{dx:-5,dy:25},
+ coiledpower:{dx:0,dy:-45},
+ impulse:{dx:15,dy:65},
+ solarrising:{dx:0,dy:5},
+ huntcatch:{dx:10,dy:0}
 };
 
 /*
@@ -1499,6 +1517,20 @@ function pointAt(pts,t){
     d-=s.l;}
   const s=segs[segs.length-1];return {x:s.b.x,y:s.b.y,ang:0};
 }
+/* GLYPH LAYER OWNS ITS OWN GEOMETRY — p.lab is English-only */
+function glyphPlacement(p,pts){
+  const mid=pointAt(pts,0.5), rad=mid.ang*Math.PI/180;
+  let nx=-Math.sin(rad), ny=Math.cos(rad);
+  const nearest=Object.values(NODES).reduce((best,n)=>{
+    const d=Math.hypot(mid.x-n.x,mid.y-n.y);
+    return !best||d<best.d?{n,d}:best;
+  },null).n;
+  const plus=Math.hypot(mid.x+nx*12-nearest.x,mid.y+ny*12-nearest.y);
+  const minus=Math.hypot(mid.x-nx*12-nearest.x,mid.y-ny*12-nearest.y);
+  if(minus>plus){nx=-nx;ny=-ny;}
+  const nudge=GLYPH_NUDGE[p.id]||{};
+  return {x:mid.x+nx*12+(nudge.dx||0),y:mid.y+ny*12+(nudge.dy||0)};
+}
 
 const bandLayer=el('g',{id:'bands'});
 const ringLayer=el('g',{id:'ring'});
@@ -1509,6 +1541,7 @@ const barqueLayer=el('g',{id:'barque'});
 const deityLayer=el('g',{id:'deities'});
 const labelLayer=el('g',{id:'labels'});
 const pathLabels={};
+const pathGlyphLabels={};
 const pathGroups={}, sphereGroups={}, lensTexts={};
 
 PATHS.forEach(p=>{
@@ -1535,7 +1568,11 @@ PATHS.forEach(p=>{
   const glyph=PATH_GLYPHS[p.id];
   if(glyph){
     const longGlyph=new Set(['fate','fortress','huntcatch']).has(p.id);
-    el('text',{class:'pglyph glyph'+(longGlyph?' long':''),'text-anchor':anch},tg).textContent=glyph.g;
+    const gp=glyphPlacement(p,pts);
+    const gg=el('g',{class:'pgl',transform:`translate(${gp.x} ${gp.y})`},labelLayer);
+    el('text',{class:'pglyph halo'+(longGlyph?' long':''),'text-anchor':'middle'},gg).textContent=glyph.g;
+    el('text',{class:'pglyph glyph'+(longGlyph?' long':''),'text-anchor':'middle'},gg).textContent=glyph.g;
+    pathGlyphLabels[p.id]=gg;
   }
   hit.addEventListener('click',()=>select('path',p.id));
   hit.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select('path',p.id);}});
@@ -1839,9 +1876,8 @@ function dress(lensId){
   const meduOn=lensId==='medu';
   Object.values(pathLabels).forEach(tg=>{
     tg.querySelectorAll('.plabel,.pmark').forEach(t=>{t.style.display=meduOn?'none':'';});
-    const glyph=tg.querySelector('.pglyph');
-    if(glyph) glyph.style.display=meduOn?'inline':'none';
   });
+  Object.values(pathGlyphLabels).forEach(gg=>gg.querySelectorAll('.pglyph').forEach(t=>{t.style.display=meduOn?'inline':'none';}));
   if(activeMode){ document.querySelectorAll('#rail .lens-btn').forEach(b=>b.classList.remove('on')); }
   else { document.querySelectorAll('#rail .lens-btn').forEach(b=>b.classList.toggle('on',b.dataset.id===lensId)); }
   document.querySelectorAll('#rail .mode-btn').forEach(b=>b.classList.toggle('on',!!activeMode && b.dataset.id===activeMode));
@@ -2403,7 +2439,7 @@ function home(lens){
   lens=lens|| (activeMode? MODES.find(m=>m.id===activeMode) : LENSES.find(l=>l.id===activeLens));
   if(!activeMode && lens && lens.id==='timing'){ showTimingLens(); return; }
   if(activeLens!=='timing') clearTimingRingDim();
-  const ver='v3.44 · closed canon + Paths + Kau + Decan Pass + Medu Netjer';
+  const ver='v3.45 · closed canon + Paths + Kau + Decan Pass + Medu Netjer contrast/placement patch';
   const nowBlock=(!activeMode && lens && lens.id==='decans')?nowBlockHtml():'';
   setPanel(`
    <div class="eyebrow">${activeMode?'Mode':'Lens'}</div>

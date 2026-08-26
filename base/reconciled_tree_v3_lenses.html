@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reconciled Tree — v3.47 · + Path Signs lens</title>
+<title>The Reconciled Tree — v3.48 · + sphere constellations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -90,6 +90,18 @@
   .path-sign-pair{font-size:28px; line-height:1.15; color:#A8821F}
   .path-sign-gard{margin-top:4px; font-family:'IBM Plex Mono',monospace; font-size:9px; line-height:1.35; color:#6A5A34}
   .path-sign-gloss{margin-top:6px; font-size:12.5px; line-height:1.45; font-style:italic; color:#4A3E22}
+  .constellation-block{margin:8px 0 14px}
+  .constellation-heading{font-family:'IBM Plex Mono',monospace; font-size:8.5px; letter-spacing:.18em; color:#8A6D1F}
+  .constellation-row{min-height:40px; display:flex; align-items:center; justify-content:center; gap:7px; margin:3px 0 7px}
+  .constellation-row .glyph{font-size:32px; line-height:1}
+  .constellation-empty{font-size:20px; color:#8A6D1F}
+  .constellation-detail{display:grid; grid-template-columns:22px 1fr; gap:5px; align-items:start; margin:3px 0}
+  .constellation-detail .glyph{font-size:16px; line-height:1.25; color:#A8821F}
+  .constellation-detail .text{font-size:11.5px; line-height:1.35; color:var(--ink)}
+  .constellation-detail .gard{font-family:'IBM Plex Mono',monospace; font-size:9px; color:#6A5A34}
+  .constellation-detail .gloss{font-style:italic; color:#4A3E22}
+  .constellation-transit{border-top:1px solid #BDAF8C; margin-top:10px; padding-top:8px}
+  .constellation-transit .constellation-row .glyph{font-size:22px}
   ul.epithets,ul.ruled{list-style:none; margin:2px 0 0; padding:0}
   ul.epithets li,ul.ruled li{font-size:12.5px; line-height:1.5; padding-left:13px; position:relative; margin-bottom:3px; color:var(--ink)}
   ul.epithets li::before,ul.ruled li::before{content:'◆'; position:absolute; left:0; top:1px; font-size:7px; color:#B08D2E}
@@ -137,6 +149,12 @@
   }
   .psign.halo{stroke:#171C30; stroke-width:3.5px; fill:none}
   .psign.secondary{font-size:14px}
+  .psgl{transition:opacity .18s}
+  .psgl.const-terminal .psign.glyph{fill:#EFC24B; stroke:#EFC24B}
+  .psgl.const-transit{opacity:.60}
+  .psgl.const-dim{opacity:.25}
+  .pgroup.const-transit .path-line{opacity:.60; stroke-width:1.9}
+  .pgroup.const-dim .path-line{opacity:.25}
   .lg.hov .plabel,.lg.sel .plabel{fill:#FFF8E8; stroke-width:5px}
   .lg.hov .pmark,.lg.sel .pmark{fill:#D4A93C}
   .lg.ruler-hilite .plabel{fill:var(--gold); font-size:13px; stroke:#0A0E18; stroke-width:6px}
@@ -372,7 +390,7 @@
 <body>
 <header>
   <h1>THE RECONCILED TREE</h1>
-  <div class="sub"><b>v3.47</b> · + Path Signs lens · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
+  <div class="sub"><b>v3.48</b> · + sphere constellations · lensed render · Paths mode · Kau mode · Tree of Dua ♂ / ♀ layers · every register in the inspector</div>
   <button type="button" id="tierBtn" aria-expanded="false" aria-controls="tierPop" title="Tier vocabulary">TIERS ?</button>
   <div id="tierPop" role="dialog" aria-label="Tier legend" hidden>
     <p><b>T1</b> attested primary source · <b>T2</b> interpretive / lineage · <b>T2-L</b> living lineage · <b>T3</b> owned construction · <b>G</b> resonance / gnosis</p>
@@ -606,6 +624,11 @@ const PATH_SIGNS = {
  huntcatch:      {p:"𓌕", s:"",  gard:"T11",       gloss:"arrow (šsr) — the hunt; Sagittarius the Archer"},
  timelocation:   {p:"𓏴", s:"𓇾", gard:"Z9 (+N16)", gloss:"crossed sticks — the cross/mark/seal that fixes the coordinate"}
 };
+const SIGN_MASS = { dualcurrent:1.25, immersion:1.20, appliedskill:1.10,
+                    timelocation:1.10, pillarharmony:1.10,
+                    fortress:0.90, dwelling:0.90, flame:0.95 };
+const CONST_ORDER = "clockwise12";
+const CONST_TRANSITS = "halflight";
 const SIGNS_SHOW_PAIR_INDIAGRAM = false;
 const SIGN_NUDGE = { /* pathId:{dx,dy} */
  fortress:{dx:-33.7,dy:-21.6},
@@ -1646,6 +1669,67 @@ function renderPathSign(parent,sign,placement){
   else pairAttrs.x='0.85em';
   addSignPair(parent,sign.s,pairAttrs,true);
 }
+function constellationDepartureAngle(p,sphereId){
+  const origin=NODES[sphereId], drawn=p.draw||p.pts;
+  const idx=drawn.indexOf(sphereId);
+  let target;
+  if(idx===0) target=NODES[drawn[1]];
+  else if(idx===drawn.length-1) target=NODES[drawn[idx-1]];
+  else if(idx>0) target=NODES[drawn[idx+1]];
+  else target=drawn.map(id=>NODES[id]).reduce((best,n)=>{
+    const d=Math.hypot(n.x-origin.x,n.y-origin.y);
+    return !best||d<best.d?{n,d}:best;
+  },null).n;
+  let angle=Math.atan2(target.x-origin.x,origin.y-target.y);
+  if(angle<0) angle+=Math.PI*2;
+  return angle;
+}
+function spherePathConstellation(sphereId){
+  const terminals=[], transits=[];
+  PATHS.forEach((p,index)=>{
+    if(!p.pts.includes(sphereId)) return;
+    const drawn=p.draw||p.pts;
+    const item={path:p,sign:PATH_SIGNS[p.id],index,angle:constellationDepartureAngle(p,sphereId)};
+    (drawn[0]===sphereId||drawn[drawn.length-1]===sphereId?terminals:transits).push(item);
+  });
+  const order=CONST_ORDER==='pathorder'?(a,b)=>a.index-b.index:(a,b)=>a.angle-b.angle||a.index-b.index;
+  terminals.sort(order); transits.sort(order);
+  return {terminals,transits};
+}
+function setPathSignScale(pathId,factor){
+  const mass=SIGN_MASS[pathId]||1;
+  const group=pathSignLabels[pathId]&&pathSignLabels[pathId].querySelector('.psign-mass');
+  if(group) group.setAttribute('transform',`scale(${mass*factor})`);
+}
+function clearPathSignConstellation(){
+  PATHS.forEach(p=>{
+    pathGroups[p.id]&&pathGroups[p.id].classList.remove('const-terminal','const-transit','const-dim');
+    pathSignLabels[p.id]&&pathSignLabels[p.id].classList.remove('const-terminal','const-transit','const-dim');
+    setPathSignScale(p.id,1);
+  });
+}
+function applyPathSignConstellation(sphereId){
+  clearPathSignConstellation();
+  const constellation=spherePathConstellation(sphereId);
+  const terminals=new Set(constellation.terminals.map(item=>item.path.id));
+  const transits=new Set(CONST_TRANSITS==='exclude'?[]:constellation.transits.map(item=>item.path.id));
+  PATHS.forEach(p=>{
+    const pg=pathGroups[p.id], sg=pathSignLabels[p.id];
+    if(terminals.has(p.id)||(CONST_TRANSITS==='full'&&transits.has(p.id))){
+      pg.classList.add('incident','const-terminal');
+      sg.classList.add('const-terminal');
+      setPathSignScale(p.id,1.4);
+    } else if(transits.has(p.id)){
+      pg.classList.add('const-transit');
+      sg.classList.add('const-transit');
+      setPathSignScale(p.id,1.15);
+    } else {
+      pg.classList.add('const-dim');
+      sg.classList.add('const-dim');
+    }
+  });
+  return constellation;
+}
 
 const bandLayer=el('g',{id:'bands'});
 const ringLayer=el('g',{id:'ring'});
@@ -1693,7 +1777,8 @@ PATHS.forEach(p=>{
   if(sign){
     const sp=signPlacement(p,pts);
     const sg=el('g',{class:'psgl '+sp.kind,transform:`translate(${sp.x} ${sp.y})`},labelLayer);
-    renderPathSign(sg,sign,sp);
+    const mass=el('g',{class:'psign-mass',transform:`scale(${SIGN_MASS[p.id]||1})`},sg);
+    renderPathSign(mass,sign,sp);
     pathSignLabels[p.id]=sg;
   }
   hit.addEventListener('click',()=>select('path',p.id));
@@ -1799,6 +1884,19 @@ function pathSignHtml(pid){
   const sign=PATH_SIGNS[pid];
   if(!sign) return '';
   return `<div class="path-sign-block"><div class="path-sign-glyphs"><div class="path-sign-primary glyph">${sign.p}</div>${sign.s?`<div class="path-sign-pair glyph">${sign.s}</div>`:''}</div><div class="path-sign-gard">${sign.gard}</div><div class="path-sign-gloss">${sign.gloss}</div></div>`;
+}
+function constellationDetailHtml(item){
+  return `<div class="constellation-detail"><span class="glyph">${item.sign.p}</span><span class="text">${item.path.name} · <span class="gard">${item.sign.gard}</span> · <span class="gloss">${item.sign.gloss}</span></span></div>`;
+}
+function pathSignConstellationHtml(sphereId){
+  const constellation=spherePathConstellation(sphereId);
+  const terminalRow=constellation.terminals.length
+    ?constellation.terminals.map(item=>`<span class="glyph">${item.sign.p}</span>`).join('')
+    :'<span class="constellation-empty">—</span>';
+  const terminalDetails=constellation.terminals.map(constellationDetailHtml).join('');
+  const transits=CONST_TRANSITS==='exclude'?[]:constellation.transits;
+  const transitBlock=transits.length?`<div class="constellation-transit"><div class="constellation-heading">IN TRANSIT</div><div class="constellation-row">${transits.map(item=>`<span class="glyph">${item.sign.p}</span>`).join('')}</div>${transits.map(constellationDetailHtml).join('')}</div>`:'';
+  return `<div class="constellation-block"><div class="constellation-heading">TERMINAL SIGNS</div><div class="constellation-row">${terminalRow}</div>${terminalDetails}${transitBlock}</div>`;
 }
 function showPathStudy(pid){
   const p=PATHS.find(x=>x.id===pid), m=PATH_META[pid];
@@ -2563,12 +2661,12 @@ function setPanel(html){ panel.innerHTML=html; wireDeityLinks(panel); closeDeity
 /* ================= inspector ================= */
 const panel=document.getElementById('panel');
 function field(k,v){return v?`<div class="field"><div class="k">${k}</div><div class="v">${v}</div></div>`:'';}
-function clearSel(){selectedRef=null;document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));document.querySelectorAll('.kau-card.on').forEach(c=>c.classList.remove('on'));document.querySelectorAll('.kau-path-hilite').forEach(x=>x.classList.remove('kau-path-hilite'));document.querySelectorAll('.sphere.kau-hilite').forEach(x=>x.classList.remove('kau-hilite'));if(hookLayer){hookLayer.querySelectorAll('.hook-line').forEach(l=>l.classList.remove('on'));hookLayer.innerHTML='';}document.querySelectorAll('.decan-cell.sel').forEach(g=>g.classList.remove('sel'));clearLinked();}
+function clearSel(){selectedRef=null;document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));document.querySelectorAll('.pgroup.incident').forEach(g=>g.classList.remove('incident'));if(kauLayer) kauLayer.querySelectorAll('.kau-seat.sel').forEach(g=>g.classList.remove('sel'));document.querySelectorAll('.kau-card.on').forEach(c=>c.classList.remove('on'));document.querySelectorAll('.kau-path-hilite').forEach(x=>x.classList.remove('kau-path-hilite'));document.querySelectorAll('.sphere.kau-hilite').forEach(x=>x.classList.remove('kau-hilite'));if(hookLayer){hookLayer.querySelectorAll('.hook-line').forEach(l=>l.classList.remove('on'));hookLayer.innerHTML='';}document.querySelectorAll('.decan-cell.sel').forEach(g=>g.classList.remove('sel'));clearPathSignConstellation();clearLinked();}
 function home(lens){
   lens=lens|| (activeMode? MODES.find(m=>m.id===activeMode) : LENSES.find(l=>l.id===activeLens));
   if(!activeMode && lens && lens.id==='timing'){ showTimingLens(); return; }
   if(activeLens!=='timing') clearTimingRingDim();
-  const ver='v3.47 · closed canon + Paths + Kau + Decan Pass + inscription geometry + full-corpus subset + Path Signs lens';
+  const ver='v3.48 · closed canon + Paths + Kau + Decan Pass + inscription geometry + full-corpus subset + Path Signs lens + sphere constellations';
   const nowBlock=(!activeMode && lens && lens.id==='decans')?nowBlockHtml():'';
   setPanel(`
    <div class="eyebrow">${activeMode?'Mode':'Lens'}</div>
@@ -2582,11 +2680,16 @@ function home(lens){
 const REGNAMES={sky:"Sky",neteru:"Rulers",soul:"Soul-part",week:"Week",body:"Body",forces:"Force",symbols:"Symbol",
  strengths:"Strength",weaknesses:"Weakness",distortions:"Distortion",rulerships:"Rulership",questions:"Question",circuit:"Circuit role"};
 function select(kind,id){
+  const toggleOff=kind==='sphere'&&selectedRef&&selectedRef.k==='sphere'&&selectedRef.id===id;
   clearSel();
+  if(toggleOff){home();syncHash();return;}
   selectedRef={k:kind, id};
   if(kind==='sphere'){
-    sphereGroups[id].classList.add('sel'); PATHS.forEach(p=>{ if(p.pts.indexOf(id)>=0) pathGroups[p.id].classList.add('incident'); });
+    sphereGroups[id].classList.add('sel');
+    if(activeLens==='pathsigns'&&!activeMode) applyPathSignConstellation(id);
+    else PATHS.forEach(p=>{ if(p.pts.indexOf(id)>=0) pathGroups[p.id].classList.add('incident'); });
     const n=NODES[id];
+    const constellationHtml=activeLens==='pathsigns'&&!activeMode?pathSignConstellationHtml(id):'';
     let rows='';
     for(const reg in REGNAMES){
       const v=(L[reg]&&L[reg][id]&&L[reg][id].length)?L[reg][id].join(' '):null;
@@ -2609,6 +2712,7 @@ function select(kind,id){
       <div class="eyebrow">Sphere ${n.num} · ${n.seph}</div>
       <h2>${n.kem}</h2>
       <h3 class="route">${n.planet}</h3>
+      ${constellationHtml}
       ${rows}
       ${decanRes}
       <div class="prov">Every register shown; blanks are canon. Full provenance per cell lives in the master dataset v3.32.</div>`);
@@ -2629,6 +2733,12 @@ function select(kind,id){
   }
   syncHash();
 }
+svg.addEventListener('click',e=>{
+  if(e.target!==svg) return;
+  clearSel();
+  home();
+  syncHash();
+});
 function selectDecan(dc){
   clearSel();
   selectedRef={k:'decan', id:dc.n};

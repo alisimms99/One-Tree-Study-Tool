@@ -70,6 +70,18 @@ Unchanged-geometry: `pts` diff vs v3.49 is empty.
 
 Notes on `grep -c "v4.0"`: GNU grep treats `.` as any character, so the count includes base64 false positives. Literal `v4.0` occurs **4** times: the required Phase 1 header comment, plus the three bumped version strings (title, subtitle, inspector `ver`). The check’s “expect 3” cannot hold once that header is added.
 
+## Browser verification
+
+Exercised `http://127.0.0.1:8765/reconciled_tree_v4.html` in Chrome.
+
+- PRACTITIONER off: 10 public lenses; Modes hidden.
+- PRACTITIONER on: 19 lenses + Paths/Kau modes; hash `#sky&tier=practitioner`.
+- Circuits: Belt Drive dashes, kether bare gold dot, Create/Annihilate color-only, Axes chips + `RULING` marker, Face of Ra ears at malkuth only, Body of Ptah plate `[PENDING RULINGS R-1–R-3]` with no overlay, W1–W3 traces. No Apep glyph.
+- Night Face Seats/Roads: no kether overlay text.
+- Neteru seat-click: Gevurah panel from `DEITY_LORE`/`RULERS` by reference; kether shows seated Amen only, no new tree label.
+- Paths lens road-click: PATHS/PATH_META panel (checked Divine Impulse).
+- Sky / Elements / Medu Netjer · Rulers still switch. Console: favicon 404 only.
+
 ## Circuits shell
 
 - Belt Drive: overlay order from `NODES`/`PATHS`; moving dashes; fire/air/water opposed-pair glyphs (no arrows); Create/Annihilate color-only; Fault view `pocket:[]` empty.

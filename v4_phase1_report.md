@@ -1,7 +1,7 @@
 # One Tree Tool v4 · Phase 1 report
 
 **Date:** 2026-09-02  
-**Source:** `base/reconciled_tree_v3_lenses.html` (v3.49) — the handoff name `reconciled_tree_v3_lenses_2.html` is not in git.  
+**Source:** `reconciled_tree_v3_lenses_2.html` (v3.49). Byte-identical to `base/reconciled_tree_v3_lenses.html`; Phase 1 was already built from those bytes.  
 **Outputs:** `reconciled_tree_v4.html`, `v4_notation_extract.csv`
 
 Geometry (`pts`, `draw`, node `x,y,r`) is unchanged. `note:""` was added on every node, path, lens, and mode. Plate copy stays `[COPY PENDING]` / `[PENDING RULINGS R-1–R-3]`. Kether has no new overlay label, tooltip, or text. No serpent/Apep glyph. No arrows on Flame of Consumption, Dual Current, or Immersion.

@@ -8,7 +8,10 @@ import shutil
 from pathlib import Path
 
 ROOT = Path("/workspace")
-SRC = ROOT / "base" / "reconciled_tree_v3_lenses.html"
+# Spec name (v3.49). Identical copy also lives at base/reconciled_tree_v3_lenses.html.
+SRC = ROOT / "reconciled_tree_v3_lenses_2.html"
+if not SRC.exists():
+    SRC = ROOT / "base" / "reconciled_tree_v3_lenses.html"
 DST = ROOT / "reconciled_tree_v4.html"
 CSV_PATH = ROOT / "v4_notation_extract.csv"
 

@@ -3136,16 +3136,17 @@ window.ToneEngine = {
       continue;
     }
     const gx = n.x + n.r*0.78, gy = n.y + n.r*0.72;
+    const hit = el('g', {class:'tone-hit'}, g);
     if(cfg.sounds){
-      const t = el('text', {class:'tone-glyph', x:gx, y:gy, 'font-size':'12', 'text-anchor':'middle'}, g);
+      el('title', {}, hit).textContent = (cfg.planet||id)+' tone';
+      const t = el('text', {class:'tone-glyph', x:gx, y:gy, 'font-size':'12', 'text-anchor':'middle'}, hit);
       t.textContent = '\u266A';
-      el('title', {}, t).textContent = (cfg.planet||id)+' tone';
-      t.addEventListener('click', e=>{ e.stopPropagation(); e.preventDefault(); ToneEngine.toggle(id); });
+      hit.addEventListener('click', e=>{ e.stopPropagation(); e.preventDefault(); ToneEngine.toggle(id); });
     } else if(cfg.clef){
-      const t = el('text', {class:'tone-glyph tone-clef', x:gx, y:gy, 'font-size':'11', 'text-anchor':'middle'}, g);
+      el('title', {}, hit).textContent = 'frame — not a voice';
+      const t = el('text', {class:'tone-glyph tone-clef', x:gx, y:gy, 'font-size':'11', 'text-anchor':'middle'}, hit);
       t.textContent = cfg.clef==='G' ? 'G' : 'F';
-      el('title', {}, t).textContent = 'frame — not a voice';
-      t.addEventListener('click', e=>{
+      hit.addEventListener('click', e=>{
         e.stopPropagation(); e.preventDefault();
         if(toneState.refs) ToneEngine.toggle(id);
       });

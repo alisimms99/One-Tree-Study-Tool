@@ -3008,13 +3008,14 @@ function toneMakeLayer(ctx, dest, hz, table, kind, now){
     const ratio=table[i][0], amp=table[i][1], tau=table[i][2];
     const osc=ctx.createOscillator();
     osc.type='sine';
+    osc.frequency.value = hz*ratio;
     osc.frequency.setValueAtTime(hz*ratio, now);
     const g=ctx.createGain();
     g.gain.setValueAtTime(0, now);
     g.gain.linearRampToValueAtTime(amp, now+atk);
     if(kind==='bell') g.gain.setTargetAtTime(0.0001, now+atk, tau);
     osc.connect(g); g.connect(bus); osc.start(now);
-    parts.push({osc, gain:g, ratio, amp, tau:tau||null});
+    parts.push({osc, gain:g, ratio, amp, tau:tau||null, targetHz:hz*ratio});
   }
   return {bus, parts};
 }
@@ -3109,11 +3110,14 @@ function toneRetune(){
       if(hz==null){ toneStop(id); return; }
       const v = toneVoices[id];
       toneLayerParts(v).forEach(p=>{
+        const from = p.targetHz != null ? p.targetHz : (p.osc.frequency.value || hz*p.ratio);
+        const to = hz*p.ratio;
         try{
           p.osc.frequency.cancelScheduledValues(now);
-          p.osc.frequency.setValueAtTime(p.osc.frequency.value, now);
-          p.osc.frequency.linearRampToValueAtTime(hz*p.ratio, now+0.15);
+          p.osc.frequency.setValueAtTime(from, now);
+          p.osc.frequency.linearRampToValueAtTime(to, now+0.15);
         }catch(_){}
+        p.targetHz = to;
       });
       v.hz = hz;
     });
@@ -3129,12 +3133,13 @@ function toneSetTimbre(t){
 function toneInspect(id){
   const v = toneVoices[id]; if(!v) return null;
   const pack = layer => layer ? layer.parts.map(p=>({
-    ratio:p.ratio, amp:p.amp, hz:p.osc.frequency.value, tau:p.tau
+    ratio:p.ratio, amp:p.amp, hz:p.targetHz, oscHz:p.osc.frequency.value, tau:p.tau
   })) : [];
   const prime = toneLayerParts(v).find(p=>p.ratio===1);
   return {
     mode:v.mode, hz:v.hz,
-    primeHz: prime ? prime.osc.frequency.value : null,
+    primeHz: prime ? prime.targetHz : null,
+    primeOscHz: prime ? prime.osc.frequency.value : null,
     bell: pack(v.bell), bowl: pack(v.bowl),
     oscCount: toneLayerParts(v).length
   };
@@ -3152,6 +3157,7 @@ function toneSistrum(seatId){
   for(let h=0; h<cfg.hits; h++){
     const thud = ctx.createOscillator();
     thud.type='sine';
+    thud.frequency.value = hz*cfg.thud.ratio;
     thud.frequency.setValueAtTime(hz*cfg.thud.ratio, t);
     const tg = ctx.createGain();
     tg.gain.setValueAtTime(0, t);
@@ -3163,6 +3169,7 @@ function toneSistrum(seatId){
       const jitter = 1 + (Math.random()*2-1)*cfg.jitter;
       const osc = ctx.createOscillator();
       osc.type='sine';
+      osc.frequency.value = hz*cfg.rings[r][0]*jitter;
       osc.frequency.setValueAtTime(hz*cfg.rings[r][0]*jitter, t);
       const g = ctx.createGain();
       g.gain.setValueAtTime(0, t);

@@ -396,8 +396,10 @@
   #tonectl button.on{border-color:var(--gold);color:var(--gold)}
   #tonectl input[type=range]{width:72px;vertical-align:middle;cursor:pointer}
   #toneReadout{flex:1 1 100%;min-height:1.15em;color:#EDE4CC;letter-spacing:.02em}
+  .tone-hit{cursor:pointer}
+  .tone-hitpad{pointer-events:auto}
   .tone-glyph{font-family:'IBM Plex Mono',monospace;fill:#EDE4CC;cursor:pointer;paint-order:stroke fill;stroke:#101423;stroke-width:3px;pointer-events:auto}
-  .tone-glyph:hover{fill:var(--gold)}
+  .tone-hit:hover .tone-glyph{fill:var(--gold)}
   .tone-clef{fill:#A8B0C8;cursor:default}
   .tone-clef.live{cursor:pointer;fill:#EDE4CC}
   .tone-spec{pointer-events:none;transform-box:fill-box;transform-origin:center}
@@ -3137,6 +3139,7 @@ window.ToneEngine = {
     }
     const gx = n.x + n.r*0.78, gy = n.y + n.r*0.72;
     const hit = el('g', {class:'tone-hit'}, g);
+    el('circle', {class:'tone-hitpad', cx:gx, cy:gy-3.5, r:'11', fill:'#101423', opacity:'0.55'}, hit);
     if(cfg.sounds){
       el('title', {}, hit).textContent = (cfg.planet||id)+' tone';
       const t = el('text', {class:'tone-glyph', x:gx, y:gy, 'font-size':'12', 'text-anchor':'middle'}, hit);

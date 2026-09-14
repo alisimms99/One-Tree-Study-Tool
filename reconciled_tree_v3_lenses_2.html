@@ -385,6 +385,43 @@
     .pgroup.decan-flow .path-line{stroke-dasharray:none !important}
     .sphere.linked .link-halo{opacity:.45 !important; transform:none !important}
   }
+
+  /* —— Tone engine (Phase 1) —— */
+  #tonectl{position:absolute;top:10px;left:12px;z-index:7;display:flex;flex-wrap:wrap;gap:4px 5px;align-items:center;
+    max-width:min(640px,calc(100% - 72px));padding:6px 8px;background:rgba(16,20,35,.92);border:1px solid #3A4060;border-radius:6px;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;color:#CFC7B0}
+  #tonectl button,#tonectl select{background:#171C30;border:1px solid #3A4060;border-radius:4px;color:#CFC7B0;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;padding:3px 7px;cursor:pointer}
+  #tonectl button:hover,#tonectl select:hover{border-color:var(--gold);color:var(--gold)}
+  #tonectl button.on{border-color:var(--gold);color:var(--gold)}
+  #tonectl input[type=range]{width:72px;vertical-align:middle;cursor:pointer}
+  #toneReadout{flex:1 1 100%;min-height:1.15em;color:#EDE4CC;letter-spacing:.02em}
+  .tone-glyph{font-family:'IBM Plex Mono',monospace;fill:#EDE4CC;cursor:pointer;paint-order:stroke fill;stroke:#101423;stroke-width:3px;pointer-events:auto}
+  .tone-glyph:hover{fill:var(--gold)}
+  .tone-clef{fill:#A8B0C8;cursor:default}
+  .tone-clef.live{cursor:pointer;fill:#EDE4CC}
+  .tone-spec{pointer-events:none;transform-box:fill-box;transform-origin:center}
+  .sphere.tone-on circle.body{filter:brightness(1.18);fill:var(--tone-pigment,var(--night2))}
+  @media (prefers-reduced-motion:no-preference){
+    .sphere.tone-on circle.body{animation:tonePulse 1.2s ease-in-out infinite}
+    @keyframes tonePulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+    .tone-flash{animation:toneFlash 1.4s steps(1,end) infinite}
+    @keyframes toneFlash{0%,49.9%{opacity:1}50%,100%{opacity:0}}
+    .tone-glow{animation:toneGlow 1.6s ease-in-out infinite}
+    @keyframes toneGlow{0%,100%{opacity:.22;transform:scale(1)}50%{opacity:.72;transform:scale(1.1)}}
+    .tone-gglow-core{animation:toneCore 1.8s ease-in-out infinite}
+    @keyframes toneCore{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1)}}
+    .tone-deepen{animation:toneDeep 2.6s ease-in-out infinite}
+    @keyframes toneDeep{0%,100%{opacity:.12}50%{opacity:.5}}
+    .tone-gglow-halo{animation:toneDeep 1.8s ease-in-out infinite}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .sphere.tone-on circle.body{filter:brightness(1.18)!important}
+    .tone-flash{opacity:.5!important}
+    .tone-glow{opacity:.47!important}
+    .tone-gglow-core{opacity:.62!important}
+    .tone-gglow-halo,.tone-deepen{opacity:.31!important}
+  }
 </style>
 </head>
 <body>
@@ -422,6 +459,26 @@
           <button id="panDown" title="Pan down" aria-label="Pan down">▼</button>
           <button id="panRight" title="Pan right" aria-label="Pan right">▶</button>
         </div>
+      </div>
+      <div id="tonectl" role="group" aria-label="Tone engine">
+        <button type="button" id="toneMaster" class="on" aria-pressed="true">♪ Tone: on</button>
+        <select id="toneMode" aria-label="Tone mode">
+          <option value="sustain">mode: sustain</option>
+          <option value="strike">mode: strike</option>
+        </select>
+        <select id="toneTimbre" aria-label="Timbre">
+          <option value="pure">timbre: pure</option>
+          <option value="warm">timbre: warm</option>
+        </select>
+        <select id="tonePlace" aria-label="Placement">
+          <option value="reduced">placement: reduced</option>
+          <option value="staff">placement: staff-height</option>
+        </select>
+        <button type="button" id="toneRefs" aria-pressed="false">refs: clefs off</button>
+        <button type="button" id="toneSpectral" class="on" aria-pressed="true">spectral: on</button>
+        <label>vol <input id="toneVol" type="range" min="0" max="100" value="50" aria-label="Tone volume"></label>
+        <button type="button" id="toneStop">stop all</button>
+        <div id="toneReadout"></div>
       </div>
     </div>
     <div id="kauR" class="kau-side" aria-label="Kau seats 8 to 14">
@@ -2813,6 +2870,311 @@ document.addEventListener('keydown',e=>{
   const st=parseHash();
   if(st && (st.lens!=='sky' || st.secondary || st.sel || (location.hash||'').length>1)) applyHashState(st);
   else { dress('sky'); home(); syncHash(); }
+})();
+
+/* ================= Tone engine (Phase 1) =================
+   Additive block. Frequencies are derived at runtime from TONE_CFG only.
+   AudioContext is created on the first play() gesture — never at load. */
+const TONE_CFG = {
+  schumannHz: 7.83,
+  c4Octaves: 5,                     // C4 = schumannHz * 2**c4Octaves
+  aEarth: 1.0,
+  masterGain: 0.18,                 // conservative; sine at 0.18 is comfortable on laptop speakers
+  attackSec: 0.08, releaseSec: 0.35,
+  timbre: 'pure',                   // 'pure' (sine) | 'warm' (sine + 2nd harmonic at -18 dB)
+  seats: {
+    malkuth:   { planet:'Earth',   a:1.0000, sounds:true,  color:null, pigment:'#3E9B7A', octave:'#8FFF00', behaviour:'glow' },
+    binah:     { planet:'Saturn',  a:9.5549, sounds:true,  color:null, pigment:'#1A1A1A', octave:'#0064FF', behaviour:'ground-and-glow' },
+    ausar:     { planet:'Neptune', a:30.1104,sounds:true,  color:'#2A57B4', pigment:'#2A57B4', octave:'#FAFF00', behaviour:'flash' },
+    chesed:    { planet:'Jupiter', a:5.2026, sounds:true,  color:null, pigment:'#3A6BC4', octave:'#6E00F9', behaviour:'deepen' },
+    netzach:   { planet:'Venus',   a:0.7233, sounds:true,  color:null, pigment:'#3E9B7A', octave:'#9C0000', behaviour:'flash' },
+    gevurah:   { planet:'Mars',    a:1.5237, sounds:true,  color:null, pigment:'#C0392B', octave:'#E50000', behaviour:'glow' },
+    hod:       { planet:'Mercury', a:0.3871, sounds:true,  color:null, pigment:'#C0392B', octave:'#FA0000', behaviour:'glow' },
+    tiphereth: { planet:'Sun',     clef:'G', refHz:null, sounds:false, color:'#E6B93A', pigment:'#E6B93A', octave:'#CF0000', behaviour:'static' },
+    yesod:     { planet:'Moon',    clef:'F', refHz:null, sounds:false, color:null, pigment:'#A8322B', octave:'#8000D2', behaviour:'deepen' },
+    chokmah:   { planet:null,      sounds:false, color:null, pigment:'#171C30', octave:null, behaviour:'static', note:'no derivation' },
+    kether:    { planet:null,      sounds:false, color:'#EFE7D2', pigment:'#EFE7D2', octave:null, behaviour:'static', silent:true }
+  }
+};
+window.TONE_CFG = TONE_CFG;
+
+const TONE_NOTES = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+const toneState = { enabled:true, mode:'sustain', timbre:'pure', place:'reduced', refs:false, spectral:true };
+const toneVoices = Object.create(null);
+let toneCtx = null, toneMasterGain = null;
+
+function toneC4(){ return TONE_CFG.schumannHz * Math.pow(2, TONE_CFG.c4Octaves); }
+function toneHzFor(seatId){
+  const cfg = TONE_CFG.seats[seatId];
+  if(!cfg || cfg.silent || seatId==='kether' || seatId==='chokmah') return null;
+  if(cfg.clef){
+    if(!toneState.refs) return null;
+    if(cfg.clef==='G') return toneC4() * Math.pow(2, 7/12);
+    if(cfg.clef==='F') return toneC4() * Math.pow(2, -7/12);
+    return null;
+  }
+  if(!cfg.sounds || cfg.a==null) return null;
+  const cents = 1200 * Math.log2(cfg.a / TONE_CFG.aEarth);
+  const used = toneState.place==='staff' ? cents : (((cents % 1200) + 1200) % 1200);
+  return toneC4() * Math.pow(2, used / 1200);
+}
+function toneNoteInfo(hz){
+  const cents = 1200 * Math.log2(hz / toneC4());
+  const nearest = Math.round(cents / 100);
+  const detune = Math.round(cents - nearest * 100);
+  const name = TONE_NOTES[((nearest % 12) + 12) % 12] + (4 + Math.floor(nearest / 12));
+  return { name, detune };
+}
+function toneFmtHz(hz){ return (Math.round(hz * 10) / 10).toFixed(1); }
+function toneEnsureCtx(){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return null;
+  if(!toneCtx){
+    toneCtx = new AC();
+    toneMasterGain = toneCtx.createGain();
+    toneMasterGain.gain.value = TONE_CFG.masterGain;
+    toneMasterGain.connect(toneCtx.destination);
+  }
+  if(toneCtx.state==='suspended') toneCtx.resume();
+  return toneCtx;
+}
+function tonePigment(id){
+  const cfg = TONE_CFG.seats[id];
+  if(cfg && cfg.color) return cfg.color;
+  if(cfg && cfg.pigment) return cfg.pigment;
+  const body = sphereGroups[id] && sphereGroups[id].querySelector('circle.body');
+  return body ? (getComputedStyle(body).fill || getComputedStyle(body).stroke) : null;
+}
+function toneClearSpec(id){
+  const g = sphereGroups[id]; if(!g) return;
+  g.querySelectorAll('.tone-spec').forEach(n=>n.remove());
+}
+function toneSyncSpec(id){
+  const g = sphereGroups[id], cfg = TONE_CFG.seats[id], n = NODES[id];
+  toneClearSpec(id);
+  if(!g || !cfg || !n || !toneState.spectral || !toneVoices[id]) return;
+  if(id==='kether' || id==='chokmah' || !cfg.octave) return;
+  const body = g.querySelector('circle.body');
+  const mk = (cls, r, extra)=>{
+    const c = el('circle', Object.assign({class:'tone-spec '+cls, cx:n.x, cy:n.y, r:String(r), fill:cfg.octave}, extra||{}), g);
+    if(body && (cls.indexOf('halo')>=0 || cls==='tone-glow' || cls==='tone-deepen')) g.insertBefore(c, body);
+    else if(body && (cls==='tone-flash' || cls==='tone-gglow-core')) g.insertBefore(c, body.nextSibling);
+    return c;
+  };
+  if(cfg.behaviour==='flash') mk('tone-flash', n.r);
+  else if(cfg.behaviour==='glow') mk('tone-glow', n.r*1.45);
+  else if(cfg.behaviour==='ground-and-glow'){ mk('tone-gglow-halo', n.r*1.45); mk('tone-gglow-core', n.r*0.5); }
+  else if(cfg.behaviour==='deepen') mk('tone-deepen', n.r*1.45);
+  else if(cfg.behaviour==='static' && id==='tiphereth'){
+    el('circle', {class:'tone-spec tone-static-ring', cx:n.x, cy:n.y, r:String(n.r+2.4), fill:'none', stroke:cfg.octave, 'stroke-width':'2'}, g);
+  }
+}
+function toneMark(id, on){
+  const g = sphereGroups[id]; if(!g) return;
+  g.classList.toggle('tone-on', !!on);
+  const pig = tonePigment(id);
+  if(pig) g.style.setProperty('--tone-pigment', pig);
+  if(on) toneSyncSpec(id); else toneClearSpec(id);
+}
+function toneStartVoice(id, hz){
+  const ctx = toneEnsureCtx(); if(!ctx) return;
+  const now = ctx.currentTime;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(1, now + TONE_CFG.attackSec);
+  gain.connect(toneMasterGain);
+  const osc = ctx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(hz, now);
+  osc.connect(gain);
+  osc.start(now);
+  let osc2 = null;
+  if(toneState.timbre==='warm'){
+    const g2 = ctx.createGain();
+    g2.gain.setValueAtTime(0.125, now);
+    osc2 = ctx.createOscillator();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(hz*2, now);
+    osc2.connect(g2); g2.connect(gain);
+    osc2.start(now);
+  }
+  toneVoices[id] = { osc, osc2, gain, hz };
+}
+function toneKillVoice(id){
+  const v = toneVoices[id]; if(!v) return;
+  if(v.strikeTimer){ clearTimeout(v.strikeTimer); v.strikeTimer = null; }
+  if(toneCtx){
+    const now = toneCtx.currentTime, tau = TONE_CFG.releaseSec/3;
+    try{
+      v.gain.gain.cancelScheduledValues(now);
+      v.gain.gain.setValueAtTime(Math.max(v.gain.gain.value, 0.0001), now);
+      v.gain.gain.setTargetAtTime(0.0001, now, tau);
+    }catch(_){}
+    const osc=v.osc, osc2=v.osc2, gain=v.gain;
+    setTimeout(()=>{
+      try{ osc.stop(); }catch(_){}
+      try{ if(osc2) osc2.stop(); }catch(_){}
+      try{ gain.disconnect(); }catch(_){}
+    }, Math.max(TONE_CFG.releaseSec*3, 1.2)*1000);
+  }
+  delete toneVoices[id];
+}
+function toneRefreshStrip(){
+  const master = document.getElementById('toneMaster');
+  const refs = document.getElementById('toneRefs');
+  const spec = document.getElementById('toneSpectral');
+  const mode = document.getElementById('toneMode');
+  const timbre = document.getElementById('toneTimbre');
+  const place = document.getElementById('tonePlace');
+  const out = document.getElementById('toneReadout');
+  if(master){ master.textContent = toneState.enabled ? '♪ Tone: on' : '♪ Tone: off'; master.classList.toggle('on', toneState.enabled); master.setAttribute('aria-pressed', toneState.enabled?'true':'false'); }
+  if(refs){ refs.textContent = toneState.refs ? 'refs: clefs on' : 'refs: clefs off'; refs.classList.toggle('on', toneState.refs); refs.setAttribute('aria-pressed', toneState.refs?'true':'false'); }
+  if(spec){ spec.textContent = toneState.spectral ? 'spectral: on' : 'spectral: off'; spec.classList.toggle('on', toneState.spectral); spec.setAttribute('aria-pressed', toneState.spectral?'true':'false'); }
+  if(mode) mode.value = toneState.mode;
+  if(timbre) timbre.value = toneState.timbre;
+  if(place) place.value = toneState.place;
+  document.querySelectorAll('.tone-clef').forEach(t=>t.classList.toggle('live', toneState.refs));
+  if(out){
+    const lines = Object.keys(toneVoices).map(id=>{
+      const cfg = TONE_CFG.seats[id], hz = toneHzFor(id);
+      if(!cfg || hz==null) return '';
+      const info = toneNoteInfo(hz);
+      const det = info.detune===0 ? '' : (info.detune>0 ? ' +'+info.detune+'¢' : ' '+info.detune+'¢');
+      return cfg.planet+' · '+info.name+det+' · '+toneFmtHz(hz)+' Hz';
+    }).filter(Boolean);
+    out.textContent = lines.join('   ·   ');
+  }
+}
+function tonePlay(seatId){
+  if(!toneState.enabled) return;
+  const hz = toneHzFor(seatId);
+  if(hz==null) return;
+  if(toneVoices[seatId]){
+    if(toneState.mode!=='strike') return;
+    toneKillVoice(seatId); toneMark(seatId, false);
+  }
+  if(!toneEnsureCtx()) return;
+  toneStartVoice(seatId, hz);
+  toneMark(seatId, true);
+  if(toneState.mode==='strike'){
+    toneVoices[seatId].strikeTimer = setTimeout(()=>toneStop(seatId), 2500);
+  }
+  toneRefreshStrip();
+}
+function toneStop(seatId){
+  if(!toneVoices[seatId]) return;
+  toneKillVoice(seatId);
+  toneMark(seatId, false);
+  toneRefreshStrip();
+}
+function toneToggle(seatId){ if(toneVoices[seatId]) toneStop(seatId); else tonePlay(seatId); }
+function toneStopAll(){ Object.keys(toneVoices).forEach(toneStop); }
+function toneRetune(){
+  if(toneCtx){
+    const now = toneCtx.currentTime;
+    Object.keys(toneVoices).forEach(id=>{
+      const hz = toneHzFor(id);
+      if(hz==null){ toneStop(id); return; }
+      const v = toneVoices[id];
+      try{
+        v.osc.frequency.cancelScheduledValues(now);
+        v.osc.frequency.setValueAtTime(v.osc.frequency.value, now);
+        v.osc.frequency.linearRampToValueAtTime(hz, now+0.15);
+        if(v.osc2){
+          v.osc2.frequency.cancelScheduledValues(now);
+          v.osc2.frequency.setValueAtTime(v.osc2.frequency.value, now);
+          v.osc2.frequency.linearRampToValueAtTime(hz*2, now+0.15);
+        }
+      }catch(_){}
+      v.hz = hz;
+    });
+  }
+  toneRefreshStrip();
+}
+function toneSetMode(mode){ toneState.mode = (mode==='strike') ? 'strike' : 'sustain'; toneRefreshStrip(); }
+function toneSetTimbre(timbre){
+  toneState.timbre = (timbre==='warm') ? 'warm' : 'pure';
+  TONE_CFG.timbre = toneState.timbre;
+  const ids = Object.keys(toneVoices);
+  ids.forEach(id=>{ const hz = toneVoices[id].hz; toneKillVoice(id); toneStartVoice(id, hz); toneMark(id, true); });
+  toneRefreshStrip();
+}
+function toneSetPlacement(place){ toneState.place = (place==='staff') ? 'staff' : 'reduced'; toneRetune(); }
+function toneSetRefs(on){
+  toneState.refs = !!on;
+  if(!toneState.refs){ toneStop('tiphereth'); toneStop('yesod'); }
+  toneRefreshStrip();
+}
+function toneSetSpectral(on){
+  toneState.spectral = !!on;
+  Object.keys(TONE_CFG.seats).forEach(id=>{ if(toneVoices[id]) toneSyncSpec(id); else toneClearSpec(id); });
+  toneRefreshStrip();
+}
+
+window.ToneEngine = {
+  play: tonePlay,
+  stop: toneStop,
+  toggle: toneToggle,
+  stopAll: toneStopAll,
+  setMode: toneSetMode,
+  setTimbre: toneSetTimbre,
+  hzFor: toneHzFor,
+  retune: toneRetune,
+  setPlacement: toneSetPlacement,
+  setRefs: toneSetRefs,
+  setSpectral: toneSetSpectral
+};
+
+(function mountToneEngine(){
+  for(const id in TONE_CFG.seats){
+    const cfg = TONE_CFG.seats[id], n = NODES[id], g = sphereGroups[id];
+    if(!n || !g) continue;
+    if(cfg.silent || id==='kether') continue;
+    if(id==='chokmah'){
+      const tip = el('title', {}, g);
+      tip.textContent = 'no planetary derivation';
+      continue;
+    }
+    const gx = n.x + n.r*0.78, gy = n.y + n.r*0.72;
+    if(cfg.sounds){
+      const t = el('text', {class:'tone-glyph', x:gx, y:gy, 'font-size':'12', 'text-anchor':'middle'}, g);
+      t.textContent = '\u266A';
+      el('title', {}, t).textContent = (cfg.planet||id)+' tone';
+      t.addEventListener('click', e=>{ e.stopPropagation(); e.preventDefault(); ToneEngine.toggle(id); });
+    } else if(cfg.clef){
+      const t = el('text', {class:'tone-glyph tone-clef', x:gx, y:gy, 'font-size':'11', 'text-anchor':'middle'}, g);
+      t.textContent = cfg.clef==='G' ? 'G' : 'F';
+      el('title', {}, t).textContent = 'frame — not a voice';
+      t.addEventListener('click', e=>{
+        e.stopPropagation(); e.preventDefault();
+        if(toneState.refs) ToneEngine.toggle(id);
+      });
+    }
+  }
+  const master = document.getElementById('toneMaster');
+  const refs = document.getElementById('toneRefs');
+  const spec = document.getElementById('toneSpectral');
+  const mode = document.getElementById('toneMode');
+  const timbre = document.getElementById('toneTimbre');
+  const place = document.getElementById('tonePlace');
+  const vol = document.getElementById('toneVol');
+  const stop = document.getElementById('toneStop');
+  if(master) master.addEventListener('click', ()=>{
+    toneState.enabled = !toneState.enabled;
+    if(!toneState.enabled) toneStopAll();
+    toneRefreshStrip();
+  });
+  if(refs) refs.addEventListener('click', ()=>toneSetRefs(!toneState.refs));
+  if(spec) spec.addEventListener('click', ()=>toneSetSpectral(!toneState.spectral));
+  if(mode) mode.addEventListener('change', ()=>toneSetMode(mode.value));
+  if(timbre) timbre.addEventListener('change', ()=>toneSetTimbre(timbre.value));
+  if(place) place.addEventListener('change', ()=>toneSetPlacement(place.value));
+  if(vol) vol.addEventListener('input', ()=>{
+    TONE_CFG.masterGain = (Number(vol.value)/100) * 0.36;
+    if(toneMasterGain) toneMasterGain.gain.setValueAtTime(TONE_CFG.masterGain, (toneCtx&&toneCtx.currentTime)||0);
+  });
+  if(stop) stop.addEventListener('click', ()=>toneStopAll());
+  toneRefreshStrip();
 })();
 </script>
 </body>

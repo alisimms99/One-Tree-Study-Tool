@@ -468,17 +468,14 @@
           <option value="sustain">mode: sustain</option>
           <option value="strike">mode: strike</option>
         </select>
-        <select id="toneTimbre" aria-label="Timbre">
-          <option value="pure">timbre: pure</option>
-          <option value="warm">timbre: warm</option>
-        </select>
+        <button type="button" id="toneSpectral" class="on" aria-pressed="true">spectral: on</button>
         <select id="tonePlace" aria-label="Placement">
           <option value="reduced">placement: reduced</option>
           <option value="staff">placement: staff-height</option>
         </select>
         <button type="button" id="toneRefs" aria-pressed="false">refs: clefs off</button>
-        <button type="button" id="toneSpectral" class="on" aria-pressed="true">spectral: on</button>
         <label>vol <input id="toneVol" type="range" min="0" max="100" value="50" aria-label="Tone volume"></label>
+        <button type="button" id="toneSistrum" title="One-shot accent — not a voice">sistrum</button>
         <button type="button" id="toneStop">stop all</button>
         <div id="toneReadout"></div>
       </div>
@@ -2881,9 +2878,28 @@ const TONE_CFG = {
   schumannHz: 7.83,
   c4Octaves: 5,                     // C4 = schumannHz * 2**c4Octaves
   aEarth: 1.0,
-  masterGain: 0.18,                 // conservative; sine at 0.18 is comfortable on laptop speakers
+  masterGain: 0.18,
   attackSec: 0.08, releaseSec: 0.35,
-  timbre: 'pure',                   // 'pure' (sine) | 'warm' (sine + 2nd harmonic at -18 dB)
+  timbre: { strike:'bell', sustain:'bowl' },   // see §4.9 — no bare-sine voice
+  bellAttackSec: 0.004,
+  bowlAttackSec: 1.2,
+  bowlReleaseSec: 0.6,
+  /* [ratio, amp, tau] — ruled frequency sits on ratio 1 */
+  bell: [
+    [0.5,1.00,0.80],[1,0.55,0.70],[1.2,0.55,0.55],[1.5,0.40,0.48],
+    [2,0.70,0.40],[2.5,0.30,0.30],[3,0.25,0.25],[4.2,0.15,0.15]
+  ],
+  bowl: [ [1,1.00],[1.004,0.70],[2.85,0.18],[2.87,0.12],[5.2,0.06] ],
+  /* Rework table (not the 8-ping demo). Ali auditions before this ships as a default accent. */
+  sistrum: {
+    hits: 4,
+    gapSec: 0.12,
+    accelerando: 0.88,
+    thud: { ratio:0.3, amp:0.90, dur:0.030 },
+    rings: [ [7.2,0.55,0.08],[9.4,0.40,0.07],[11.8,0.28,0.06],[13.6,0.18,0.05] ],
+    jitter: 0.03,
+    noise: { bandLo:2000, bandHi:6000, dur:0.015, amp:0.22 }
+  },
   seats: {
     malkuth:   { planet:'Earth',   a:1.0000, sounds:true,  color:null, pigment:'#3E9B7A', octave:'#8FFF00', behaviour:'glow' },
     binah:     { planet:'Saturn',  a:9.5549, sounds:true,  color:null, pigment:'#1A1A1A', octave:'#0064FF', behaviour:'ground-and-glow' },
@@ -2901,9 +2917,9 @@ const TONE_CFG = {
 window.TONE_CFG = TONE_CFG;
 
 const TONE_NOTES = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
-const toneState = { enabled:true, mode:'sustain', timbre:'pure', place:'reduced', refs:false, spectral:true };
+const toneState = { enabled:true, mode:'sustain', place:'reduced', refs:false, spectral:true };
 const toneVoices = Object.create(null);
-let toneCtx = null, toneMasterGain = null;
+let toneCtx = null, toneMasterGain = null, toneLastSeat = 'malkuth';
 
 function toneC4(){ return TONE_CFG.schumannHz * Math.pow(2, TONE_CFG.c4Octaves); }
 function toneHzFor(seatId){
@@ -2978,46 +2994,61 @@ function toneMark(id, on){
   if(pig) g.style.setProperty('--tone-pigment', pig);
   if(on) toneSyncSpec(id); else toneClearSpec(id);
 }
+function toneAmpSum(table){
+  let s=0; for(let i=0;i<table.length;i++) s+=table[i][1];
+  return s||1;
+}
+function toneMakeLayer(ctx, dest, hz, table, kind, now){
+  const bus = ctx.createGain();
+  bus.gain.setValueAtTime(1/toneAmpSum(table), now);
+  bus.connect(dest);
+  const parts = [];
+  const atk = kind==='bell' ? TONE_CFG.bellAttackSec : TONE_CFG.bowlAttackSec;
+  for(let i=0;i<table.length;i++){
+    const ratio=table[i][0], amp=table[i][1], tau=table[i][2];
+    const osc=ctx.createOscillator();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(hz*ratio, now);
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0, now);
+    g.gain.linearRampToValueAtTime(amp, now+atk);
+    if(kind==='bell') g.gain.setTargetAtTime(0.0001, now+atk, tau);
+    osc.connect(g); g.connect(bus); osc.start(now);
+    parts.push({osc, gain:g, ratio, amp, tau:tau||null});
+  }
+  return {bus, parts};
+}
+function toneLayerParts(v){
+  return [].concat(v.bell?v.bell.parts:[], v.bowl?v.bowl.parts:[]);
+}
 function toneStartVoice(id, hz){
   const ctx = toneEnsureCtx(); if(!ctx) return;
   const now = ctx.currentTime;
-  const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0, now);
-  gain.gain.linearRampToValueAtTime(1, now + TONE_CFG.attackSec);
-  gain.connect(toneMasterGain);
-  const osc = ctx.createOscillator();
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(hz, now);
-  osc.connect(gain);
-  osc.start(now);
-  let osc2 = null;
-  if(toneState.timbre==='warm'){
-    const g2 = ctx.createGain();
-    g2.gain.setValueAtTime(0.125, now);
-    osc2 = ctx.createOscillator();
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(hz*2, now);
-    osc2.connect(g2); g2.connect(gain);
-    osc2.start(now);
-  }
-  toneVoices[id] = { osc, osc2, gain, hz };
+  const voice = ctx.createGain();
+  voice.gain.setValueAtTime(1, now);
+  voice.connect(toneMasterGain);
+  const mode = toneState.mode;
+  const bell = toneMakeLayer(ctx, voice, hz, TONE_CFG.bell, 'bell', now);
+  const bowl = (mode==='sustain') ? toneMakeLayer(ctx, voice, hz, TONE_CFG.bowl, 'bowl', now) : null;
+  toneVoices[id] = { hz, mode, voice, bell, bowl, started:now };
 }
 function toneKillVoice(id){
   const v = toneVoices[id]; if(!v) return;
   if(v.strikeTimer){ clearTimeout(v.strikeTimer); v.strikeTimer = null; }
-  if(toneCtx){
-    const now = toneCtx.currentTime, tau = TONE_CFG.releaseSec/3;
+  if(toneCtx && v.voice){
+    const now = toneCtx.currentTime, tau = TONE_CFG.bowlReleaseSec;
     try{
-      v.gain.gain.cancelScheduledValues(now);
-      v.gain.gain.setValueAtTime(Math.max(v.gain.gain.value, 0.0001), now);
-      v.gain.gain.setTargetAtTime(0.0001, now, tau);
+      v.voice.gain.cancelScheduledValues(now);
+      v.voice.gain.setValueAtTime(Math.max(v.voice.gain.value, 0.0001), now);
+      v.voice.gain.setTargetAtTime(0.0001, now, tau);
     }catch(_){}
-    const osc=v.osc, osc2=v.osc2, gain=v.gain;
+    const die = now + tau*4 + 0.15;
+    const all = toneLayerParts(v);
+    all.forEach(p=>{ try{ p.osc.stop(die); }catch(_){} });
     setTimeout(()=>{
-      try{ osc.stop(); }catch(_){}
-      try{ if(osc2) osc2.stop(); }catch(_){}
-      try{ gain.disconnect(); }catch(_){}
-    }, Math.max(TONE_CFG.releaseSec*3, 1.2)*1000);
+      all.forEach(p=>{ try{ p.gain.disconnect(); }catch(_){} });
+      try{ v.voice.disconnect(); }catch(_){}
+    }, (tau*4+0.25)*1000);
   }
   delete toneVoices[id];
 }
@@ -3026,14 +3057,12 @@ function toneRefreshStrip(){
   const refs = document.getElementById('toneRefs');
   const spec = document.getElementById('toneSpectral');
   const mode = document.getElementById('toneMode');
-  const timbre = document.getElementById('toneTimbre');
   const place = document.getElementById('tonePlace');
   const out = document.getElementById('toneReadout');
   if(master){ master.textContent = toneState.enabled ? '♪ Tone: on' : '♪ Tone: off'; master.classList.toggle('on', toneState.enabled); master.setAttribute('aria-pressed', toneState.enabled?'true':'false'); }
   if(refs){ refs.textContent = toneState.refs ? 'refs: clefs on' : 'refs: clefs off'; refs.classList.toggle('on', toneState.refs); refs.setAttribute('aria-pressed', toneState.refs?'true':'false'); }
   if(spec){ spec.textContent = toneState.spectral ? 'spectral: on' : 'spectral: off'; spec.classList.toggle('on', toneState.spectral); spec.setAttribute('aria-pressed', toneState.spectral?'true':'false'); }
   if(mode) mode.value = toneState.mode;
-  if(timbre) timbre.value = toneState.timbre;
   if(place) place.value = toneState.place;
   document.querySelectorAll('.tone-clef').forEach(t=>t.classList.toggle('live', toneState.refs));
   if(out){
@@ -3056,10 +3085,11 @@ function tonePlay(seatId){
     toneKillVoice(seatId); toneMark(seatId, false);
   }
   if(!toneEnsureCtx()) return;
+  toneLastSeat = seatId;
   toneStartVoice(seatId, hz);
   toneMark(seatId, true);
-  if(toneState.mode==='strike'){
-    toneVoices[seatId].strikeTimer = setTimeout(()=>toneStop(seatId), 2500);
+  if(toneState.mode==='strike' && toneVoices[seatId]){
+    toneVoices[seatId].strikeTimer = setTimeout(()=>toneStop(seatId), 3000);
   }
   toneRefreshStrip();
 }
@@ -3078,28 +3108,85 @@ function toneRetune(){
       const hz = toneHzFor(id);
       if(hz==null){ toneStop(id); return; }
       const v = toneVoices[id];
-      try{
-        v.osc.frequency.cancelScheduledValues(now);
-        v.osc.frequency.setValueAtTime(v.osc.frequency.value, now);
-        v.osc.frequency.linearRampToValueAtTime(hz, now+0.15);
-        if(v.osc2){
-          v.osc2.frequency.cancelScheduledValues(now);
-          v.osc2.frequency.setValueAtTime(v.osc2.frequency.value, now);
-          v.osc2.frequency.linearRampToValueAtTime(hz*2, now+0.15);
-        }
-      }catch(_){}
+      toneLayerParts(v).forEach(p=>{
+        try{
+          p.osc.frequency.cancelScheduledValues(now);
+          p.osc.frequency.setValueAtTime(p.osc.frequency.value, now);
+          p.osc.frequency.linearRampToValueAtTime(hz*p.ratio, now+0.15);
+        }catch(_){}
+      });
       v.hz = hz;
     });
   }
   toneRefreshStrip();
 }
 function toneSetMode(mode){ toneState.mode = (mode==='strike') ? 'strike' : 'sustain'; toneRefreshStrip(); }
-function toneSetTimbre(timbre){
-  toneState.timbre = (timbre==='warm') ? 'warm' : 'pure';
-  TONE_CFG.timbre = toneState.timbre;
-  const ids = Object.keys(toneVoices);
-  ids.forEach(id=>{ const hz = toneVoices[id].hz; toneKillVoice(id); toneStartVoice(id, hz); toneMark(id, true); });
-  toneRefreshStrip();
+function toneSetTimbre(t){
+  /* Timbre is fixed by mode (strike=bell, sustain=bowl). API kept for tests. */
+  if(t==='bell') TONE_CFG.timbre.strike = 'bell';
+  if(t==='bowl') TONE_CFG.timbre.sustain = 'bowl';
+}
+function toneInspect(id){
+  const v = toneVoices[id]; if(!v) return null;
+  const pack = layer => layer ? layer.parts.map(p=>({
+    ratio:p.ratio, amp:p.amp, hz:p.osc.frequency.value, tau:p.tau
+  })) : [];
+  const prime = toneLayerParts(v).find(p=>p.ratio===1);
+  return {
+    mode:v.mode, hz:v.hz,
+    primeHz: prime ? prime.osc.frequency.value : null,
+    bell: pack(v.bell), bowl: pack(v.bowl),
+    oscCount: toneLayerParts(v).length
+  };
+}
+function toneSistrum(seatId){
+  if(!toneState.enabled) return;
+  const id = seatId || toneLastSeat;
+  const hz = toneHzFor(id) || toneC4();
+  const ctx = toneEnsureCtx(); if(!ctx) return;
+  const cfg = TONE_CFG.sistrum, now0 = ctx.currentTime;
+  const bus = ctx.createGain();
+  bus.gain.setValueAtTime(0.45, now0);
+  bus.connect(toneMasterGain);
+  let t = now0;
+  for(let h=0; h<cfg.hits; h++){
+    const thud = ctx.createOscillator();
+    thud.type='sine';
+    thud.frequency.setValueAtTime(hz*cfg.thud.ratio, t);
+    const tg = ctx.createGain();
+    tg.gain.setValueAtTime(0, t);
+    tg.gain.linearRampToValueAtTime(cfg.thud.amp, t+0.002);
+    tg.gain.linearRampToValueAtTime(0.0001, t+cfg.thud.dur);
+    thud.connect(tg); tg.connect(bus);
+    thud.start(t); thud.stop(t+cfg.thud.dur+0.02);
+    for(let r=0;r<cfg.rings.length;r++){
+      const jitter = 1 + (Math.random()*2-1)*cfg.jitter;
+      const osc = ctx.createOscillator();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(hz*cfg.rings[r][0]*jitter, t);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(cfg.rings[r][1], t+0.002);
+      g.gain.setTargetAtTime(0.0001, t+0.002, cfg.rings[r][2]);
+      osc.connect(g); g.connect(bus);
+      osc.start(t); osc.stop(t+0.35);
+    }
+    const frames = Math.max(1, Math.ceil(ctx.sampleRate*cfg.noise.dur));
+    const buf = ctx.createBuffer(1, frames, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for(let i=0;i<frames;i++) data[i] = Math.random()*2-1;
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const bp = ctx.createBiquadFilter();
+    bp.type='bandpass';
+    bp.frequency.setValueAtTime((cfg.noise.bandLo+cfg.noise.bandHi)/2, t);
+    bp.Q.setValueAtTime(1.1, t);
+    const ng = ctx.createGain();
+    ng.gain.setValueAtTime(cfg.noise.amp, t);
+    ng.gain.linearRampToValueAtTime(0.0001, t+cfg.noise.dur);
+    src.connect(bp); bp.connect(ng); ng.connect(bus);
+    src.start(t); src.stop(t+cfg.noise.dur+0.02);
+    t += cfg.gapSec * Math.pow(cfg.accelerando, h);
+  }
 }
 function toneSetPlacement(place){ toneState.place = (place==='staff') ? 'staff' : 'reduced'; toneRetune(); }
 function toneSetRefs(on){
@@ -3124,7 +3211,9 @@ window.ToneEngine = {
   retune: toneRetune,
   setPlacement: toneSetPlacement,
   setRefs: toneSetRefs,
-  setSpectral: toneSetSpectral
+  setSpectral: toneSetSpectral,
+  sistrum: toneSistrum,
+  inspect: toneInspect
 };
 
 (function mountToneEngine(){
@@ -3159,9 +3248,9 @@ window.ToneEngine = {
   const refs = document.getElementById('toneRefs');
   const spec = document.getElementById('toneSpectral');
   const mode = document.getElementById('toneMode');
-  const timbre = document.getElementById('toneTimbre');
   const place = document.getElementById('tonePlace');
   const vol = document.getElementById('toneVol');
+  const sistrum = document.getElementById('toneSistrum');
   const stop = document.getElementById('toneStop');
   if(master) master.addEventListener('click', ()=>{
     toneState.enabled = !toneState.enabled;
@@ -3171,12 +3260,12 @@ window.ToneEngine = {
   if(refs) refs.addEventListener('click', ()=>toneSetRefs(!toneState.refs));
   if(spec) spec.addEventListener('click', ()=>toneSetSpectral(!toneState.spectral));
   if(mode) mode.addEventListener('change', ()=>toneSetMode(mode.value));
-  if(timbre) timbre.addEventListener('change', ()=>toneSetTimbre(timbre.value));
   if(place) place.addEventListener('change', ()=>toneSetPlacement(place.value));
   if(vol) vol.addEventListener('input', ()=>{
     TONE_CFG.masterGain = (Number(vol.value)/100) * 0.36;
     if(toneMasterGain) toneMasterGain.gain.setValueAtTime(TONE_CFG.masterGain, (toneCtx&&toneCtx.currentTime)||0);
   });
+  if(sistrum) sistrum.addEventListener('click', ()=>toneSistrum());
   if(stop) stop.addEventListener('click', ()=>toneStopAll());
   toneRefreshStrip();
 })();
